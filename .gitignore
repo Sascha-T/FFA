@@ -1,0 +1,12 @@
+# Local project settings
+.vs/
+
+ # Build
+bin/
+obj/
+
+# Authentication
+Credentials.json
+
+# Logs
+logs/
