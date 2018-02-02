@@ -31,13 +31,9 @@ namespace FFA.Services
         }
 
         public Task ReplyAsync(IUser user, IMessageChannel channel, string description, string title = null, Color? color = null)
-        {
-            return SendAsync(channel, user.Tag() + ", " + description, title, color);
-        }
+            => SendAsync(channel, user.Tag() + ", " + description, title, color);
 
         public Task ReplyErrorAsync(IUser user, IMessageChannel channel, string description)
-        {
-            return ReplyAsync(user, channel, description, null, _configuration.ErrorColor);
-        }
+            => ReplyAsync(user, channel, description, null, _configuration.ErrorColor);
     }
 }
