@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using System.Threading.Tasks;
 using FFA.Services;
+using System.Threading.Tasks;
 
 namespace FFA.Events
 {

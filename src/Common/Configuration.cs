@@ -21,9 +21,7 @@ namespace FFA.Common
         }
 
         public char Prefix { get; set; }
-        
         public Color[] Colors { get; set; }
-
         public Color ErrorColor { get; set; }
     }
 }

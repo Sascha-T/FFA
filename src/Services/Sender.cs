@@ -1,9 +1,9 @@
 ﻿using Discord;
+using FFA.Common;
+using FFA.Extensions;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using FFA.Common;
-using FFA.Extensions;
 
 namespace FFA.Services
 {

@@ -1,10 +1,10 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
-using System;
-using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
 using FFA.Services;
-using Discord;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace FFA.Common
 {

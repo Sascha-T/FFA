@@ -1,19 +1,19 @@
 ﻿using Discord;
 using Discord.Commands;
-using System.Linq;
-using System.Threading.Tasks;
 using FFA.Common;
-using FFA.Extensions;
-using FFA.Preconditions;
 using FFA.Database;
 using FFA.Database.Models;
+using FFA.Extensions;
+using FFA.Preconditions;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FFA.Modules
 {
     [Name("Moderation")]
     [GuildOnly]
-    // [ModOnly]
+    // Min rep count
     public sealed class Moderation : ModuleBase<Context>
     {
         private readonly Credentials _credentials;
@@ -24,9 +24,10 @@ namespace FFA.Modules
             _credentials = credentials;
             _ffaContext = ffaContext;
         }
-
+        // TODO: user join auto renut for mutes
+        // TODO: be able to mute IUser
         [Command("mute")]
-        [Summary("Mute any guild member.")]
+        [Summary("Mute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task MuteAsync(IGuildUser guildUser, Rule rule, TimeSpan length, [Remainder] string reason = null)
         {
@@ -36,14 +37,14 @@ namespace FFA.Modules
             }
             else
             {
-                await guildUser.AddRoleAsync(Context.Guild.Roles.Single((x) => x.Id == _credentials.MutedRoleId));
+                await guildUser.AddRoleAsync(Context.Guild.GetRole(_credentials.MutedRoleId));
                 await _ffaContext.AddAsync(new Mute(guildUser.Id, DateTime.UtcNow.Add(length)));
                 await Context.ReplyAsync("You have successfully muted " + guildUser.Tag() + ".");
             }
         }
 
         [Command("unmute")]
-        [Summary("Unmute any guild member.")]
+        [Summary("Unmute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task UnmuteAsync(IGuildUser guildUser, [Remainder] string reason = null)
         {
@@ -54,7 +55,7 @@ namespace FFA.Modules
             else
             {
                 await _ffaContext.RemoveAsync<Mute>((x) => x.UserId == guildUser.Id);
-                await guildUser.RemoveRoleAsync(Context.Guild.Roles.Single((x) => x.Id == _credentials.MutedRoleId));
+                await guildUser.RemoveRoleAsync(Context.Guild.GetRole(_credentials.MutedRoleId));
                 await Context.ReplyAsync("You have successfully unmuted " + guildUser.Tag() + ".");
             }
         }

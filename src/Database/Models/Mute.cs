@@ -12,7 +12,8 @@ namespace FFA.Database.Models
             EndsAt = endsAt;
         }
 
-        public ulong UserId { get; }
+        public int Id { get; set; }
+        public ulong UserId { get; set; }
         public DateTime EndsAt { get; set; }
     }
 }

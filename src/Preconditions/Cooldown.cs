@@ -1,7 +1,7 @@
 ﻿using Discord.Commands;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace FFA.Preconditions
 {
@@ -50,7 +50,7 @@ namespace FFA.Preconditions
             CommandHash = commandHash;
         }
 
-        public ulong UserId { get; set; }
-        public int CommandHash { get; set; }
+        public ulong UserId { get; }
+        public int CommandHash { get; }
     }
 }

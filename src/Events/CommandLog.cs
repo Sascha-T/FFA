@@ -1,10 +1,10 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.Net;
-using System.Net;
-using System.Threading.Tasks;
 using FFA.Extensions;
 using FFA.Services;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace FFA.Events
 {

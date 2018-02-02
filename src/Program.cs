@@ -1,17 +1,20 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using FFA.Common;
+using FFA.Database;
+using FFA.Database.Models;
+using FFA.Events;
+using FFA.Readers;
+using FFA.Services;
+using FFA.Timers;
+using FFA.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using FFA.Common;
-using FFA.Events;
-using FFA.Services;
-using FFA.Utility;
-using FFA.Database;
 
 namespace FFA
 {
@@ -38,7 +41,7 @@ namespace FFA
                 LogLevel = LogSeverity.Info,
                 IgnoreExtraArgs = true
             });
-
+            
             var services = new ServiceCollection()
                 .AddDbContext<FFAContext>(ServiceLifetime.Transient)
                 .AddSingleton<Logger>()
@@ -50,18 +53,24 @@ namespace FFA
                 .AddSingleton<Sender>()
                 .AddSingleton<MessageReceived>()
                 .AddSingleton<ClientLog>()
-                .AddSingleton<CommandLog>();
+                .AddSingleton<CommandLog>()
+                .AddSingleton<Ready>()
+                .AddSingleton<AutoUnmute>();
 
             var provider = services.BuildServiceProvider();
-            
-            provider.GetRequiredService<MessageReceived>();
-            provider.GetRequiredService<ClientLog>();
-            provider.GetRequiredService<CommandLog>();
 
+            commandService.AddTypeReader<Rule>(new RuleTypeReader());
+            commandService.AddTypeReader<TimeSpan>(new TimeSpanTypeReader());
             await commandService.AddModulesAsync(Assembly.GetEntryAssembly());
             await client.LoginAsync(TokenType.Bot, credentials.Token);
             await client.StartAsync();
-            
+
+            // TODO: reflexion?
+            provider.GetRequiredService<MessageReceived>();
+            provider.GetRequiredService<ClientLog>();
+            provider.GetRequiredService<CommandLog>();
+            provider.GetRequiredService<Ready>();
+
             await Task.Delay(-1);
         }
     }

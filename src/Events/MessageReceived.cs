@@ -1,8 +1,8 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
+using FFA.Common;
 using System;
 using System.Threading.Tasks;
-using FFA.Common;
 
 namespace FFA.Events
 {
