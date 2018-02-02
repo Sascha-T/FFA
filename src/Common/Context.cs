@@ -19,6 +19,11 @@ namespace FFA.Common
             _sender = _provider.GetRequiredService<Sender>();
         }
 
+        public async Task DmAsync(string description)
+        {
+            await _sender.SendAsync(await User.GetOrCreateDMChannelAsync(), description);
+        }
+
         public Task SendAsync(string description, string title = null, Color? color = null)
         {
             return _sender.SendAsync(Channel, description, title, color);
@@ -27,6 +32,11 @@ namespace FFA.Common
         public Task ReplyAsync(string description, string title = null, Color? color = null)
         {
             return _sender.ReplyAsync(User, Channel, description, title, color);
+        }
+
+        public Task ReplyErrorAsync(string description)
+        {
+            return _sender.ReplyErrorAsync(User, Channel, description);
         }
     }
 }

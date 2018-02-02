@@ -4,7 +4,7 @@ using Discord.Commands;
 
 namespace FFA.Preconditions
 {
-    public class GuildOnly : PreconditionAttribute
+    public sealed class GuildOnly : PreconditionAttribute
     {
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {

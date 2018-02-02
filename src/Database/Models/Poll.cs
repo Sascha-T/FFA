@@ -5,13 +5,13 @@ namespace FFA.Database.Models
 {
     public class Poll
     {
-        public int Id { get; }
-        public string Name { get; }
-        public string Script { get; }
-        public string Description { get; }
-        public bool Approved { get; }
-        public ulong CreatorId { get; }
-        public List<Vote> Votes { get; }
-        public DateTime CreatedAt { get; } = DateTime.UtcNow;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Script { get; set; }
+        public string Description { get; set; }
+        public bool Approved { get; set; }
+        public ulong CreatorId { get; set; }
+        public List<Vote> Votes { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

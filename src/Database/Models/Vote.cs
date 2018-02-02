@@ -2,9 +2,9 @@
 {
     public class Vote
     {
-        public int Id { get; }
-        public ulong VoterId { get; }
-        public bool For { get; }
-        public int PollId { get; }
+        public int Id { get; set; }
+        public ulong VoterId { get; set; }
+        public bool For { get; set; }
+        public int PollId { get; set; }
     }
 }

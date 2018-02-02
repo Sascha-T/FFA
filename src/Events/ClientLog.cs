@@ -5,7 +5,7 @@ using FFA.Services;
 
 namespace FFA.Events
 {
-    public class ClientLog
+    public sealed class ClientLog
     {
         private readonly DiscordSocketClient _client;
         private readonly Logger _logger;

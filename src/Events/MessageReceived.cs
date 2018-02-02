@@ -48,12 +48,14 @@ namespace FFA.Events
                     {
                         case CommandError.UnknownCommand:
                             return;
+                        case CommandError.BadArgCount:
+                            // TODO: usage & example
                         default:
                             message = result.ErrorReason;
                             break;
                     }
 
-                    await context.ReplyAsync(message, null, _config.ErrorColor);
+                    await context.ReplyErrorAsync(message);
                 }
             }
         }

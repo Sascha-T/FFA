@@ -28,14 +28,14 @@ namespace FFA
 
             var client = new DiscordSocketClient(new DiscordSocketConfig
             {
-                LogLevel = LogSeverity.Debug,
+                LogLevel = LogSeverity.Info,
                 MessageCacheSize = 10
             });
 
             var commandService = new CommandService(new CommandServiceConfig
             {
                 DefaultRunMode = RunMode.Async,
-                LogLevel = LogSeverity.Debug,
+                LogLevel = LogSeverity.Info,
                 IgnoreExtraArgs = true
             });
 
@@ -49,14 +49,12 @@ namespace FFA
                 .AddSingleton(credentials)
                 .AddSingleton<Sender>()
                 .AddSingleton<MessageReceived>()
-                .AddSingleton<ChannelCreated>()
                 .AddSingleton<ClientLog>()
                 .AddSingleton<CommandLog>();
 
             var provider = services.BuildServiceProvider();
             
             provider.GetRequiredService<MessageReceived>();
-            provider.GetRequiredService<ChannelCreated>();
             provider.GetRequiredService<ClientLog>();
             provider.GetRequiredService<CommandLog>();
 

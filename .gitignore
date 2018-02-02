@@ -10,3 +10,9 @@ Credentials.json
 
 # Logs
 logs/
+
+# Migrations
+Migrations/
+
+# Database
+FFA.db
