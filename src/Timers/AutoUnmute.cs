@@ -2,7 +2,6 @@
 using FFA.Common;
 using FFA.Database;
 using FFA.Database.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 

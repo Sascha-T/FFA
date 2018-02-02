@@ -37,7 +37,7 @@ namespace FFA.Services
 
                 foreach (var rule in group.OrderBy((x) => x.Content))
                 {
-                    description += $"{(char)('a' + j++)}. {rule.Content} " +
+                    description += $"**{(char)('a' + j++)}.** {rule.Content} " +
                                    $"({(rule.MaxMuteLength.HasValue ? "Bannable" : rule.MaxMuteLength.Value.Hours + "h")})";
                 }
 

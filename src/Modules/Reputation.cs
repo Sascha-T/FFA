@@ -5,6 +5,7 @@ using FFA.Database;
 using FFA.Database.Models;
 using FFA.Extensions;
 using FFA.Preconditions;
+using System;
 using System.Threading.Tasks;
 
 namespace FFA.Modules
@@ -21,10 +22,10 @@ namespace FFA.Modules
         }
 
         [Command("addrule")]
-        public async Task AddRule(string content, string category, System.TimeSpan? maxMuteLength = null)
+        [Summary("Adds a rule.")]
+        public async Task AddRule(string content, string category, TimeSpan? maxMuteLength = null)
         {
-            await _ffaContext.Rules.AddAsync(new Rule(content, category, maxMuteLength));
-            await _ffaContext.SaveChangesAsync();
+            await _ffaContext.AddAsync(new Rule(content, category, maxMuteLength));
             await Context.ReplyAsync($"You have successfully added a new rule.");
         }
 
