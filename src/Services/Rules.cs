@@ -37,7 +37,8 @@ namespace FFA.Services
 
                 foreach (var rule in group.OrderBy((x) => x.Description))
                 {
-                    description += $"{(char)('a' + j++)}. {rule.Description} ({(rule.Bannable ? "Bannable" : rule.MaxMuteLength.Value.Hours + "h")})";
+                    description += $"{(char)('a' + j++)}. {rule.Description} " +
+                                   $"({(rule.MaxMuteLength.HasValue ? "Bannable" : rule.MaxMuteLength.Value.Hours + "h")})";
                 }
 
                 await _sender.SendAsync(rulesChannel, description, $"{++i}. {group.First().Category}:");

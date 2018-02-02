@@ -18,13 +18,12 @@ namespace FFA.Modules
         }
 
         [Command("addrule")]
-        public async Task AddRule(string category, bool bannable, string message, System.TimeSpan? maxnut = null)
+        public async Task AddRule(string category, string message, System.TimeSpan? maxnut = null)
         {
             await _ffaContext.Rules.AddAsync(new Database.Models.Rule()
             {
                 Category = category,
                 Description = message,
-                Bannable = bannable,
                 MaxMuteLength = maxnut
             });
             await _ffaContext.SaveChangesAsync();
@@ -33,7 +32,7 @@ namespace FFA.Modules
 
         [Command("rep")]
         [Summary("Give reputation to any user.")]
-        public async Task RepAsync([Summary("NiceFaggot#0001")] [Cooldown(24)] IUser user)
+        public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(24)] IUser user)
         {
             await _ffaContext.UpsertUserAsync(user.Id, (x) => x.Reputation++);
             await Context.ReplyAsync($"You have successfully repped {user.Tag()}.");
@@ -41,7 +40,7 @@ namespace FFA.Modules
 
         [Command("unrep")]
         [Summary("Remove reputation from any user.")]
-        public async Task UnrepAsync([Summary("AlabamaTrigger#6666")] [Cooldown(24)] IUser user)
+        public async Task UnRepAsync([Summary("PapaFag#6666")] [Cooldown(24)] IUser user)
         {
             await _ffaContext.UpsertUserAsync(user.Id, (x) => x.Reputation--);
             await Context.ReplyAsync($"You have successfully unrepped {user.Tag()}.");
@@ -49,7 +48,7 @@ namespace FFA.Modules
 
         [Command("myrep")]
         [Summary("Get your current reputation.")]
-        public async Task MyrepAsync()
+        public async Task MyRepAsync()
         {
             var dbUser = await _ffaContext.GetUserAsync(Context.User.Id);
 
