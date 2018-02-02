@@ -2,7 +2,7 @@
 
 namespace FFA.Extensions
 {
-    public static class ExceptionExtension
+    public static class ExceptionExtensions
     {
         public static string LastMessage(this Exception err)
         {

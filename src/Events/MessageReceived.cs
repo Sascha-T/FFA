@@ -1,6 +1,7 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
 using FFA.Common;
+using FFA.Extensions;
 using System;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace FFA.Events
             _commandService = commandService;
             _config = config;
             _provider = provider;
-            
+
             _client.MessageReceived += OnMessageReceivedAsync;
         }
 
@@ -49,7 +50,12 @@ namespace FFA.Events
                         case CommandError.UnknownCommand:
                             return;
                         case CommandError.BadArgCount:
-                            // TODO: usage & example
+                            var cmd = _commandService.GetCommand(context, argPos);
+
+                            message = $"You are incorrectly using this command.\n" +
+                                      $"**Usage:** `{_config.Prefix}{cmd.GetUsage()}`\n" +
+                                      $"**Example:** `{_config.Prefix}{cmd.GetExample()}`";
+                            break;
                         default:
                             message = result.ErrorReason;
                             break;

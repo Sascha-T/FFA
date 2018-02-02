@@ -1,34 +1,44 @@
 ﻿using Discord.Commands;
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FFA.Readers
 {
     public class TimeSpanTypeReader : TypeReader
     {
+        private readonly Regex numberRegex = new Regex(@"^\d+(\.\d+)?");
+
         public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
-            if (!uint.TryParse(input, out uint result))
+            var numberMatch = numberRegex.Match(input);
+
+            if (!numberMatch.Success || !uint.TryParse(numberMatch.Value, out uint result))
             {
                 return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid time."));
             }
 
             TimeSpan span;
 
-            switch (input.ToLower()[input.Length - 1])
+            if (input.EndsWith("ms"))
             {
-                case 's':
-                    span = TimeSpan.FromSeconds(result);
-                    break;
-                case 'm':
-                    span = TimeSpan.FromMinutes(result);
-                    break;
-                case 'd':
-                    span = TimeSpan.FromDays(result);
-                    break;
-                default:
-                    span = TimeSpan.FromHours(result);
-                    break;
+                span = TimeSpan.FromMilliseconds(result);
+            }
+            else if (input.EndsWith('s'))
+            {
+                span = TimeSpan.FromSeconds(result);
+            }
+            else if (input.EndsWith('m'))
+            {
+                span = TimeSpan.FromMinutes(result);
+            }
+            else if (input.EndsWith('d'))
+            {
+                span = TimeSpan.FromDays(result);
+            }
+            else
+            {
+                span = TimeSpan.FromHours(result);
             }
 
             return Task.FromResult(TypeReaderResult.FromSuccess(span));

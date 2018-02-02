@@ -11,7 +11,7 @@ namespace FFA.Database.Models
         public string Description { get; set; }
         public bool Approved { get; set; }
         public ulong CreatorId { get; set; }
-        public List<Vote> Votes { get; set; }
+        public List<Vote> Votes { get; set; } = new List<Vote>();
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

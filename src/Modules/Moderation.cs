@@ -29,7 +29,10 @@ namespace FFA.Modules
         [Command("mute")]
         [Summary("Mute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task MuteAsync(IGuildUser guildUser, Rule rule, TimeSpan length, [Remainder] string reason = null)
+        public async Task MuteAsync([Summary("Jimbo#5555")] IGuildUser guildUser, 
+                                    [Summary("2c")] Rule rule, 
+                                    [Summary("24h")] TimeSpan length, 
+                                    [Summary("stop with all that ruckus!")] [Remainder] string reason = null)
         {
             if (guildUser.RoleIds.Contains(_credentials.MutedRoleId))
             {
@@ -46,7 +49,8 @@ namespace FFA.Modules
         [Command("unmute")]
         [Summary("Unmute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task UnmuteAsync(IGuildUser guildUser, [Remainder] string reason = null)
+        public async Task UnmuteAsync([Summary("Billy#6969")] IGuildUser guildUser, 
+                                      [Summary("you best stop flirting with Mrs Ruckus")] [Remainder] string reason = null)
         {
             if (!guildUser.RoleIds.Contains(_credentials.MutedRoleId))
             {
