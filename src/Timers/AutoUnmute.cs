@@ -30,9 +30,9 @@ namespace FFA.Timers
         {
             var guild = _client.GetGuild(_credentials.GuildId);
             var mutedRole = guild.GetRole(_credentials.MutedRoleId);
-            var mutes = await _ffaContext.Mutes.ToListAsync();
-            
-            foreach (var mute in mutes)
+
+            // TODO: safe to remove during iteration?
+            foreach (var mute in _ffaContext.Mutes)
             {
                 if (mute.EndsAt.Subtract(DateTime.UtcNow).Ticks <= 0)
                 {
