@@ -13,7 +13,7 @@ namespace FFA.Modules
 {
     [Name("Moderation")]
     [GuildOnly]
-    // Min rep count
+    [TopTwenty]
     public sealed class Moderation : ModuleBase<Context>
     {
         private readonly Credentials _credentials;

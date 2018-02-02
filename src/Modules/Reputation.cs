@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace FFA.Modules
 {
+    [Name("Reputation")]
+    [GuildOnly]
     public sealed class Reputation : ModuleBase<Context>
     {
         private readonly FFAContext _ffaContext;
