@@ -26,7 +26,7 @@ namespace FFA.Readers
                 return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid rule category number."));
             }
 
-            var group = groups[categoryNumber - 1].OrderBy((x) => x.Description).ToArray();
+            var group = groups[categoryNumber - 1].OrderBy((x) => x.Content).ToArray();
 
             if (input[1] < 'a' || input[1] > 'a' + group.Length - 1)
             {

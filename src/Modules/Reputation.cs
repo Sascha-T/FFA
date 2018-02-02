@@ -2,6 +2,7 @@
 using Discord.Commands;
 using FFA.Common;
 using FFA.Database;
+using FFA.Database.Models;
 using FFA.Extensions;
 using FFA.Preconditions;
 using System.Threading.Tasks;
@@ -20,14 +21,9 @@ namespace FFA.Modules
         }
 
         [Command("addrule")]
-        public async Task AddRule(string category, string message, System.TimeSpan? maxnut = null)
+        public async Task AddRule(string content, string category, System.TimeSpan? maxMuteLength = null)
         {
-            await _ffaContext.Rules.AddAsync(new Database.Models.Rule()
-            {
-                Category = category,
-                Description = message,
-                MaxMuteLength = maxnut
-            });
+            await _ffaContext.Rules.AddAsync(new Rule(content, category, maxMuteLength));
             await _ffaContext.SaveChangesAsync();
             await Context.ReplyAsync($"You have successfully added a new rule.");
         }

@@ -32,12 +32,12 @@ namespace FFA.Services
 
             foreach (var group in _ffaContext.Rules.OrderBy((x) => x.Category).GroupBy((x) => x.Category))
             {
-                var description = string.Empty;
                 int j = 0;
+                var description = string.Empty;
 
-                foreach (var rule in group.OrderBy((x) => x.Description))
+                foreach (var rule in group.OrderBy((x) => x.Content))
                 {
-                    description += $"{(char)('a' + j++)}. {rule.Description} " +
+                    description += $"{(char)('a' + j++)}. {rule.Content} " +
                                    $"({(rule.MaxMuteLength.HasValue ? "Bannable" : rule.MaxMuteLength.Value.Hours + "h")})";
                 }
 

@@ -24,7 +24,7 @@ namespace FFA.Modules
             _credentials = credentials;
             _ffaContext = ffaContext;
         }
-        // TODO: user join auto renut for mutes
+
         // TODO: be able to mute IUser
         [Command("mute")]
         [Summary("Mute any guild user.")]
