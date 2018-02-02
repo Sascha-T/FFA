@@ -19,25 +19,25 @@ namespace FFA.Modules
 
         [Command("rep")]
         [Summary("Give reputation to any user.")]
-        public async Task Rep([Cooldown(24)] IUser user)
+        public async Task RepAsync([Cooldown(24)] IUser user)
         {
-            await _ffaContext.UpdateUser(user.Id, (x) => x.Reputation++);
+            await _ffaContext.UpsertUserAsync(user.Id, (x) => x.Reputation++);
             await Context.ReplyAsync($"You have successfully repped {user.Tag()}.");
         }
 
         [Command("unrep")]
         [Summary("Remove reputation from any user.")]
-        public async Task Unrep([Cooldown(24)] IUser user)
+        public async Task UnrepAsync([Cooldown(24)] IUser user)
         {
-            await _ffaContext.UpdateUser(user.Id, (x) => x.Reputation--);
+            await _ffaContext.UpsertUserAsync(user.Id, (x) => x.Reputation--);
             await Context.ReplyAsync($"You have successfully unrepped {user.Tag()}.");
         }
 
         [Command("myrep")]
         [Summary("Get your current reputation.")]
-        public async Task Myrep()
+        public async Task MyrepAsync()
         {
-            var dbUser = await _ffaContext.GetUser(Context.User.Id);
+            var dbUser = await _ffaContext.GetUserAsync(Context.User.Id);
 
             await Context.DmAsync($"You currently have {dbUser.Reputation} reputation.");
             await Context.ReplyAsync($"You have been DMed with your reputation.");
