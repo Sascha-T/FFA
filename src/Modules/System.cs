@@ -2,6 +2,7 @@
 using Discord.Commands;
 using FFA.Common;
 using FFA.Extensions;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,16 +20,16 @@ namespace FFA.Modules
             _config = config;
         }
 
-        [Command("help")]
+        [Command("Help")]
         [Alias("command", "commands", "cmd", "cmds")]
         [Summary("Information about all the commands.")]
         public async Task Help([Summary("rep")] string commandName = null)
         {
             if (!string.IsNullOrWhiteSpace(commandName))
             {
-                commandName = commandName.ToLower();
-
-                var cmd = _commandService.Commands.FirstOrDefault((x) => x.Name == commandName || x.Aliases.Any((y) => y == commandName));
+                var cmd = _commandService.Commands.FirstOrDefault(x 
+                            => string.Equals(x.Name, commandName, StringComparison.OrdinalIgnoreCase) || 
+                               x.Aliases.Any(y => string.Equals(y, commandName, StringComparison.OrdinalIgnoreCase)));
 
                 if (cmd == default(CommandInfo))
                 {
@@ -44,9 +45,9 @@ namespace FFA.Modules
             else
             {
                 var description = "```";
-                var padding = _commandService.Commands.OrderByDescending((x) => x.Name.Length).First().Name.Length + 2;
+                var padding = _commandService.Commands.OrderByDescending(x => x.Name.Length).First().Name.Length + 2;
 
-                foreach (var command in _commandService.Commands.OrderBy((x) => x.Name))
+                foreach (var command in _commandService.Commands.OrderBy(x => x.Name))
                 {
                     description += $"{_config.Prefix}{command.Name.PadRight(padding)}{command.Summary}\n";
                 }

@@ -11,10 +11,10 @@ namespace FFA.Events
     public sealed class CommandLog
     {
         private readonly CommandService _commandService;
-        private readonly Logger _logger;
-        private readonly Sender _sender;
+        private readonly LoggingService _logger;
+        private readonly SendingService _sender;
 
-        public CommandLog(CommandService commandService, Logger logger, Sender sender)
+        public CommandLog(CommandService commandService, LoggingService logger, SendingService sender)
         {
             _commandService = commandService;
             _logger = logger;
@@ -43,7 +43,7 @@ namespace FFA.Events
                 await _sender.ReplyErrorAsync(commandException.Context.User, commandException.Context.Channel, message);
             }
 
-            await _logger.LogAsync(msg.Severity, msg.Source + ": " + (msg.Exception?.ToString() ?? msg.Message));
+            await _logger.LogAsync(msg.Severity, $"{msg.Source}: {(msg.Exception?.ToString() ?? msg.Message)}");
         }
     }
 }

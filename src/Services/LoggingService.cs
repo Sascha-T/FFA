@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public sealed class Logger
+    public sealed class LoggingService
     {
         public async Task LogAsync(LogSeverity severity, string message)
         {

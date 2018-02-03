@@ -2,6 +2,7 @@
 using FFA.Common;
 using FFA.Database;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FFA.Events
@@ -23,9 +24,11 @@ namespace FFA.Events
 
         private async Task OnUserJoinedAsync(SocketGuildUser guildUser)
         {
-            if (await _ffaContext.Mutes.AnyAsync((x) => x.UserId == guildUser.Id))
+            var dbGuild = await _ffaContext.GetGuildAsync(guildUser.Guild.Id);
+
+            if (dbGuild.MutedRoleId.HasValue && await _ffaContext.Mutes.AnyAsync(x => x.GuildId == guildUser.Id && x.UserId == guildUser.Id))
             {
-                var mutedRole = guildUser.Guild.GetRole(_credentials.MutedRoleId);
+                var mutedRole = guildUser.Guild.GetRole(dbGuild.MutedRoleId.Value);
 
                 await guildUser.AddRoleAsync(mutedRole);
             }

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public sealed class Sender
+    public sealed class SendingService
     {
         private readonly ThreadLocal<Random> _random;
         private readonly Configuration _configuration;
 
-        public Sender(ThreadLocal<Random> random, Configuration configuration)
+        public SendingService(ThreadLocal<Random> random, Configuration configuration)
         {
             _random = random;
             _configuration = configuration;
@@ -31,7 +31,7 @@ namespace FFA.Services
         }
 
         public Task ReplyAsync(IUser user, IMessageChannel channel, string description, string title = null, Color? color = null)
-            => SendAsync(channel, user.Tag() + ", " + description, title, color);
+            => SendAsync(channel, $"{user.Tag()}, {description}", title, color);
 
         public Task ReplyErrorAsync(IUser user, IMessageChannel channel, string description)
             => ReplyAsync(user, channel, description, null, _configuration.ErrorColor);

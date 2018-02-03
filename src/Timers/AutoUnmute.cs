@@ -1,7 +1,8 @@
 ﻿using Discord.WebSocket;
-using FFA.Common;
 using FFA.Database;
 using FFA.Database.Models;
+using FFA.Services;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 
@@ -10,16 +11,16 @@ namespace FFA.Timers
     public class AutoUnmute
     {
         private readonly DiscordSocketClient _client;
-        private readonly Credentials _credentials;
         private readonly FFAContext _ffaContext;
+        private readonly ModerationService _moderationService;
         private readonly Timer _timer;
         private readonly AutoResetEvent _autoEvent;
 
-        public AutoUnmute(DiscordSocketClient client, Credentials credentials, FFAContext ffaContext)
+        public AutoUnmute(DiscordSocketClient client, FFAContext ffaContext, ModerationService moderationService)
         {
-            _credentials = credentials;
             _client = client;
             _ffaContext = ffaContext;
+            _moderationService = moderationService;
             _autoEvent = new AutoResetEvent(false);
             // TODO: put auto unnut length in configuration
             _timer = new Timer(Execute, _autoEvent, 0, 60000);
@@ -27,21 +28,29 @@ namespace FFA.Timers
 
         private async void Execute(object state)
         {
-            var guild = _client.GetGuild(_credentials.GuildId);
-            var mutedRole = guild.GetRole(_credentials.MutedRoleId);
-
-            // TODO: safe to remove during iteration?
-            foreach (var mute in _ffaContext.Mutes)
+            foreach (var guild in _client.Guilds)
             {
-                if (mute.EndsAt.Subtract(DateTime.UtcNow).Ticks <= 0)
+                var dbGuild = await _ffaContext.GetGuildAsync(guild.Id);
+
+                if (dbGuild.MutedRoleId.HasValue)
                 {
-                    await _ffaContext.RemoveAsync<Mute>(mute.Id);
+                    var mutedRole = guild.GetRole(dbGuild.MutedRoleId.Value);
+                    var mutes = await _ffaContext.Mutes.ToListAsync();
 
-                    var guildUser = guild.GetUser(mute.UserId);
-
-                    if (guildUser != null)
+                    foreach (var mute in mutes)
                     {
-                        await guildUser.RemoveRoleAsync(mutedRole);
+                        if (mute.EndsAt.Subtract(DateTime.UtcNow).Ticks <= 0)
+                        {
+                            await _ffaContext.RemoveAsync<Mute>(mute.Id);
+
+                            var guildUser = guild.GetUser(mute.UserId);
+
+                            if (guildUser != null)
+                            {
+                                await guildUser.RemoveRoleAsync(mutedRole);
+                                await _moderationService.LogUnmute(guild, _client.CurrentUser, guildUser);
+                            }
+                        }
                     }
                 }
             }

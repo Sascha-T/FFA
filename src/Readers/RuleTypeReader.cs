@@ -19,14 +19,14 @@ namespace FFA.Readers
             }
 
             var ffaContext = services.GetRequiredService<FFAContext>();
-            var groups = ffaContext.Rules.OrderBy((x) => x.Category).GroupBy((x) => x.Category).ToArray();
+            var groups = ffaContext.Rules.OrderBy(x => x.Category).GroupBy(x => x.Category).ToArray();
             
             if (groups.Length < categoryNumber || categoryNumber <= 0)
             {
                 return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid rule category number."));
             }
 
-            var group = groups[categoryNumber - 1].OrderBy((x) => x.Content).ToArray();
+            var group = groups[categoryNumber - 1].OrderBy(x => x.Content).ToArray();
 
             if (input[1] < 'a' || input[1] > 'a' + group.Length - 1)
             {

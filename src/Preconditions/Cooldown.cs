@@ -13,7 +13,7 @@ namespace FFA.Preconditions
 
         public CooldownAttribute(int hours)
         {
-            _cooldownLength = TimeSpan.FromSeconds(hours);
+            _cooldownLength = TimeSpan.FromHours(hours);
         }
 
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value, IServiceProvider services)

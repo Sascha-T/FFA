@@ -6,7 +6,7 @@ namespace FFA.Extensions
     {
         public static string Tag(this IUser user)
         {
-            return "**" + user.Username + user.Discriminator + "**";
+            return $"**{user.Username}#{user.Discriminator}**";
         }
     }
 }

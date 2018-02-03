@@ -13,7 +13,7 @@ namespace FFA.Readers
         {
             var numberMatch = numberRegex.Match(input);
 
-            if (!numberMatch.Success || !uint.TryParse(numberMatch.Value, out uint result))
+            if (!numberMatch.Success || !double.TryParse(numberMatch.Value, out double result) || result <= 0)
             {
                 return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid time."));
             }

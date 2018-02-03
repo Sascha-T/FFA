@@ -11,12 +11,12 @@ namespace FFA.Common
     public class Context : SocketCommandContext
     {
         private readonly IServiceProvider _provider;
-        private readonly Sender _sender;
+        private readonly SendingService _sender;
 
         public Context(DiscordSocketClient client, SocketUserMessage msg, IServiceProvider provider) : base(client, msg)
         {
             _provider = provider;
-            _sender = _provider.GetRequiredService<Sender>();
+            _sender = _provider.GetRequiredService<SendingService>();
         }
 
         public async Task DmAsync(string description, string title = null)

@@ -8,9 +8,9 @@ namespace FFA.Events
     public sealed class ClientLog
     {
         private readonly DiscordSocketClient _client;
-        private readonly Logger _logger;
+        private readonly LoggingService _logger;
 
-        public ClientLog(DiscordSocketClient client, Logger logger)
+        public ClientLog(DiscordSocketClient client, LoggingService logger)
         {
             _client = client;
             _logger = logger;

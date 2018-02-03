@@ -26,6 +26,7 @@ namespace FFA
         public async Task StartAsync(string[] args)
         {
             var parsedArgs = await Arguments.ParseAsync(args);
+            // TODO: settings to throw on unfound prop
             var config = JsonConvert.DeserializeObject<Configuration>(parsedArgs[0]);
             var credentials = JsonConvert.DeserializeObject<Credentials>(parsedArgs[1]);
 
@@ -44,14 +45,16 @@ namespace FFA
             
             var services = new ServiceCollection()
                 .AddDbContext<FFAContext>(ServiceLifetime.Transient)
-                .AddSingleton<Logger>()
+                .AddSingleton<LoggingService>()
                 .AddSingleton(client)
                 .AddSingleton(commandService)
                 .AddSingleton(new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode())))
                 .AddSingleton(config)
                 .AddSingleton(credentials)
-                .AddSingleton<Sender>()
+                .AddSingleton<SendingService>()
+                .AddSingleton<RulesService>()
                 .AddSingleton<MessageReceived>()
+                .AddSingleton<ModerationService>()
                 .AddSingleton<ClientLog>()
                 .AddSingleton<CommandLog>()
                 .AddSingleton<Ready>()
@@ -65,7 +68,6 @@ namespace FFA
             await client.LoginAsync(TokenType.Bot, credentials.Token);
             await client.StartAsync();
 
-            // TODO: reflexion?
             provider.GetRequiredService<MessageReceived>();
             provider.GetRequiredService<ClientLog>();
             provider.GetRequiredService<CommandLog>();
