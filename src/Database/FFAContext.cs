@@ -75,7 +75,6 @@ namespace FFA.Database
             => await UpdateAsync(await Set<T>().FirstAsync(predicate), update);
 
         // User methods
-        // TODO: prettier solution to this ensuring guild creation
         public Task<User> GetUserAsync(ulong id, ulong guildId)
             => GetAsync<User>(id, x =>
             {
