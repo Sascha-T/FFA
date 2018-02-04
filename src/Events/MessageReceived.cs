@@ -35,7 +35,7 @@ namespace FFA.Events
 
             int argPos = 0;
 
-            if (msg.HasStringPrefix(Configuration.Prefix, ref argPos))
+            if (msg.HasStringPrefix(Configuration.PREFIX, ref argPos))
             {
                 var result = await _commandService.ExecuteAsync(context, argPos, _provider);
 
@@ -52,8 +52,8 @@ namespace FFA.Events
                             var cmd = _commandService.GetCommand(context, argPos);
 
                             message = $"You are incorrectly using this command.\n" +
-                                      $"**Usage:** `{Configuration.Prefix}{cmd.GetUsage()}`\n" +
-                                      $"**Example:** `{Configuration.Prefix}{cmd.GetExample()}`";
+                                      $"**Usage:** `{Configuration.PREFIX}{cmd.GetUsage()}`\n" +
+                                      $"**Example:** `{Configuration.PREFIX}{cmd.GetExample()}`";
                             break;
                         default:
                             message = result.ErrorReason;

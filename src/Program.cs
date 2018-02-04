@@ -27,8 +27,7 @@ namespace FFA
         public async Task StartAsync(string[] args)
         {
             var parsedArgs = await Arguments.ParseAsync(args);
-            // TODO: settings to throw on unfound prop
-            var credentials = JsonConvert.DeserializeObject<Credentials>(parsedArgs[1]);
+            var credentials = JsonConvert.DeserializeObject<Credentials>(parsedArgs[0], Configuration.JSON_SETTINGS);
 
             var client = new DiscordSocketClient(new DiscordSocketConfig
             {
@@ -63,7 +62,7 @@ namespace FFA
                 .AddSingleton<AutoUnmute>();
 
             var provider = services.BuildServiceProvider();
-            
+
             commandService.AddTypeReader<Rule>(new RuleTypeReader());
             commandService.AddTypeReader<TimeSpan>(new TimeSpanTypeReader());
             await commandService.AddModulesAsync(Assembly.GetEntryAssembly());

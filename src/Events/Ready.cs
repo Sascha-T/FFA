@@ -24,7 +24,7 @@ namespace FFA.Events
         {
             _provider.GetRequiredService<AutoUnmute>();
 
-            return _client.SetGameAsync(Configuration.Game);
+            return _client.SetGameAsync(Configuration.GAME);
         }
     }
 }

@@ -36,8 +36,8 @@ namespace FFA.Modules
                 else
                 {
                     await Context.SendAsync($"**Description:** {cmd.Summary}\n" +
-                                            $"**Usage:** `{Configuration.Prefix}{cmd.GetUsage()}`\n" +
-                                            $"**Example:** `{Configuration.Prefix}{cmd.GetExample()}`");
+                                            $"**Usage:** `{Configuration.PREFIX}{cmd.GetUsage()}`\n" +
+                                            $"**Example:** `{Configuration.PREFIX}{cmd.GetExample()}`");
                 }
             }
             else
@@ -47,7 +47,7 @@ namespace FFA.Modules
 
                 foreach (var command in _commandService.Commands.OrderBy(x => x.Name))
                 {
-                    description += $"{Configuration.Prefix}{command.Name.PadRight(padding)}{command.Summary}\n";
+                    description += $"{Configuration.PREFIX}{command.Name.PadRight(padding)}{command.Summary}\n";
                 }
 
                 await Context.DmAsync($"{description}```", "Commands");

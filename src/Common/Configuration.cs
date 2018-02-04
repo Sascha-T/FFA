@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -7,22 +8,23 @@ namespace FFA.Common
     public static class Configuration
     {
         // Command handler
-        public const string Prefix = ";";
+        public const string PREFIX = ";";
 
         // Current user
-        public const string Game = Prefix + "help";
+        public const string GAME = PREFIX + "help";
         
         // Moderation
-        public const int TopReputation = 20, MinimumMuteLength = 1;
+        public const int TOP_REP = 20, MIN_MUTE_LENGTH = 1;
 
         // Cooldowns
-        public const int RepCooldown = 24, UnRepCooldown = 24;
+        public const int REP_COOLDOWN = 24, UNREP_COOLDOWN = 24;
 
         // Custom colors
-        public static readonly Color ErrorColor = new Color(0xFF0000), MuteColor = new Color(0xFF3E29), UnmuteColor = new Color(0xFF3E29);
+        public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65);
 
         // Default colors
-        public static readonly IReadOnlyList<Color> Colors = new Color[]
+        // TODO: more colors!!!
+        public static readonly IReadOnlyList<Color> DEFAULT_COLORS = new Color[]
         {
             new Color(0xFF269A),
             new Color(0x00FF00),
@@ -36,5 +38,11 @@ namespace FFA.Common
             new Color(0x9624ED),
             new Color(0xA8ED00)
         }.ToImmutableArray();
+
+        // JSON serialization
+        public static readonly JsonSerializerSettings JSON_SETTINGS = new JsonSerializerSettings
+        {
+            MissingMemberHandling = MissingMemberHandling.Error
+        };
     }
 }

@@ -25,7 +25,7 @@ namespace FFA.Services
 
             var builder = new EmbedBuilder
             {
-                Color = color ?? _random.Value.ArrayElement(Configuration.Colors),
+                Color = color ?? _random.Value.ArrayElement(Configuration.DEFAULT_COLORS),
                 Description = description,
                 Title = title
             };
@@ -37,6 +37,6 @@ namespace FFA.Services
             => SendAsync(channel, $"{user.Bold()}, {description}", title, color);
 
         public Task ReplyErrorAsync(IUser user, IMessageChannel channel, string description)
-            => ReplyAsync(user, channel, description, null, Configuration.ErrorColor);
+            => ReplyAsync(user, channel, description, null, Configuration.ERROR_COLOR);
     }
 }

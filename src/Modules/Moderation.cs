@@ -14,7 +14,7 @@ namespace FFA.Modules
 {
     [Name("Moderation")]
     [GuildOnly]
-    [Top(Configuration.TopReputation)]
+    [Top(Configuration.TOP_REP)]
     public sealed class Moderation : ModuleBase<Context>
     {
         private readonly FFAContext _ffaContext;
@@ -31,7 +31,7 @@ namespace FFA.Modules
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task MuteAsync([Summary("Jimbo#5555")] IGuildUser guildUser, 
                                     [Summary("2c")] Rule rule, 
-                                    [Summary("8h")] [MinimumHours(Configuration.MinimumMuteLength)] TimeSpan length, 
+                                    [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] TimeSpan length, 
                                     [Summary("stop with all that ruckus!")] [Remainder] string reason = null)
         {
             var dbGuild = await _ffaContext.GetGuildAsync(Context.Guild.Id);

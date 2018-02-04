@@ -31,7 +31,7 @@ namespace FFA.Services
                               (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}\n") +
                               $"**Length:** {length.TotalHours}h";
 
-            return Log(guild, author, description, Configuration.MuteColor);
+            return Log(guild, author, description, Configuration.MUTE_COLOR);
         }
         
         public Task LogUnmute(IGuild guild, IUser moderator, IUser subject, string reason = null)
@@ -46,7 +46,7 @@ namespace FFA.Services
                               $"**User:** {subject} ({subject.Id})\n" +
                               (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}");
 
-            return Log(guild, author, description, Configuration.UnmuteColor);
+            return Log(guild, author, description, Configuration.UNMUTE_COLOR);
         }
 
         public async Task Log(IGuild guild, EmbedAuthorBuilder author, string description, Color color)
