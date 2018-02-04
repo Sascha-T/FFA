@@ -1,6 +1,6 @@
 ﻿using Discord.WebSocket;
-using FFA.Common;
 using FFA.Database;
+using FFA.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -26,6 +26,11 @@ namespace FFA.Events
             if (dbGuild.MutedRoleId.HasValue && await _ffaContext.Mutes.AnyAsync(x => x.GuildId == guildUser.Id && x.UserId == guildUser.Id))
             {
                 var mutedRole = guildUser.Guild.GetRole(dbGuild.MutedRoleId.Value);
+
+                if (mutedRole == null || !mutedRole.CanUseRole())
+                {
+                    return;
+                }
 
                 await guildUser.AddRoleAsync(mutedRole);
             }

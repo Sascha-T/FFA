@@ -2,6 +2,7 @@
 using FFA.Common;
 using FFA.Database;
 using FFA.Database.Models;
+using FFA.Extensions;
 using System;
 using System.Threading.Tasks;
 
@@ -57,6 +58,11 @@ namespace FFA.Services
             if (dbGuild.LogChannelId.HasValue)
             {
                 var logChannel = await guild.GetChannelAsync(dbGuild.LogChannelId.Value) as ITextChannel;
+
+                if (logChannel == null || !await logChannel.CanSend())
+                {
+                    return;
+                }
 
                 var builder = new EmbedBuilder()
                 {

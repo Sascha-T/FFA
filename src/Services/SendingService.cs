@@ -18,8 +18,13 @@ namespace FFA.Services
             _configuration = configuration;
         }
 
-        public Task SendAsync(IMessageChannel channel, string description, string title = null, Color? color = null)
+        public async Task SendAsync(IMessageChannel channel, string description, string title = null, Color? color = null)
         {
+            if (channel is ITextChannel textChannel && !await textChannel.CanSend())
+            {
+                return;
+            }
+
             var builder = new EmbedBuilder
             {
                 Color = color ?? _random.Value.ArrayElement(_configuration.Colors),
@@ -27,7 +32,7 @@ namespace FFA.Services
                 Title = title
             };
 
-            return channel.SendMessageAsync("", false, builder.Build());
+            await channel.SendMessageAsync("", false, builder.Build());
         }
 
         public Task ReplyAsync(IUser user, IMessageChannel channel, string description, string title = null, Color? color = null)

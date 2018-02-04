@@ -15,5 +15,6 @@
     "ErrorColor": 16711680,
     "MuteColor": 16727593,
     "UnmuteColor": 7536485,
-    "Prefix": ";"
+    "Prefix": ";",
+    "Game":  ";help"
 }

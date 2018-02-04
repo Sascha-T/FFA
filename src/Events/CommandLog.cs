@@ -43,6 +43,7 @@ namespace FFA.Events
                 await _sender.ReplyErrorAsync(commandException.Context.User, commandException.Context.Channel, message);
             }
 
+            // TODO: some brilliant solution to not log on httpexception with nice boolean logic
             await _logger.LogAsync(msg.Severity, $"{msg.Source}: {(msg.Exception?.ToString() ?? msg.Message)}");
         }
     }

@@ -5,7 +5,6 @@ using FFA.Extensions;
 using FFA.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading;
 
 namespace FFA.Timers

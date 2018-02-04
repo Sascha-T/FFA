@@ -5,9 +5,11 @@ namespace FFA.Common
     public class Configuration
     {
         // TODO: JSON reader for Color type
-        public Configuration(char prefix, uint[] colors, uint errorColor, uint muteColor, uint unmuteColor)
+        // TODO: constant static config file?
+        public Configuration(char prefix, string game, uint[] colors, uint errorColor, uint muteColor, uint unmuteColor)
         {
             Prefix = prefix;
+            Game = game;
             Colors = new Color[colors.Length];
             
             for (var i = 0; i < colors.Length; i++)
@@ -21,6 +23,7 @@ namespace FFA.Common
         }
 
         public char Prefix { get; set; }
+        public string Game { get; set; }
         public Color[] Colors { get; set; }
         public Color ErrorColor { get; set; }
         public Color MuteColor { get; set; }
