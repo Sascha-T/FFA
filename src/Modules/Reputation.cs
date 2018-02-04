@@ -23,10 +23,10 @@ namespace FFA.Modules
         }
 
         [Command("Mod")]
-        [Summary("Informs you whether or not you are a moderator.")]
+        [Summary("Informs you whether you are a moderator.")]
         public async Task Mod()
         {
-            if (await _repService.IsInTop(20, Context.User.Id, Context.Guild.Id))
+            if (await _repService.IsInTop(Configuration.TopReputation, Context.User.Id, Context.Guild.Id))
             {
                 await Context.ReplyAsync("You are currently a moderator.");
             }
@@ -38,7 +38,7 @@ namespace FFA.Modules
 
         [Command("Rep")]
         [Summary("Give reputation to any user.")]
-        public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(24)] [NoSelf] IGuildUser user)
+        public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(Configuration.RepCooldown)] [NoSelf] IGuildUser user)
         {
             await _ffaContext.UpsertUserAsync(user, x => x.Reputation++);
             await Context.ReplyAsync($"You have successfully repped {user.Bold()}.");
@@ -46,7 +46,7 @@ namespace FFA.Modules
 
         [Command("UnRep")]
         [Summary("Remove reputation from any user.")]
-        public async Task UnRepAsync([Summary("PapaFag#6666")] [Cooldown(24)] [NoSelf] IGuildUser user)
+        public async Task UnRepAsync([Summary("PapaFag#6666")] [Cooldown(Configuration.UnRepCooldown)] [NoSelf] IGuildUser user)
         {
             await _ffaContext.UpsertUserAsync(user, x => x.Reputation--);
             await Context.ReplyAsync($"You have successfully unrepped {user.Bold()}.");

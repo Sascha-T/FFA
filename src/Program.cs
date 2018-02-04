@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace FFA
 {
+    // TODO: use more d.net interfaces instead of direct stuff!
     public class Program
     {
         static void Main(string[] args)
@@ -62,7 +63,7 @@ namespace FFA
                 .AddSingleton<AutoUnmute>();
 
             var provider = services.BuildServiceProvider();
-
+            
             commandService.AddTypeReader<Rule>(new RuleTypeReader());
             commandService.AddTypeReader<TimeSpan>(new TimeSpanTypeReader());
             await commandService.AddModulesAsync(Assembly.GetEntryAssembly());
