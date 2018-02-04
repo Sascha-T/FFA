@@ -55,27 +55,29 @@ namespace FFA.Services
         {
             var dbGuild = await _ffaContext.GetGuildAsync(guild.Id);
 
-            if (dbGuild.LogChannelId.HasValue)
+            if (!dbGuild.LogChannelId.HasValue)
             {
-                var logChannel = await guild.GetChannelAsync(dbGuild.LogChannelId.Value) as ITextChannel;
-
-                if (logChannel == null || !await logChannel.CanSend())
-                {
-                    return;
-                }
-
-                var builder = new EmbedBuilder()
-                {
-                    Author = author,
-                    Timestamp = DateTimeOffset.Now,
-                    Footer = new EmbedFooterBuilder{ Text = $"Case #{dbGuild.LogCase}" },
-                    Description = description,
-                    Color = color
-                };
-
-                await logChannel.SendMessageAsync("", false, builder.Build());
-                await _ffaContext.UpdateAsync(dbGuild, x => x.LogCase++);
+                return;
             }
+
+            var logChannel = await guild.GetChannelAsync(dbGuild.LogChannelId.Value) as ITextChannel;
+
+            if (logChannel == null || !await logChannel.CanSend())
+            {
+                return;
+            }
+
+            var builder = new EmbedBuilder()
+            {
+                Author = author,
+                Timestamp = DateTimeOffset.Now,
+                Footer = new EmbedFooterBuilder { Text = $"Case #{dbGuild.LogCase}" },
+                Description = description,
+                Color = color
+            };
+
+            await logChannel.SendMessageAsync("", false, builder.Build());
+            await _ffaContext.UpdateAsync(dbGuild, x => x.LogCase++);
         }
     }
 }
