@@ -14,7 +14,7 @@ namespace FFA.Modules
 {
     [Name("Moderation")]
     [GuildOnly]
-    [TopTwenty]
+    [Top(20)]
     public sealed class Moderation : ModuleBase<Context>
     {
         private readonly FFAContext _ffaContext;
@@ -52,7 +52,7 @@ namespace FFA.Modules
             {
                 await guildUser.AddRoleAsync(Context.Guild.GetRole(dbGuild.MutedRoleId.Value));
                 await _ffaContext.AddAsync(new Mute(Context.Guild.Id, guildUser.Id, DateTime.UtcNow.Add(length)));
-                await Context.ReplyAsync($"You have successfully muted {guildUser.Tag()}.");
+                await Context.ReplyAsync($"You have successfully muted {guildUser.Bold()}.");
                 await _moderationService.LogMute(Context.Guild, Context.User, guildUser, rule, length, reason);
             }
         }
@@ -77,7 +77,7 @@ namespace FFA.Modules
             {
                 await _ffaContext.RemoveAsync<Mute>(x => x.UserId == guildUser.Id);
                 await guildUser.RemoveRoleAsync(Context.Guild.GetRole(dbGuild.MutedRoleId.Value));
-                await Context.ReplyAsync($"You have successfully unmuted {guildUser.Tag()}.");
+                await Context.ReplyAsync($"You have successfully unmuted {guildUser.Bold()}.");
                 await _moderationService.LogUnmute(Context.Guild, Context.User, guildUser, reason);
             }
         }

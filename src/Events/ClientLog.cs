@@ -10,6 +10,7 @@ namespace FFA.Events
         private readonly DiscordSocketClient _client;
         private readonly LoggingService _logger;
 
+        // TODO: switch all events/timers to take in service provider in constructor
         public ClientLog(DiscordSocketClient client, LoggingService logger)
         {
             _client = client;

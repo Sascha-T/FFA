@@ -2,7 +2,6 @@
 using FFA.Common;
 using FFA.Database;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FFA.Events
@@ -11,13 +10,11 @@ namespace FFA.Events
     {
         private readonly DiscordSocketClient _client;
         private readonly FFAContext _ffaContext;
-        private readonly Credentials _credentials;
 
-        public UserJoined(DiscordSocketClient client, FFAContext ffaContext, Credentials credentials)
+        public UserJoined(DiscordSocketClient client, FFAContext ffaContext)
         {
             _client = client;
             _ffaContext = ffaContext;
-            _credentials = credentials;
 
             _client.UserJoined += OnUserJoinedAsync;
         }

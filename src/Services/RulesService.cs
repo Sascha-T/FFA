@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using FFA.Database;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,10 +27,11 @@ namespace FFA.Services
                 var rulesChannel = await guild.GetChannelAsync(dbGuild.RulesChannelId.Value) as SocketTextChannel;
                 var messages = await rulesChannel.GetMessagesAsync().FlattenAsync();
                 await rulesChannel.DeleteMessagesAsync(messages);
+                var rules = await _ffaContext.Rules.ToListAsync();
 
                 int i = 0;
 
-                foreach (var group in _ffaContext.Rules.Where(x => x.GuildId == guild.Id).OrderBy(x => x.Category).GroupBy(x => x.Category))
+                foreach (var group in rules.Where(x => x.GuildId == guild.Id).OrderBy(x => x.Category).GroupBy(x => x.Category))
                 {
                     int j = 0;
                     var description = string.Empty;
@@ -41,6 +43,7 @@ namespace FFA.Services
                     }
 
                     await _sender.SendAsync(rulesChannel, description, $"{++i}. {group.First().Category}:");
+                    await Task.Delay(1000);
                 }
             }
         }

@@ -55,6 +55,7 @@ namespace FFA
                 .AddSingleton<RulesService>()
                 .AddSingleton<MessageReceived>()
                 .AddSingleton<ModerationService>()
+                .AddSingleton<ReputationService>()
                 .AddSingleton<ClientLog>()
                 .AddSingleton<CommandLog>()
                 .AddSingleton<Ready>()

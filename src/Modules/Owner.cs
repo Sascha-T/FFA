@@ -3,7 +3,6 @@ using Discord.Commands;
 using FFA.Common;
 using FFA.Database;
 using FFA.Database.Models;
-using FFA.Preconditions;
 using FFA.Services;
 using System;
 using System.Threading.Tasks;
@@ -11,6 +10,7 @@ using System.Threading.Tasks;
 namespace FFA.Modules
 {
     [Name("Owner")]
+    // TODO: remove comment when release
     //[GuildOwner]
     public sealed class Owner : ModuleBase<Context>
     {
