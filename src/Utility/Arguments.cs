@@ -6,6 +6,7 @@ namespace FFA.Utility
 {
     public static class Arguments
     {
+        // TODO: proper parsing instead of reading files inside parser LOL
         public static async Task<string[]> ParseAsync(string[] args)
         {
             var configFile = "Configuration.json";

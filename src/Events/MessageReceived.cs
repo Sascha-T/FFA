@@ -48,6 +48,7 @@ namespace FFA.Events
                     switch (result.Error.Value)
                     {
                         case CommandError.UnknownCommand:
+                            // TODO: check for command similarity
                             return;
                         case CommandError.BadArgCount:
                             var cmd = _commandService.GetCommand(context, argPos);

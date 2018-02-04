@@ -43,6 +43,8 @@ namespace FFA
                 IgnoreExtraArgs = true
             });
             
+            // TODO: reorganize ordering of additions to service collection
+            // TODO: reflexion to add all services/events/timers
             var services = new ServiceCollection()
                 .AddDbContext<FFAContext>(ServiceLifetime.Transient)
                 .AddSingleton<LoggingService>()
