@@ -34,7 +34,7 @@ namespace FFA.Timers
             {
                 var dbGuild = await _ffaContext.GetGuildAsync(guild.Id);
 
-                if (dbGuild.MutedRoleId.HasValue)
+                if (!dbGuild.MutedRoleId.HasValue)
                 {
                     return;
                 }
