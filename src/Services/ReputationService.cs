@@ -1,5 +1,7 @@
 ﻿using FFA.Database;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FFA.Services
 {
@@ -12,11 +14,11 @@ namespace FFA.Services
             _ffaContext = ffaContext;
         }
 
-        public bool IsInTop(int count, ulong userId, ulong guildId)
+        public async Task<bool> IsInTop(int count, ulong userId, ulong guildId)
         {
             var topUsers = _ffaContext.Users.Where(x => x.GuildId == guildId).OrderByDescending(x => x.Reputation).Take(count);
-
-            return topUsers.Any(x => x.Id == userId);
+            
+            return await topUsers.AnyAsync(x => x.Id == userId);
         }
     }
 }

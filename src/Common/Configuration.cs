@@ -10,7 +10,7 @@ namespace FFA.Common
             Prefix = prefix;
             Colors = new Color[colors.Length];
             
-            for (int i = 0; i < colors.Length; i++)
+            for (var i = 0; i < colors.Length; i++)
             {
                 Colors[i] = new Color(colors[i]);
             }

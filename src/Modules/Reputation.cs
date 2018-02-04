@@ -24,15 +24,15 @@ namespace FFA.Modules
 
         [Command("Mod")]
         [Summary("Informs you whether or not you are a moderator.")]
-        public Task Mod()
+        public async Task Mod()
         {
-            if (_repService.IsInTop(20, Context.User.Id, Context.Guild.Id))
+            if (await _repService.IsInTop(20, Context.User.Id, Context.Guild.Id))
             {
-                return Context.ReplyAsync("You are currently a moderator.");
+                await Context.ReplyAsync("You are currently a moderator.");
             }
             else
             {
-                return Context.ReplyErrorAsync("You are currently not a moderator.");
+                await Context.ReplyErrorAsync("You are currently not a moderator.");
             }
         }
 

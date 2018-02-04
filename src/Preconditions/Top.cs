@@ -15,16 +15,16 @@ namespace FFA.Preconditions
             _count = count;
         }
 
-        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
             var repService = services.GetRequiredService<ReputationService>();
 
-            if (!repService.IsInTop(_count, context.User.Id, context.Guild.Id))
+            if (!await repService.IsInTop(_count, context.User.Id, context.Guild.Id))
             {
-                return Task.FromResult(PreconditionResult.FromError($"This command may only be used by the top {_count} most reputable users."));
+                return PreconditionResult.FromError($"This command may only be used by the top {_count} most reputable users.");
             }
 
-            return Task.FromResult(PreconditionResult.FromSuccess());
+            return PreconditionResult.FromSuccess();
         }
     }
 }

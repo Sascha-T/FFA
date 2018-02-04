@@ -1,9 +1,11 @@
 ﻿using Discord.WebSocket;
 using FFA.Database;
 using FFA.Database.Models;
+using FFA.Extensions;
 using FFA.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 
 namespace FFA.Timers
@@ -34,22 +36,31 @@ namespace FFA.Timers
 
                 if (dbGuild.MutedRoleId.HasValue)
                 {
-                    var mutedRole = guild.GetRole(dbGuild.MutedRoleId.Value);
-                    var mutes = await _ffaContext.Mutes.ToListAsync();
+                    return;
+                }
 
-                    foreach (var mute in mutes)
+                var mutedRole = guild.GetRole(dbGuild.MutedRoleId.Value);
+
+                if (mutedRole == null || !mutedRole.CanUseRole())
+                {
+                    return;
+                }
+
+                var mutes = await _ffaContext.Mutes.ToListAsync();
+
+                foreach (var mute in mutes)
+                {
+                    if (mute.EndsAt.Subtract(DateTime.UtcNow).Ticks <= 0)
                     {
-                        if (mute.EndsAt.Subtract(DateTime.UtcNow).Ticks <= 0)
+                        await _ffaContext.RemoveAsync<Mute>(mute.Id);
+
+                        var guildUser = guild.GetUser(mute.UserId);
+
+                        if (guildUser != null)
                         {
-                            await _ffaContext.RemoveAsync<Mute>(mute.Id);
-
-                            var guildUser = guild.GetUser(mute.UserId);
-
-                            if (guildUser != null)
-                            {
-                                await guildUser.RemoveRoleAsync(mutedRole);
-                                await _moderationService.LogUnmute(guild, _client.CurrentUser, guildUser);
-                            }
+                            await guildUser.RemoveRoleAsync(mutedRole);
+                            // TODO: specialized log for auto unmute
+                            await _moderationService.LogUnmute(guild, _client.CurrentUser, guildUser);
                         }
                     }
                 }

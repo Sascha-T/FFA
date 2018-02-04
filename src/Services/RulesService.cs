@@ -27,22 +27,20 @@ namespace FFA.Services
                 var rulesChannel = await guild.GetChannelAsync(dbGuild.RulesChannelId.Value) as SocketTextChannel;
                 var messages = await rulesChannel.GetMessagesAsync().FlattenAsync();
                 await rulesChannel.DeleteMessagesAsync(messages);
-                var rules = await _ffaContext.Rules.ToListAsync();
+                var groups = await _ffaContext.Rules.Where(x => x.GuildId == guild.Id).OrderBy(x => x.Category).GroupBy(x => x.Category).ToListAsync();
 
-                int i = 0;
-
-                foreach (var group in rules.Where(x => x.GuildId == guild.Id).OrderBy(x => x.Category).GroupBy(x => x.Category))
+                for (var i = 0; i < groups.Count; i++)
                 {
-                    int j = 0;
                     var description = string.Empty;
+                    var j = 0;
 
-                    foreach (var rule in group.OrderBy(x => x.Content))
+                    foreach (var rule in groups[i].OrderBy(x => x.Content))
                     {
                         description += $"**{(char)('a' + j++)}.** {rule.Content} " +
                                        $"({(rule.MaxMuteLength.HasValue ? rule.MaxMuteLength.Value.TotalHours + "h" : "Bannable")})\n";
                     }
 
-                    await _sender.SendAsync(rulesChannel, description, $"{++i}. {group.First().Category}:");
+                    await _sender.SendAsync(rulesChannel, description, $"{i}. {groups[0].First().Category}:");
                     await Task.Delay(1000);
                 }
             }

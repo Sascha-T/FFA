@@ -11,7 +11,7 @@ namespace FFA.Utility
             var configFile = "Configuration.json";
             var credentialsFile = "Credentials.json";
 
-            for (int i = 0; i < args.Length; i++)
+            for (var i = 0; i < args.Length; i++)
             {
                 if (args[i] == "-c" || args[i] == "--conf")
                 {

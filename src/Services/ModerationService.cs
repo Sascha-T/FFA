@@ -17,8 +17,7 @@ namespace FFA.Services
             _ffaContext = ffaContext;
             _config = config;
         }
-
-        // TODO: color from config
+        
         public Task LogMute(IGuild guild, IUser moderator, IUser subject, Rule rule, TimeSpan length, string reason = null)
         {
             var author = new EmbedAuthorBuilder
@@ -35,8 +34,7 @@ namespace FFA.Services
 
             return Log(guild, author, description, _config.MuteColor);
         }
-
-        // TODO: color from config
+        
         public Task LogUnmute(IGuild guild, IUser moderator, IUser subject, string reason = null)
         {
             var author = new EmbedAuthorBuilder
