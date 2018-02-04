@@ -28,8 +28,8 @@ namespace FFA.Modules
             if (!string.IsNullOrWhiteSpace(commandName))
             {
                 var cmd = _commandService.Commands.FirstOrDefault(x 
-                            => string.Equals(x.Name, commandName, StringComparison.OrdinalIgnoreCase) || 
-                               x.Aliases.Any(y => string.Equals(y, commandName, StringComparison.OrdinalIgnoreCase)));
+                            => x.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase) || 
+                               x.Aliases.Any(y => y.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
 
                 if (cmd == default(CommandInfo))
                 {
@@ -52,7 +52,7 @@ namespace FFA.Modules
                     description += $"{_config.Prefix}{command.Name.PadRight(padding)}{command.Summary}\n";
                 }
 
-                await Context.DmAsync(description + "```", "Commands");
+                await Context.DmAsync($"{description}```", "Commands");
 
                 if (!(Context.Channel is IDMChannel))
                 {

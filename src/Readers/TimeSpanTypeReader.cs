@@ -1,5 +1,6 @@
 ﻿using Discord.Commands;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -7,38 +8,33 @@ namespace FFA.Readers
 {
     public class TimeSpanTypeReader : TypeReader
     {
-        private readonly Regex numberRegex = new Regex(@"^\d+(\.\d+)?");
+        private readonly Regex numberRegex = new Regex(@"^\d+(\.\d+)?", RegexOptions.ECMAScript);
+        private readonly Dictionary<string, double> timeMultipliers = new Dictionary<string, double>()
+        {
+            { "ms", TimeSpan.TicksPerMillisecond },
+            { "s", TimeSpan.TicksPerSecond },
+            { "m", TimeSpan.TicksPerMinute },
+            { "d", TimeSpan.TicksPerDay },
+        };
 
         public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
             var numberMatch = numberRegex.Match(input);
 
-            if (!numberMatch.Success || !double.TryParse(numberMatch.Value, out double result) || result <= 0)
+            if (!numberMatch.Success || !ushort.TryParse(numberMatch.Value, out ushort result))
             {
                 return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid time."));
             }
 
-            TimeSpan span;
+            var span = TimeSpan.FromHours(result);
 
-            if (input.EndsWith("ms"))
+            foreach (var pair in timeMultipliers)
             {
-                span = TimeSpan.FromMilliseconds(result);
-            }
-            else if (input.EndsWith('s'))
-            {
-                span = TimeSpan.FromSeconds(result);
-            }
-            else if (input.EndsWith('m'))
-            {
-                span = TimeSpan.FromMinutes(result);
-            }
-            else if (input.EndsWith('d'))
-            {
-                span = TimeSpan.FromDays(result);
-            }
-            else
-            {
-                span = TimeSpan.FromHours(result);
+                if (input.EndsWith(pair.Key))
+                {
+                    span = TimeSpan.FromTicks(result) * pair.Value;
+                    break;
+                }
             }
 
             return Task.FromResult(TypeReaderResult.FromSuccess(span));

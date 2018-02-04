@@ -31,7 +31,7 @@ namespace FFA.Modules
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task MuteAsync([Summary("Jimbo#5555")] IGuildUser guildUser, 
                                     [Summary("2c")] Rule rule, 
-                                    [Summary("8h")] TimeSpan length, 
+                                    [Summary("8h")] [MinimumHours(1)] TimeSpan length, 
                                     [Summary("stop with all that ruckus!")] [Remainder] string reason = null)
         {
             var dbGuild = await _ffaContext.GetGuildAsync(Context.Guild.Id);

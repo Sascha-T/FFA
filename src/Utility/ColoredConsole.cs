@@ -17,6 +17,6 @@ namespace FFA.Utility
         }
 
         public static Task WriteLineAsync(string message, ConsoleColor color)
-            => WriteAsync(message + '\n', color);
+            => WriteAsync($"{message}\n", color);
     }
 }

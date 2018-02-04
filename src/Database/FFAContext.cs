@@ -18,6 +18,7 @@ namespace FFA.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            // TODO: move connection string to credentials
             optionsBuilder.UseSqlite("Data Source=FFA.db");
         }
 
