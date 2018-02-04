@@ -10,12 +10,10 @@ namespace FFA.Services
     public sealed class SendingService
     {
         private readonly ThreadLocal<Random> _random;
-        private readonly Configuration _configuration;
 
-        public SendingService(ThreadLocal<Random> random, Configuration configuration)
+        public SendingService(ThreadLocal<Random> random)
         {
             _random = random;
-            _configuration = configuration;
         }
 
         public async Task SendAsync(IMessageChannel channel, string description, string title = null, Color? color = null)
@@ -27,7 +25,7 @@ namespace FFA.Services
 
             var builder = new EmbedBuilder
             {
-                Color = color ?? _random.Value.ArrayElement(_configuration.Colors),
+                Color = color ?? _random.Value.ArrayElement(Configuration.Colors),
                 Description = description,
                 Title = title
             };
@@ -39,6 +37,6 @@ namespace FFA.Services
             => SendAsync(channel, $"{user.Bold()}, {description}", title, color);
 
         public Task ReplyErrorAsync(IUser user, IMessageChannel channel, string description)
-            => ReplyAsync(user, channel, description, null, _configuration.ErrorColor);
+            => ReplyAsync(user, channel, description, null, Configuration.ErrorColor);
     }
 }

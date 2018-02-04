@@ -12,12 +12,10 @@ namespace FFA.Modules
     public sealed class System : ModuleBase<Context>
     {
         private readonly CommandService _commandService;
-        private readonly Configuration _config;
 
-        public System(CommandService commandService, Configuration config)
+        public System(CommandService commandService)
         {
             _commandService = commandService;
-            _config = config;
         }
 
         [Command("Help")]
@@ -38,8 +36,8 @@ namespace FFA.Modules
                 else
                 {
                     await Context.SendAsync($"**Description:** {cmd.Summary}\n" +
-                                            $"**Usage:** `{_config.Prefix}{cmd.GetUsage()}`\n" +
-                                            $"**Example:** `{_config.Prefix}{cmd.GetExample()}`");
+                                            $"**Usage:** `{Configuration.Prefix}{cmd.GetUsage()}`\n" +
+                                            $"**Example:** `{Configuration.Prefix}{cmd.GetExample()}`");
                 }
             }
             else
@@ -49,7 +47,7 @@ namespace FFA.Modules
 
                 foreach (var command in _commandService.Commands.OrderBy(x => x.Name))
                 {
-                    description += $"{_config.Prefix}{command.Name.PadRight(padding)}{command.Summary}\n";
+                    description += $"{Configuration.Prefix}{command.Name.PadRight(padding)}{command.Summary}\n";
                 }
 
                 await Context.DmAsync($"{description}```", "Commands");

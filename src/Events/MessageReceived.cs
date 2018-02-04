@@ -11,14 +11,12 @@ namespace FFA.Events
     {
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commandService;
-        private readonly Configuration _config;
         private readonly IServiceProvider _provider;
 
-        public MessageReceived(DiscordSocketClient client, CommandService commandService, Configuration config, IServiceProvider provider)
+        public MessageReceived(DiscordSocketClient client, CommandService commandService, IServiceProvider provider)
         {
             _client = client;
             _commandService = commandService;
-            _config = config;
             _provider = provider;
 
             _client.MessageReceived += OnMessageReceivedAsync;
@@ -37,7 +35,7 @@ namespace FFA.Events
 
             int argPos = 0;
 
-            if (msg.HasCharPrefix(_config.Prefix, ref argPos))
+            if (msg.HasStringPrefix(Configuration.Prefix, ref argPos))
             {
                 var result = await _commandService.ExecuteAsync(context, argPos, _provider);
 
@@ -54,8 +52,8 @@ namespace FFA.Events
                             var cmd = _commandService.GetCommand(context, argPos);
 
                             message = $"You are incorrectly using this command.\n" +
-                                      $"**Usage:** `{_config.Prefix}{cmd.GetUsage()}`\n" +
-                                      $"**Example:** `{_config.Prefix}{cmd.GetExample()}`";
+                                      $"**Usage:** `{Configuration.Prefix}{cmd.GetUsage()}`\n" +
+                                      $"**Example:** `{Configuration.Prefix}{cmd.GetExample()}`";
                             break;
                         default:
                             message = result.ErrorReason;

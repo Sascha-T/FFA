@@ -11,12 +11,10 @@ namespace FFA.Services
     public class ModerationService
     {
         private readonly FFAContext _ffaContext;
-        private readonly Configuration _config;
 
-        public ModerationService(FFAContext ffaContext, Configuration config)
+        public ModerationService(FFAContext ffaContext)
         {
             _ffaContext = ffaContext;
-            _config = config;
         }
         
         public Task LogMute(IGuild guild, IUser moderator, IUser subject, Rule rule, TimeSpan length, string reason = null)
@@ -33,7 +31,7 @@ namespace FFA.Services
                               (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}\n") +
                               $"**Length:** {length.TotalHours}h";
 
-            return Log(guild, author, description, _config.MuteColor);
+            return Log(guild, author, description, Configuration.MuteColor);
         }
         
         public Task LogUnmute(IGuild guild, IUser moderator, IUser subject, string reason = null)
@@ -48,7 +46,7 @@ namespace FFA.Services
                               $"**User:** {subject} ({subject.Id})\n" +
                               (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}");
 
-            return Log(guild, author, description, _config.UnmuteColor);
+            return Log(guild, author, description, Configuration.UnmuteColor);
         }
 
         public async Task Log(IGuild guild, EmbedAuthorBuilder author, string description, Color color)

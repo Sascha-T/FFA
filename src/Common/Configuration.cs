@@ -1,32 +1,29 @@
 ﻿using Discord;
+using System.Collections.Immutable;
 
 namespace FFA.Common
 {
-    public class Configuration
+    public static class Configuration
     {
-        // TODO: JSON reader for Color type
-        // TODO: constant static config file?
-        public Configuration(char prefix, string game, uint[] colors, uint errorColor, uint muteColor, uint unmuteColor)
+        public const string Prefix = ";";
+        public const string Game = Prefix + "help";
+        public static readonly Color ErrorColor = new Color(0xFF0000);
+        public static readonly Color MuteColor = new Color(0xFF3E29);
+        public static readonly Color UnmuteColor = new Color(0xFF3E29);
+        public static readonly ImmutableArray<Color> Colors = new ImmutableArray<Color>()
         {
-            Prefix = prefix;
-            Game = game;
-            Colors = new Color[colors.Length];
-            
-            for (var i = 0; i < colors.Length; i++)
-            {
-                Colors[i] = new Color(colors[i]);
-            }
-
-            ErrorColor = new Color(errorColor);
-            MuteColor = new Color(muteColor);
-            UnmuteColor = new Color(unmuteColor);
-        }
-
-        public char Prefix { get; set; }
-        public string Game { get; set; }
-        public Color[] Colors { get; set; }
-        public Color ErrorColor { get; set; }
-        public Color MuteColor { get; set; }
-        public Color UnmuteColor { get; set; }
+            new Color(0xFF269A),
+            new Color(0x00FF00),
+            new Color(0x00E828),
+            new Color(0x08F8FF),
+            new Color(0xF226FF),
+            new Color(0xFF1C8E),
+            new Color(0x68FF22),
+            new Color(0xFFBE11),
+            new Color(0x2954FF),
+            new Color(0x9624ED),
+            new Color(0xA8ED00)
+        };
+        
     }
 }
