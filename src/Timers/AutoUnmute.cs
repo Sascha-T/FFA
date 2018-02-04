@@ -35,14 +35,14 @@ namespace FFA.Timers
 
                 if (!dbGuild.MutedRoleId.HasValue)
                 {
-                    return;
+                    continue;
                 }
 
                 var mutedRole = guild.GetRole(dbGuild.MutedRoleId.Value);
 
                 if (mutedRole == null || !mutedRole.CanUseRole())
                 {
-                    return;
+                    continue;
                 }
 
                 var mutes = await _ffaContext.Mutes.ToListAsync();
