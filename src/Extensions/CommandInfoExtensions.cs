@@ -11,19 +11,7 @@ namespace FFA.Extensions
 
             foreach (var param in command.Parameters)
             {
-                var before = param.IsOptional ? "[" : "<";
-                var after = param.IsOptional ? "]" : ">";
-
-                if (param.Type.IsAssignableFrom(typeof(IUser)) || param.Type.IsAssignableFrom(typeof(IRole)))
-                {
-                    before += "@";
-                }
-                else if (param.Type.IsAssignableFrom(typeof(ITextChannel)))
-                {
-                    before += "#";
-                }
-
-                usage += $" {before}{param.Name}{after}";
+                usage += $" {(param.IsOptional ? "[" : " < ")}{param.Name}{(param.IsOptional ? "]" : ">")}";
             }
 
             return usage;

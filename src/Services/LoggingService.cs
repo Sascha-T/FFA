@@ -9,6 +9,7 @@ namespace FFA.Services
     {
         public async Task LogAsync(LogSeverity severity, string message)
         {
+            // TODO: log to a file + different file for errors
             await Console.Out.WriteAsync($"{DateTime.UtcNow.ToString("hh:mm:ss")} ");
             await ColoredConsole.WriteAsync($"[{severity}]", GetSeverityColor(severity));
             await Console.Out.WriteLineAsync($" {message}");
