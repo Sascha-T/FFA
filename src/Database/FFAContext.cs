@@ -16,11 +16,9 @@ namespace FFA.Database
         public DbSet<Rule> Rules { get; set; }
         public DbSet<Mute> Mutes { get; set; }
 
+        // TODO: move connection string to credentials
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            // TODO: move connection string to credentials
-            optionsBuilder.UseSqlite("Data Source=FFA.db");
-        }
+            => optionsBuilder.UseSqlite("Data Source=FFA.db");
 
         // Generic methods
         public async Task AddAsync<T>(T entity) where T : class

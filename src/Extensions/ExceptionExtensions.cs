@@ -4,11 +4,6 @@ namespace FFA.Extensions
 {
     public static class ExceptionExtensions
     {
-        public static string LastMessage(this Exception err)
-        {
-            return err.Last().Message;
-        }
-
         public static Exception Last(this Exception err)
         {
             var next = err;
@@ -20,5 +15,8 @@ namespace FFA.Extensions
 
             return next;
         }
+
+        public static string LastMessage(this Exception err)
+            => err.Last().Message;
     }
 }
