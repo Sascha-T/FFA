@@ -1,7 +1,10 @@
 ﻿using Discord;
+using Microsoft.CodeAnalysis.Scripting;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace FFA.Common
 {
@@ -38,6 +41,20 @@ namespace FFA.Common
             new Color(0x9624ED),
             new Color(0xA8ED00)
         }.ToImmutableArray();
+
+        // Eval imports
+        public static readonly IReadOnlyList<string> EVAL_IMPORTS = new string[]
+        {
+            "System",
+            "System.Linq",
+            "System.Threading.Tasks",
+        }.ToImmutableArray();
+
+        // Eval script options
+        public static readonly ScriptOptions SCRIPT_OPTIONS = ScriptOptions.Default
+                .WithImports(EVAL_IMPORTS)
+                .WithReferences(AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic && 
+                                !string.IsNullOrWhiteSpace(x.Location)));
 
         // JSON serialization
         public static readonly JsonSerializerSettings JSON_SETTINGS = new JsonSerializerSettings

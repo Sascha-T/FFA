@@ -22,6 +22,12 @@ namespace FFA.Common
         public async Task DmAsync(string description, string title = null)
             => await _sender.SendAsync(await User.GetOrCreateDMChannelAsync(), description, title);
 
+        public Task SendFieldsAsync(Color? color = null, params string[] fieldOrValue)
+            => _sender.SendFieldsAsync(Channel, color, fieldOrValue);
+
+        public Task SendFieldsErrorAsync(params string[] fieldOrValue)
+            => _sender.SendFieldsErrorAsync(Channel, fieldOrValue);
+
         public Task SendAsync(string description, string title = null, Color? color = null)
             => _sender.SendAsync(Channel, description, title, color);
 

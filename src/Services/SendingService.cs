@@ -16,19 +16,40 @@ namespace FFA.Services
             _random = random;
         }
 
-        public async Task SendAsync(IMessageChannel channel, string description, string title = null, Color? color = null)
+        public Task SendFieldsAsync(IMessageChannel channel, Color? color = null, params string[] fieldOrValue)
+        {
+            var builder = new EmbedBuilder
+            {
+                Color = color ?? _random.Value.ArrayElement(Configuration.DEFAULT_COLORS)
+            };
+
+            for (var i = 0; i < fieldOrValue.Length; i += 2)
+            {
+                builder.AddField(fieldOrValue[i], fieldOrValue[i + 1]);
+            }
+
+            return SendEmbedAsync(channel, builder);
+        }
+
+        public Task SendFieldsErrorAsync(IMessageChannel channel, params string[] fieldOrValue)
+            => SendFieldsAsync(channel, Configuration.ERROR_COLOR, fieldOrValue);
+
+        public Task SendAsync(IMessageChannel channel, string description, string title = null, Color? color = null)
+        {
+            return SendEmbedAsync(channel, new EmbedBuilder
+            {
+                Color = color ?? _random.Value.ArrayElement(Configuration.DEFAULT_COLORS),
+                Description = description,
+                Title = title
+            });
+        }
+
+        public async Task SendEmbedAsync(IMessageChannel channel, EmbedBuilder builder)
         {
             if (channel is ITextChannel textChannel && !await textChannel.CanSend())
             {
                 return;
             }
-
-            var builder = new EmbedBuilder
-            {
-                Color = color ?? _random.Value.ArrayElement(Configuration.DEFAULT_COLORS),
-                Description = description,
-                Title = title
-            };
 
             await channel.SendMessageAsync("", false, builder.Build());
         }

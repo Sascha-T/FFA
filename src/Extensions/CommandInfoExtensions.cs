@@ -11,7 +11,7 @@ namespace FFA.Extensions
 
             foreach (var param in command.Parameters)
             {
-                usage += $" {(param.IsOptional ? "[" : " < ")}{param.Name}{(param.IsOptional ? "]" : ">")}";
+                usage += $" {(param.IsOptional ? "[" : "<")}{param.Name}{(param.IsOptional ? "]" : ">")}";
             }
 
             return usage;

@@ -10,7 +10,7 @@ namespace FFA.Preconditions
         {
             if (context.Guild.OwnerId != context.User.Id)
             {
-                return Task.FromResult(PreconditionResult.FromError("This command may only by the owner of the guild."));
+                return Task.FromResult(PreconditionResult.FromError("This command may only by the guild owner."));
             }
 
             return Task.FromResult(PreconditionResult.FromSuccess());

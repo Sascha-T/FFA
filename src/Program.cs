@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 namespace FFA
 {
     // TODO: use more d.net interfaces instead of direct stuff!
+    // TODO: ensure all async methods end with Async
     public class Program
     {
         static void Main(string[] args)
