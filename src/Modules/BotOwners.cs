@@ -17,11 +17,13 @@ namespace FFA.Modules
     {
         private readonly FFAContext _ffaContext;
         private readonly SendingService _sender;
+        private readonly ReputationService _repService;
         
-        public BotOwners(FFAContext ffaContext, SendingService sender)
+        public BotOwners(FFAContext ffaContext, SendingService sender, ReputationService repService)
         {
             _ffaContext = ffaContext;
             _sender = sender;
+            _repService = repService;
         }
 
         [Command("Eval")]
@@ -40,7 +42,7 @@ namespace FFA.Modules
             {
                 try
                 {
-                    var result = await script.RunAsync(new { Context, _ffaContext, _sender });
+                    var result = await script.RunAsync(new { Context, _ffaContext, _sender, _repService });
                     await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.ReturnValue?.ToString() ?? "No result."}```");
                 }
                 catch (Exception ex)
