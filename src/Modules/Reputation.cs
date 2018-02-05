@@ -39,9 +39,9 @@ namespace FFA.Modules
         [Command("Resign")]
         [Top(Configuration.TOP_REP)]
         [Summary("Reset your reputation to zero.")]
-        public async Task ResignAsync([Summary("AlabamaTrigger#0001")] [Cooldown(Configuration.REP_COOLDOWN)] [NoSelf] IGuildUser user)
+        public async Task ResignAsync()
         {
-            await _ffaContext.UpsertUserAsync(user, x => x.Reputation = 0);
+            await _ffaContext.UpsertUserAsync(Context.User, x => x.Reputation = 0);
             await Context.ReplyAsync($"You have successfully resigned.");
         }
 
