@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace FFA.Extensions
 {
-    public static class SocketTextChannelExtensions
+    public static class ITextChannelExtensions
     {
-        public static async Task<bool> CanSend(this ITextChannel channel)
+        public static async Task<bool> CanSendAsync(this ITextChannel channel)
         {
             var currentUser = await channel.Guild.GetCurrentUserAsync();
             var permissionOverwrites = currentUser.GetPermissions(channel);

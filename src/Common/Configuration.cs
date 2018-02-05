@@ -22,6 +22,9 @@ namespace FFA.Common
         // Cooldowns
         public const int REP_COOLDOWN = 24, UNREP_COOLDOWN = 24;
 
+        // Timers
+        public const int AUTO_UNMUTE_TIMER = 60000;
+
         // Custom colors
         public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65);
 
@@ -48,6 +51,9 @@ namespace FFA.Common
             "System",
             "System.Linq",
             "System.Threading.Tasks",
+            "Discord",
+            "Discord.Commands",
+            "Discord.WebSocket"
         }.ToImmutableArray();
 
         // Eval script options

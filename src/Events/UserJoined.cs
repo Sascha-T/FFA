@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 using FFA.Database;
 using FFA.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -19,15 +20,15 @@ namespace FFA.Events
             _client.UserJoined += OnUserJoinedAsync;
         }
 
-        private async Task OnUserJoinedAsync(SocketGuildUser guildUser)
+        private async Task OnUserJoinedAsync(IGuildUser guildUser)
         {
             var dbGuild = await _ffaContext.GetGuildAsync(guildUser.Guild.Id);
 
-            if (dbGuild.MutedRoleId.HasValue && await _ffaContext.Mutes.AnyAsync(x => x.GuildId == guildUser.Id && x.UserId == guildUser.Id))
+            if (dbGuild.MutedRoleId.HasValue && await _ffaContext.Mutes.AnyAsync(x => x.GuildId == guildUser.Guild.Id && x.UserId == guildUser.Id))
             {
                 var mutedRole = guildUser.Guild.GetRole(dbGuild.MutedRoleId.Value);
 
-                if (mutedRole == null || !mutedRole.CanUseRole())
+                if (mutedRole == null || !await mutedRole.CanUseRoleAsync())
                 {
                     return;
                 }

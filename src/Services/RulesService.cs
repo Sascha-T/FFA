@@ -19,7 +19,7 @@ namespace FFA.Services
             _sender = sender;
         }
 
-        public async Task UpdateAsync(SocketGuild guild)
+        public async Task UpdateAsync(IGuild guild)
         {
             var dbGuild = await _ffaContext.GetGuildAsync(guild.Id);
 
@@ -28,9 +28,9 @@ namespace FFA.Services
                 return;
             }
 
-            var rulesChannel = guild.GetChannel(dbGuild.RulesChannelId.Value) as SocketTextChannel;
+            var rulesChannel = await guild.GetChannelAsync(dbGuild.RulesChannelId.Value) as ITextChannel;
 
-            if (rulesChannel == null || !await rulesChannel.CanSend())
+            if (rulesChannel == null || !await rulesChannel.CanSendAsync())
             {
                 return;
             }

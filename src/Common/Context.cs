@@ -19,22 +19,22 @@ namespace FFA.Common
             _sender = _provider.GetRequiredService<SendingService>();
         }
 
-        public async Task DmAsync(string description, string title = null)
+        public async Task<IUserMessage> DmAsync(string description, string title = null)
             => await _sender.SendAsync(await User.GetOrCreateDMChannelAsync(), description, title);
 
-        public Task SendFieldsAsync(Color? color = null, params string[] fieldOrValue)
+        public Task<IUserMessage> SendFieldsAsync(Color? color = null, params string[] fieldOrValue)
             => _sender.SendFieldsAsync(Channel, color, fieldOrValue);
 
-        public Task SendFieldsErrorAsync(params string[] fieldOrValue)
+        public Task<IUserMessage> SendFieldsErrorAsync(params string[] fieldOrValue)
             => _sender.SendFieldsErrorAsync(Channel, fieldOrValue);
 
-        public Task SendAsync(string description, string title = null, Color? color = null)
+        public Task<IUserMessage> SendAsync(string description, string title = null, Color? color = null)
             => _sender.SendAsync(Channel, description, title, color);
 
-        public Task ReplyAsync(string description, string title = null, Color? color = null)
+        public Task<IUserMessage> ReplyAsync(string description, string title = null, Color? color = null)
             => _sender.ReplyAsync(User, Channel, description, title, color);
 
-        public Task ReplyErrorAsync(string description)
+        public Task<IUserMessage> ReplyErrorAsync(string description)
             => _sender.ReplyErrorAsync(User, Channel, description);
     }
 }

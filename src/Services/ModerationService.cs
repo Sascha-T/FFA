@@ -17,7 +17,7 @@ namespace FFA.Services
             _ffaContext = ffaContext;
         }
         
-        public Task LogMute(IGuild guild, IUser moderator, IUser subject, Rule rule, TimeSpan length, string reason = null)
+        public Task LogMuteAsync(IGuild guild, IUser moderator, IUser subject, Rule rule, TimeSpan length, string reason = null)
         {
             var author = new EmbedAuthorBuilder
             {
@@ -31,10 +31,10 @@ namespace FFA.Services
                               (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}\n") +
                               $"**Length:** {length.TotalHours}h";
 
-            return Log(guild, author, description, Configuration.MUTE_COLOR);
+            return LogAsync(guild, author, description, Configuration.MUTE_COLOR);
         }
         
-        public Task LogUnmute(IGuild guild, IUser moderator, IUser subject, string reason = null)
+        public Task LogUnmuteAsync(IGuild guild, IUser moderator, IUser subject, string reason = null)
         {
             var author = new EmbedAuthorBuilder
             {
@@ -46,10 +46,10 @@ namespace FFA.Services
                               $"**User:** {subject} ({subject.Id})\n" +
                               (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}");
 
-            return Log(guild, author, description, Configuration.UNMUTE_COLOR);
+            return LogAsync(guild, author, description, Configuration.UNMUTE_COLOR);
         }
 
-        public async Task Log(IGuild guild, EmbedAuthorBuilder author, string description, Color color)
+        public async Task LogAsync(IGuild guild, EmbedAuthorBuilder author, string description, Color color)
         {
             var dbGuild = await _ffaContext.GetGuildAsync(guild.Id);
 
@@ -60,7 +60,7 @@ namespace FFA.Services
 
             var logChannel = await guild.GetChannelAsync(dbGuild.LogChannelId.Value) as ITextChannel;
 
-            if (logChannel == null || !await logChannel.CanSend())
+            if (logChannel == null || !await logChannel.CanSendAsync())
             {
                 return;
             }

@@ -52,8 +52,8 @@ namespace FFA.Events
                             var cmd = _commandService.GetCommand(context, argPos);
 
                             message = $"You are incorrectly using this command.\n" +
-                                      $"**Usage:** `{Configuration.PREFIX}{cmd.GetUsage()}`\n" +
-                                      $"**Example:** `{Configuration.PREFIX}{cmd.GetExample()}`";
+                                    $"**Usage:** `{Configuration.PREFIX}{cmd.GetUsage()}`\n" +
+                                    $"**Example:** `{Configuration.PREFIX}{cmd.GetExample()}`";
                             break;
                         default:
                             message = result.ErrorReason;

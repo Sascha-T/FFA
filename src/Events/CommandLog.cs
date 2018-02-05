@@ -32,19 +32,32 @@ namespace FFA.Events
 
                 if (last is HttpException discordException)
                 {
-                    switch (discordException.HttpCode)
+                    if (discordException.DiscordCode.HasValue)
                     {
-                        case HttpStatusCode.Forbidden:
-                            message = "I do not have permission to do that.";
-                            break;
+                        switch (discordException.DiscordCode.Value)
+                        {
+                            case 50017:
+                                message = "I cannot DM you. Please allow direct messages from guild members.";
+                                break;
+                        }
                     }
+                    else
+                    {
+                        switch (discordException.HttpCode)
+                        {
+                            case HttpStatusCode.Forbidden:
+                                message = "I do not have permission to do that.";
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    await _logger.LogAsync(msg.Severity, $"{msg.Source}: {(msg.Exception?.ToString() ?? msg.Message)}");
                 }
 
                 await _sender.ReplyErrorAsync(commandException.Context.User, commandException.Context.Channel, message);
             }
-
-            // TODO: some brilliant solution to not log on httpexception with nice boolean logic
-            await _logger.LogAsync(msg.Severity, $"{msg.Source}: {(msg.Exception?.ToString() ?? msg.Message)}");
         }
     }
 }

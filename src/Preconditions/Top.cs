@@ -19,7 +19,7 @@ namespace FFA.Preconditions
         {
             var repService = services.GetRequiredService<ReputationService>();
 
-            if (!await repService.IsInTop(_count, context.User.Id, context.Guild.Id))
+            if (!await repService.IsInTopAsync(_count, context.User.Id, context.Guild.Id))
             {
                 return PreconditionResult.FromError($"This command may only be used by the top {_count} most reputable users.");
             }

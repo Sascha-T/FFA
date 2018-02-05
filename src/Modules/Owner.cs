@@ -26,7 +26,7 @@ namespace FFA.Modules
         [Command("SetLogChannel")]
         [Alias("setlogs", "setmodlog", "setmodlogs")]
         [Summary("Sets the log channel.")]
-        public async Task SetLogChannel([Summary("OldManJenkins")] [Remainder] ITextChannel logChannel)
+        public async Task SetLogChannelAsync([Summary("OldManJenkins")] [Remainder] ITextChannel logChannel)
         {
             await _ffaContext.UpsertGuildAsync(Context.Guild.Id, x => x.LogChannelId = logChannel.Id);
             await Context.ReplyAsync($"You have successfully set to log channel to {logChannel.Mention}.");
@@ -35,7 +35,7 @@ namespace FFA.Modules
         [Command("SetRulesChannel")]
         [Alias("setrules")]
         [Summary("Sets the rules channel.")]
-        public async Task SetRulesChannel([Summary("MrsPuff")] [Remainder] ITextChannel rulesChannel)
+        public async Task SetRulesChannelAsync([Summary("MrsPuff")] [Remainder] ITextChannel rulesChannel)
         {
             await _ffaContext.UpsertGuildAsync(Context.Guild.Id, x => x.RulesChannelId = rulesChannel.Id);
             await Context.ReplyAsync($"You have successfully set to rules channel to {rulesChannel.Mention}.");
@@ -43,8 +43,8 @@ namespace FFA.Modules
 
         [Command("SetMutedRole")]
         [Alias("setmuted", "setmuterole", "setmute")]
-        [Summary("Sets the rules channel.")]
-        public async Task SetMutedRole([Summary("BarnacleBoy")] [Remainder] IRole mutedRole)
+        [Summary("Sets the muted role.")]
+        public async Task SetMutedRoleAsync([Summary("BarnacleBoy")] [Remainder] IRole mutedRole)
         {
             await _ffaContext.UpsertGuildAsync(Context.Guild.Id, x => x.MutedRoleId = mutedRole.Id);
             await Context.ReplyAsync($"You have successfully set to muted role to {mutedRole.Mention}.");
@@ -52,9 +52,9 @@ namespace FFA.Modules
 
         [Command("AddRule")]
         [Summary("Adds a rule.")]
-        public async Task AddRule([Summary("\"Sending 10 images in 5 seconds\"")] string content,
-                                  [Summary("Spam")] string category,
-                                  [Summary("24h")] TimeSpan? maxMuteLength = null)
+        public async Task AddRuleAsync([Summary("\"Sending 10 images in 5 seconds\"")] string content,
+                                       [Summary("Spam")] string category,
+                                       [Summary("24h")] TimeSpan? maxMuteLength = null)
         {
             await _ffaContext.AddAsync(new Rule(Context.Guild.Id, content, category, maxMuteLength));
             await Context.ReplyAsync($"You have successfully added a new rule.");

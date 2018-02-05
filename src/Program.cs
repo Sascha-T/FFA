@@ -60,6 +60,7 @@ namespace FFA
                 .AddSingleton<ClientLog>()
                 .AddSingleton<CommandLog>()
                 .AddSingleton<Ready>()
+                .AddSingleton<UserJoined>()
                 .AddSingleton<AutoUnmute>();
 
             var provider = services.BuildServiceProvider();
@@ -71,6 +72,7 @@ namespace FFA
             await client.StartAsync();
 
             provider.GetRequiredService<MessageReceived>();
+            provider.GetRequiredService<UserJoined>();
             provider.GetRequiredService<ClientLog>();
             provider.GetRequiredService<CommandLog>();
             provider.GetRequiredService<Ready>();

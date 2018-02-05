@@ -16,7 +16,7 @@ namespace FFA.Services
             _random = random;
         }
 
-        public Task SendFieldsAsync(IMessageChannel channel, Color? color = null, params string[] fieldOrValue)
+        public Task<IUserMessage> SendFieldsAsync(IMessageChannel channel, Color? color = null, params string[] fieldOrValue)
         {
             var builder = new EmbedBuilder
             {
@@ -31,10 +31,10 @@ namespace FFA.Services
             return SendEmbedAsync(channel, builder);
         }
 
-        public Task SendFieldsErrorAsync(IMessageChannel channel, params string[] fieldOrValue)
+        public Task<IUserMessage> SendFieldsErrorAsync(IMessageChannel channel, params string[] fieldOrValue)
             => SendFieldsAsync(channel, Configuration.ERROR_COLOR, fieldOrValue);
 
-        public Task SendAsync(IMessageChannel channel, string description, string title = null, Color? color = null)
+        public Task<IUserMessage> SendAsync(IMessageChannel channel, string description, string title = null, Color? color = null)
         {
             return SendEmbedAsync(channel, new EmbedBuilder
             {
@@ -44,20 +44,20 @@ namespace FFA.Services
             });
         }
 
-        public async Task SendEmbedAsync(IMessageChannel channel, EmbedBuilder builder)
+        public async Task<IUserMessage> SendEmbedAsync(IMessageChannel channel, EmbedBuilder builder)
         {
-            if (channel is ITextChannel textChannel && !await textChannel.CanSend())
+            if (channel is ITextChannel textChannel && !await textChannel.CanSendAsync())
             {
-                return;
+                return null;
             }
 
-            await channel.SendMessageAsync("", false, builder.Build());
+            return await channel.SendMessageAsync("", false, builder.Build());
         }
 
-        public Task ReplyAsync(IUser user, IMessageChannel channel, string description, string title = null, Color? color = null)
+        public Task<IUserMessage> ReplyAsync(IUser user, IMessageChannel channel, string description, string title = null, Color? color = null)
             => SendAsync(channel, $"{user.Bold()}, {description}", title, color);
 
-        public Task ReplyErrorAsync(IUser user, IMessageChannel channel, string description)
+        public Task<IUserMessage> ReplyErrorAsync(IUser user, IMessageChannel channel, string description)
             => ReplyAsync(user, channel, description, null, Configuration.ERROR_COLOR);
     }
 }

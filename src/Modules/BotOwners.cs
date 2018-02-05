@@ -1,7 +1,9 @@
 ﻿using Discord.Commands;
 using FFA.Common;
+using FFA.Database;
 using FFA.Extensions;
 using FFA.Preconditions;
+using FFA.Services;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using System;
@@ -13,11 +15,20 @@ namespace FFA.Modules
     [BotOwner]
     public class BotOwners : ModuleBase<Context>
     {
+        private readonly FFAContext _ffaContext;
+        private readonly SendingService _sender;
+        
+        public BotOwners(FFAContext ffaContext, SendingService sender)
+        {
+            _ffaContext = ffaContext;
+            _sender = sender;
+        }
+
         [Command("Eval")]
         [Summary("Evaluate C# code in a command context.")]
         public async Task EvalAsync([Summary("Client.Token")] [Remainder] string code)
         {
-            var script = CSharpScript.Create(code, Configuration.SCRIPT_OPTIONS, typeof(Context));
+            var script = CSharpScript.Create(code, Configuration.SCRIPT_OPTIONS);
             var diagnostics = script.Compile();
             var compilerError = diagnostics.FirstOrDefault(x => x.Severity == DiagnosticSeverity.Error);
 
@@ -29,7 +40,7 @@ namespace FFA.Modules
             {
                 try
                 {
-                    var result = await script.RunAsync(Context);
+                    var result = await script.RunAsync(new { Context, _ffaContext, _sender });
                     await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.ReturnValue?.ToString() ?? "No result."}```");
                 }
                 catch (Exception ex)

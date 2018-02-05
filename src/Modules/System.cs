@@ -21,13 +21,12 @@ namespace FFA.Modules
         [Command("Help")]
         [Alias("command", "commands", "cmd", "cmds")]
         [Summary("Information about all the commands.")]
-        public async Task Help([Summary("rep")] string commandName = null)
+        public async Task HelpAsync([Summary("rep")] string commandName = null)
         {
             if (!string.IsNullOrWhiteSpace(commandName))
             {
-                var cmd = _commandService.Commands.FirstOrDefault(x 
-                            => x.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase) || 
-                               x.Aliases.Any(y => y.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
+                var cmd = _commandService.Commands.FirstOrDefault(x => x.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase) || 
+                                                                       x.Aliases.Any(y => y.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
 
                 if (cmd == default(CommandInfo))
                 {

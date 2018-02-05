@@ -29,7 +29,7 @@ namespace FFA.Modules
         [Command("Mute")]
         [Summary("Mute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task MuteAsync([Summary("Jimbo#5555")] IGuildUser guildUser, 
+        public async Task MuteAsync([Summary("Jimbo#5555")] [NoSelf] IGuildUser guildUser, 
                                     [Summary("2c")] Rule rule, 
                                     [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] TimeSpan length, 
                                     [Summary("stop with all that ruckus!")] [Remainder] string reason = null)
@@ -53,14 +53,14 @@ namespace FFA.Modules
                 await guildUser.AddRoleAsync(Context.Guild.GetRole(dbGuild.MutedRoleId.Value));
                 await _ffaContext.AddAsync(new Mute(Context.Guild.Id, guildUser.Id, DateTime.UtcNow.Add(length)));
                 await Context.ReplyAsync($"You have successfully muted {guildUser.Bold()}.");
-                await _moderationService.LogMute(Context.Guild, Context.User, guildUser, rule, length, reason);
+                await _moderationService.LogMuteAsync(Context.Guild, Context.User, guildUser, rule, length, reason);
             }
         }
 
         [Command("Unmute")]
         [Summary("Unmute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task UnmuteAsync([Summary("Billy#6969")] IGuildUser guildUser, 
+        public async Task UnmuteAsync([Summary("Billy#6969")] [NoSelf] IGuildUser guildUser, 
                                       [Summary("you best stop flirting with Mrs Ruckus")] [Remainder] string reason = null)
         {
             var dbGuild = await _ffaContext.GetGuildAsync(Context.Guild.Id);
@@ -78,7 +78,7 @@ namespace FFA.Modules
                 await _ffaContext.RemoveAsync<Mute>(x => x.UserId == guildUser.Id);
                 await guildUser.RemoveRoleAsync(Context.Guild.GetRole(dbGuild.MutedRoleId.Value));
                 await Context.ReplyAsync($"You have successfully unmuted {guildUser.Bold()}.");
-                await _moderationService.LogUnmute(Context.Guild, Context.User, guildUser, reason);
+                await _moderationService.LogUnmuteAsync(Context.Guild, Context.User, guildUser, reason);
             }
         }
     }
