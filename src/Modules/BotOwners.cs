@@ -30,8 +30,7 @@ namespace FFA.Modules
         [Summary("Evaluate C# code in a command context.")]
         public async Task EvalAsync([Summary("Client.Token")] [Remainder] string code)
         {
-            var globals = new { Context, _ffaContext, _sender, _repService };
-            var script = CSharpScript.Create(code, Configuration.SCRIPT_OPTIONS, globals.GetType());
+            var script = CSharpScript.Create(code, Configuration.SCRIPT_OPTIONS, typeof(Globals));
             var diagnostics = script.Compile();
             var compilerError = diagnostics.FirstOrDefault(x => x.Severity == DiagnosticSeverity.Error);
 
@@ -43,7 +42,7 @@ namespace FFA.Modules
             {
                 try
                 {
-                    var result = await script.RunAsync(globals);
+                    var result = await script.RunAsync(new Globals(Context, _ffaContext, _sender, _repService));
                     await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.ReturnValue?.ToString() ?? "No result."}```");
                 }
                 catch (Exception ex)
@@ -52,5 +51,21 @@ namespace FFA.Modules
                 }
             }
         }
+    }
+
+    public class Globals
+    {
+        public Globals(Context context, FFAContext ffaContext, SendingService sender, ReputationService reputationService)
+        {
+            Context = context;
+            FFAContext = ffaContext;
+            Sender = sender;
+            ReputationService = reputationService;
+        }
+
+        public Context Context { get; }
+        public FFAContext FFAContext { get; }
+        public SendingService Sender { get; }
+        public ReputationService ReputationService { get; }
     }
 }
