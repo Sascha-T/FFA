@@ -1,5 +1,4 @@
 ﻿using Discord;
-using Discord.WebSocket;
 using FFA.Database;
 using FFA.Extensions;
 using Microsoft.EntityFrameworkCore;

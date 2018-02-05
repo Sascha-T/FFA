@@ -7,7 +7,6 @@ using FFA.Database.Models;
 using FFA.Events;
 using FFA.Readers;
 using FFA.Services;
-using FFA.Timers;
 using FFA.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -16,6 +15,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
+// TODO: make public things that don't need to be public internal.
 namespace FFA
 {
     public class Program
