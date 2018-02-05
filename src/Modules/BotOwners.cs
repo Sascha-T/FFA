@@ -30,7 +30,8 @@ namespace FFA.Modules
         [Summary("Evaluate C# code in a command context.")]
         public async Task EvalAsync([Summary("Client.Token")] [Remainder] string code)
         {
-            var script = CSharpScript.Create(code, Configuration.SCRIPT_OPTIONS);
+            var globals = new { Context, _ffaContext, _sender, _repService };
+            var script = CSharpScript.Create(code, Configuration.SCRIPT_OPTIONS, globals.GetType());
             var diagnostics = script.Compile();
             var compilerError = diagnostics.FirstOrDefault(x => x.Severity == DiagnosticSeverity.Error);
 
@@ -42,7 +43,7 @@ namespace FFA.Modules
             {
                 try
                 {
-                    var result = await script.RunAsync(new { Context, _ffaContext, _sender, _repService });
+                    var result = await script.RunAsync(globals);
                     await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.ReturnValue?.ToString() ?? "No result."}```");
                 }
                 catch (Exception ex)
