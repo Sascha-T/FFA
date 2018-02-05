@@ -18,8 +18,6 @@ using System.Threading.Tasks;
 
 namespace FFA
 {
-    // TODO: use more d.net interfaces instead of direct stuff!
-    // TODO: ensure all async methods end with Async
     public class Program
     {
         static void Main(string[] args)
@@ -42,7 +40,7 @@ namespace FFA
                 LogLevel = LogSeverity.Info,
                 IgnoreExtraArgs = true
             });
-            
+
             // TODO: reorganize ordering of additions to service collection
             // TODO: reflexion to add all services/events/timers
             var services = new ServiceCollection()
@@ -56,26 +54,21 @@ namespace FFA
                 .AddSingleton<RulesService>()
                 .AddSingleton<MessageReceived>()
                 .AddSingleton<ModerationService>()
-                .AddSingleton<ReputationService>()
-                .AddSingleton<ClientLog>()
-                .AddSingleton<CommandLog>()
-                .AddSingleton<Ready>()
-                .AddSingleton<UserJoined>()
-                .AddSingleton<AutoUnmute>();
+                .AddSingleton<ReputationService>();
 
             var provider = services.BuildServiceProvider();
+
+            new ClientLog(provider);
+            new CommandLog(provider);
+            new MessageReceived(provider);
+            new Ready(provider);
+            new UserJoined(provider);
 
             commandService.AddTypeReader<Rule>(new RuleTypeReader());
             commandService.AddTypeReader<TimeSpan>(new TimeSpanTypeReader());
             await commandService.AddModulesAsync(Assembly.GetEntryAssembly());
             await client.LoginAsync(TokenType.Bot, credentials.Token);
             await client.StartAsync();
-
-            provider.GetRequiredService<MessageReceived>();
-            provider.GetRequiredService<UserJoined>();
-            provider.GetRequiredService<ClientLog>();
-            provider.GetRequiredService<CommandLog>();
-            provider.GetRequiredService<Ready>();
 
             await Task.Delay(-1);
         }

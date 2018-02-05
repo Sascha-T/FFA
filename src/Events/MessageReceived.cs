@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using FFA.Common;
 using FFA.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
@@ -13,11 +14,11 @@ namespace FFA.Events
         private readonly CommandService _commandService;
         private readonly IServiceProvider _provider;
 
-        public MessageReceived(DiscordSocketClient client, CommandService commandService, IServiceProvider provider)
+        public MessageReceived(IServiceProvider provider)
         {
-            _client = client;
-            _commandService = commandService;
             _provider = provider;
+            _client = _provider.GetRequiredService<DiscordSocketClient>();
+            _commandService = _provider.GetRequiredService<CommandService>();
 
             _client.MessageReceived += OnMessageReceivedAsync;
         }

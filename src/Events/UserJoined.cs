@@ -3,6 +3,8 @@ using Discord.WebSocket;
 using FFA.Database;
 using FFA.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 
 namespace FFA.Events
@@ -12,10 +14,10 @@ namespace FFA.Events
         private readonly DiscordSocketClient _client;
         private readonly FFAContext _ffaContext;
 
-        public UserJoined(DiscordSocketClient client, FFAContext ffaContext)
+        public UserJoined(IServiceProvider provider)
         {
-            _client = client;
-            _ffaContext = ffaContext;
+            _client = provider.GetRequiredService<DiscordSocketClient>();
+            _ffaContext = provider.GetRequiredService<FFAContext>();
 
             _client.UserJoined += OnUserJoinedAsync;
         }

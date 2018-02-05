@@ -9,20 +9,20 @@ namespace FFA.Events
 {
     public sealed class Ready
     {
-        private readonly DiscordSocketClient _client;
         private readonly IServiceProvider _provider;
+        private readonly DiscordSocketClient _client;
 
-        public Ready(DiscordSocketClient client, IServiceProvider provider)
+        public Ready(IServiceProvider provider)
         {
-            _client = client;
             _provider = provider;
+            _client = provider.GetRequiredService<DiscordSocketClient>();
 
             _client.Ready += OnReadyAsync;
         }
 
         private Task OnReadyAsync()
         {
-            _provider.GetRequiredService<AutoUnmute>();
+            new AutoUnmute(_provider);
 
             return _client.SetGameAsync(Configuration.GAME);
         }

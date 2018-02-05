@@ -3,6 +3,8 @@ using Discord.Commands;
 using Discord.Net;
 using FFA.Extensions;
 using FFA.Services;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -14,11 +16,11 @@ namespace FFA.Events
         private readonly LoggingService _logger;
         private readonly SendingService _sender;
 
-        public CommandLog(CommandService commandService, LoggingService logger, SendingService sender)
+        public CommandLog(IServiceProvider provider)
         {
-            _commandService = commandService;
-            _logger = logger;
-            _sender = sender;
+            _commandService = provider.GetRequiredService<CommandService>();
+            _logger = provider.GetRequiredService<LoggingService>();
+            _sender = provider.GetRequiredService<SendingService>();
 
             _commandService.Log += OnCommandLogAsync;
         }

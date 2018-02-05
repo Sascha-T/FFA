@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using FFA.Services;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 
 namespace FFA.Events
@@ -9,12 +11,11 @@ namespace FFA.Events
     {
         private readonly DiscordSocketClient _client;
         private readonly LoggingService _logger;
-
-        // TODO: switch all events/timers to take in service provider in constructor
-        public ClientLog(DiscordSocketClient client, LoggingService logger)
+        
+        public ClientLog(IServiceProvider provider)
         {
-            _client = client;
-            _logger = logger;
+            _client = provider.GetRequiredService<DiscordSocketClient>();
+            _logger = provider.GetRequiredService<LoggingService>();
 
             _client.Log += OnLogAsync;
         }

@@ -6,6 +6,7 @@ using FFA.Database.Models;
 using FFA.Extensions;
 using FFA.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,11 +21,11 @@ namespace FFA.Timers
         private readonly Timer _timer;
         private readonly AutoResetEvent _autoEvent;
 
-        public AutoUnmute(DiscordSocketClient client, FFAContext ffaContext, ModerationService moderationService)
+        public AutoUnmute(IServiceProvider provider)
         {
-            _client = client;
-            _ffaContext = ffaContext;
-            _moderationService = moderationService;
+            _client = provider.GetRequiredService<DiscordSocketClient>();
+            _ffaContext = provider.GetRequiredService<FFAContext>();
+            _moderationService = provider.GetRequiredService<ModerationService>();
             _autoEvent = new AutoResetEvent(false);
             _timer = new Timer(Execute, _autoEvent, 0, Configuration.AUTO_UNMUTE_TIMER);
         }
