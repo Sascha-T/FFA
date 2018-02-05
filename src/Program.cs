@@ -15,6 +15,8 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
+// TODO: README, contributing, all other github things.
+// TODO: Rules revamp
 // TODO: make public things that don't need to be public internal.
 namespace FFA
 {

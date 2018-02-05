@@ -9,6 +9,7 @@ namespace FFA.Database
 {
     public class FFAContext : DbContext
     {
+        // TODO: rejection reasons for polls
         public DbSet<Guild> Guilds { get; set; }
         public DbSet<Poll> Polls { get; set; }
         public DbSet<Vote> Votes { get; set; }
