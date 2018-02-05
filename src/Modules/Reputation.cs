@@ -41,7 +41,7 @@ namespace FFA.Modules
         [Summary("Reset your reputation to zero.")]
         public async Task ResignAsync()
         {
-            await _ffaContext.UpsertUserAsync(Context.User, x => x.Reputation = 0);
+            await _ffaContext.UpsertUserAsync(Context.User.Id, Context.Guild.Id, x => x.Reputation = 0);
             await Context.ReplyAsync($"You have successfully resigned.");
         }
 
