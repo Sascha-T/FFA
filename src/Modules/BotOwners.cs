@@ -17,12 +17,14 @@ namespace FFA.Modules
     {
         private readonly FFAContext _ffaContext;
         private readonly SendingService _sender;
+        private readonly RulesService _rulesService;
         private readonly ReputationService _repService;
         
-        public BotOwners(FFAContext ffaContext, SendingService sender, ReputationService repService)
+        public BotOwners(FFAContext ffaContext, SendingService sender, RulesService rulesService, ReputationService repService)
         {
             _ffaContext = ffaContext;
             _sender = sender;
+            _rulesService = rulesService;
             _repService = repService;
         }
 
@@ -42,7 +44,7 @@ namespace FFA.Modules
             {
                 try
                 {
-                    var result = await script.RunAsync(new Globals(Context, _ffaContext, _sender, _repService));
+                    var result = await script.RunAsync(new Globals(Context, _ffaContext, _sender, _rulesService, _repService));
                     await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.ReturnValue?.ToString() ?? "No result."}```");
                 }
                 catch (Exception ex)
@@ -55,17 +57,19 @@ namespace FFA.Modules
 
     public class Globals
     {
-        public Globals(Context context, FFAContext ffaContext, SendingService sender, ReputationService reputationService)
+        public Globals(Context context, FFAContext ffaContext, SendingService sender, RulesService rulesService, ReputationService reputationService)
         {
             Context = context;
             FFAContext = ffaContext;
             Sender = sender;
+            RulesService = rulesService;
             ReputationService = reputationService;
         }
 
         public Context Context { get; }
         public FFAContext FFAContext { get; }
         public SendingService Sender { get; }
+        public RulesService RulesService { get; }
         public ReputationService ReputationService { get; }
     }
 }

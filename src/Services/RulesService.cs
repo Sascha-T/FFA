@@ -3,6 +3,7 @@ using FFA.Database;
 using FFA.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FFA.Services
@@ -11,45 +12,56 @@ namespace FFA.Services
     {
         private readonly FFAContext _ffaContext;
         private readonly SendingService _sender;
+        private readonly SemaphoreSlim _semaphore;
 
         public RulesService(FFAContext ffaContext, SendingService sender)
         {
             _ffaContext = ffaContext;
             _sender = sender;
+            _semaphore = new SemaphoreSlim(1);
         }
 
         public async Task UpdateAsync(IGuild guild)
         {
-            var dbGuild = await _ffaContext.GetGuildAsync(guild.Id);
+            await _semaphore.WaitAsync();
 
-            if (!dbGuild.RulesChannelId.HasValue)
+            try
             {
-                return;
-            }
+                var dbGuild = await _ffaContext.GetGuildAsync(guild.Id);
 
-            var rulesChannel = await guild.GetChannelAsync(dbGuild.RulesChannelId.Value) as ITextChannel;
-
-            if (rulesChannel == null || !await rulesChannel.CanSendAsync())
-            {
-                return;
-            }
-
-            var messages = await rulesChannel.GetMessagesAsync().FlattenAsync();
-            await rulesChannel.DeleteMessagesAsync(messages);
-            var groups = await _ffaContext.Rules.Where(x => x.GuildId == guild.Id).OrderBy(x => x.Category).GroupBy(x => x.Category).ToListAsync();
-
-            for (var i = 0; i < groups.Count; i++)
-            {
-                var description = string.Empty;
-
-                foreach (var item in groups[i].OrderBy(x => x.Content).Select((Value, Index) => new { Value, Index }))
+                if (!dbGuild.RulesChannelId.HasValue)
                 {
-                    description += $"**{(char)('a' + item.Index)}.** {item.Value.Content} " +
-                                   $"({(item.Value.MaxMuteLength.HasValue ? item.Value.MaxMuteLength.Value.TotalHours + "h" : "Bannable")})\n";
+                    return;
                 }
 
-                await _sender.SendAsync(rulesChannel, description, $"{i + 1}. {groups[i].First().Category}:");
-                await Task.Delay(1000);
+                var rulesChannel = await guild.GetChannelAsync(dbGuild.RulesChannelId.Value) as ITextChannel;
+
+                if (rulesChannel == null || !await rulesChannel.CanSendAsync())
+                {
+                    return;
+                }
+
+                var messages = await rulesChannel.GetMessagesAsync().FlattenAsync();
+                await rulesChannel.DeleteMessagesAsync(messages);
+                var groups = await _ffaContext.Rules.Where(x => x.GuildId == guild.Id).OrderBy(x => x.Category).GroupBy(x => x.Category).ToListAsync();
+
+                for (var i = 0; i < groups.Count; i++)
+                {
+                    var description = string.Empty;
+
+                    foreach (var item in groups[i].OrderBy(x => x.Content).Select((Value, Index) => new { Value, Index }))
+                    {
+                        description += $"**{(char)('a' + item.Index)}.** {item.Value.Content} " +
+                                       $"({(item.Value.MaxMuteLength.HasValue ? item.Value.MaxMuteLength.Value.TotalHours + "h" : "Bannable")})\n";
+                    }
+
+                    await _sender.SendAsync(rulesChannel, description, $"{i + 1}. {groups[i].First().Category}:");
+                    await Task.Delay(1000);
+                }
+            }
+            finally
+            {
+                _semaphore.Release();
             }
         }
     }
