@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Modules
 {
+    // TODO: move reputation increase to config
     [Name("Reputation")]
     [GuildOnly]
     public sealed class Reputation : ModuleBase<Context>

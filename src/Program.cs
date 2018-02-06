@@ -39,7 +39,7 @@ namespace FFA
 
             var commandService = new CommandService(new CommandServiceConfig
             {
-                DefaultRunMode = RunMode.Async,
+                DefaultRunMode = RunMode.Sync,
                 LogLevel = LogSeverity.Info,
                 IgnoreExtraArgs = true
             });

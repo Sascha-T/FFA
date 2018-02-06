@@ -25,10 +25,10 @@ namespace FFA.Common
         // Maximums
         public const int MAX_NICKNAME_LENGTH = 32;
 
-        // Cooldowns
+        // Cooldowns in days
         public const int REP_COOLDOWN = 24, UNREP_COOLDOWN = 24, BULLY_COOLDOWN = 1;
 
-        // Timers
+        // Timers in milliseconds
         public const int AUTO_UNMUTE_TIMER = 60000;
 
         // Custom colors
