@@ -19,8 +19,14 @@ namespace FFA.Common
         // Moderation
         public const int TOP_REP = 20, MIN_MUTE_LENGTH = 1;
 
+        // Memes
+        public const int TOP_BULLY = 40;
+
+        // Maximums
+        public const int MAX_NICKNAME_LENGTH = 32;
+
         // Cooldowns
-        public const int REP_COOLDOWN = 24, UNREP_COOLDOWN = 24;
+        public const int REP_COOLDOWN = 24, UNREP_COOLDOWN = 24, BULLY_COOLDOWN = 1;
 
         // Timers
         public const int AUTO_UNMUTE_TIMER = 60000;
