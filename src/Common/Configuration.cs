@@ -31,6 +31,9 @@ namespace FFA.Common
         // Minimums
         public const int MIN_CLEAR = 3;
 
+        // Defaults
+        public const int CLEAR_DEFAULT = 20;
+
         // Cooldowns in days
         public const int REP_COOLDOWN = 24, UNREP_COOLDOWN = 24, BULLY_COOLDOWN = 1;
 

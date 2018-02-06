@@ -88,7 +88,7 @@ namespace FFA.Modules
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task Clear([Summary("SteveJr#3333")] [NoSelf] IGuildUser guildUser,
                                 [Summary("3a")] Rule rule,
-                                [Summary("20")] [Between(Configuration.MIN_CLEAR, Configuration.MAX_CLEAR)] int quantity,
+                                [Summary("20")] [Between(Configuration.MIN_CLEAR, Configuration.MAX_CLEAR)] int quantity = Configuration.CLEAR_DEFAULT,
                                 [Summary("that's enough pornos for tonight Steve")] [Remainder] string reason = null)
         {
             var messages = await Context.Channel.GetMessagesAsync().FlattenAsync();
