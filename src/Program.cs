@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 // TODO: make public things that don't need to be public internal.
 namespace FFA
 {
-    internal class Program
+    internal sealed class Program
     {
         private static void Main(string[] args)
             => new Program().StartAsync(args).GetAwaiter().GetResult();

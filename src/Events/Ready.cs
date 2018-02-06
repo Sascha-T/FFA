@@ -24,7 +24,9 @@ namespace FFA.Events
         {
             new AutoUnmute(_provider);
 
-            return Task.Run(() => _client.SetGameAsync(Configuration.GAME));
+            _ = Task.Run(() => _client.SetGameAsync(Configuration.GAME));
+
+            return Task.CompletedTask;
         }
     }
 }
