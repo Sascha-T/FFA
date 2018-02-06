@@ -45,7 +45,7 @@ namespace FFA.Modules
                 try
                 {
                     var result = await script.RunAsync(new Globals(Context, _ffaContext, _sender, _rulesService, _repService));
-                    await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.ReturnValue?.ToString() ?? "No result."}```");
+                    await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.ReturnValue?.ToString() ?? "Success."}```");
                 }
                 catch (Exception ex)
                 {

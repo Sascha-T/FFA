@@ -14,7 +14,7 @@ namespace FFA.Modules
 {
     [Name("Moderation")]
     [GuildOnly]
-    [Top(Configuration.TOP_REP)]
+    [Top(Configuration.TOP_MOD)]
     public sealed class Moderation : ModuleBase<Context>
     {
         private readonly FFAContext _ffaContext;
@@ -80,6 +80,26 @@ namespace FFA.Modules
                 await Context.ReplyAsync($"You have successfully unmuted {guildUser.Bold()}.");
                 await _moderationService.LogUnmuteAsync(Context.Guild, Context.User, guildUser, reason);
             }
+        }
+
+        [Command("Clear")]
+        [Summary("Delete a specified amount of messages sent by any guild user.")]
+        [RequireBotPermission(GuildPermission.ManageRoles)]
+        public async Task Clear([Summary("SteveJr#3333")] [NoSelf] IGuildUser guildUser,
+                                [Summary("3a")] Rule rule,
+                                [Summary("20")] [Between(Configuration.MIN_CLEAR, Configuration.MAX_CLEAR)] int quantity,
+                                [Summary("that's enough pornos for tonight Steve")] [Remainder] string reason = null)
+        {
+            var messages = await Context.Channel.GetMessagesAsync().FlattenAsync();
+            var filtered = messages.Where(x => x.Author.Id == guildUser.Id).Take(quantity);
+
+            await (Context.Channel as ITextChannel).DeleteMessagesAsync(filtered);
+
+            var msg = await Context.ReplyAsync($"You have successfully deleted {quantity} messages sent by {guildUser.Bold()}.");
+
+            await Task.Delay(Configuration.CLEAR_DELETE_DELAY);
+            await msg.DeleteAsync();
+            await _moderationService.LogClearAsync(Context.Guild, Context.User, guildUser, rule, quantity, reason);
         }
     }
 }

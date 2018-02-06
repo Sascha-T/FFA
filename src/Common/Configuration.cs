@@ -15,15 +15,21 @@ namespace FFA.Common
 
         // Current user
         public const string GAME = PREFIX + "help";
-        
-        // Moderation
-        public const int TOP_REP = 20, MIN_MUTE_LENGTH = 1;
 
-        // Memes
-        public const int TOP_BULLY = 40;
+        // Moderation settings
+        public const int MIN_MUTE_LENGTH = 1, CLEAR_DELETE_DELAY = 3000;
+
+        // Reputation commands
+        public const int REP_INCREASE = 1, UNREP_DECREASE = 1;
+
+        // Reputation requirements
+        public const int TOP_MOD = 20, TOP_BULLY = 40;
 
         // Maximums
-        public const int MAX_NICKNAME_LENGTH = 32;
+        public const int MAX_NICKNAME_LENGTH = 32, MAX_CLEAR = 100;
+
+        // Minimums
+        public const int MIN_CLEAR = 3;
 
         // Cooldowns in days
         public const int REP_COOLDOWN = 24, UNREP_COOLDOWN = 24, BULLY_COOLDOWN = 1;
@@ -32,7 +38,8 @@ namespace FFA.Common
         public const int AUTO_UNMUTE_TIMER = 60000;
 
         // Custom colors
-        public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65);
+        public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65),
+                                     CLEAR_COLOR = new Color(0x4D3DFF);
 
         // Default colors
         // TODO: more colors!!!

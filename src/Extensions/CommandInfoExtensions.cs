@@ -25,11 +25,11 @@ namespace FFA.Extensions
             {
                 var before = string.Empty;
 
-                if (param.Type.IsAssignableFrom(typeof(IUser)) || param.Type.IsAssignableFrom(typeof(IRole)))
+                if (typeof(IUser).IsAssignableFrom(param.Type) || typeof(IRole).IsAssignableFrom(param.Type))
                 {
                     before += "@";
                 }
-                else if (param.Type.IsAssignableFrom(typeof(ITextChannel)))
+                else if (typeof(ITextChannel).IsAssignableFrom(param.Type))
                 {
                     before += "#";
                 }

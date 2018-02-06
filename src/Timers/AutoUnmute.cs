@@ -62,8 +62,7 @@ namespace FFA.Timers
                             if (guildUser != null)
                             {
                                 await guildUser.RemoveRoleAsync(mutedRole);
-                                // TODO: specialized log for auto unmute
-                                await _moderationService.LogUnmuteAsync(guild, _client.CurrentUser, guildUser);
+                                await _moderationService.LogAutoUnmuteAsync(guild, guildUser);
                             }
                         }
                     }

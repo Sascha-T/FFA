@@ -19,37 +19,39 @@ namespace FFA.Services
 
         public Task LogMuteAsync(IGuild guild, IUser moderator, IUser subject, Rule rule, TimeSpan length, string reason = null)
         {
-            var author = new EmbedAuthorBuilder
-            {
-                Name = $"{moderator} ({moderator.Id})",
-                IconUrl = moderator.GetAvatarUrl()
-            };
-
             var description = $"**Action:** Mute\n" +
                               $"**User:** {subject} ({subject.Id})\n" +
                               $"**Rule:** {rule.Content}\n" +
                               (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}\n") +
                               $"**Length:** {length.TotalHours}h";
 
-            return LogAsync(guild, author, description, Configuration.MUTE_COLOR);
+            return LogAsync(guild, description, Configuration.MUTE_COLOR, moderator);
         }
 
         public Task LogUnmuteAsync(IGuild guild, IUser moderator, IUser subject, string reason = null)
         {
-            var author = new EmbedAuthorBuilder
-            {
-                Name = $"{moderator} ({moderator.Id})",
-                IconUrl = moderator.GetAvatarUrl()
-            };
-
             var description = $"**Action:** Unmute\n" +
                               $"**User:** {subject} ({subject.Id})\n" +
                               (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}");
 
-            return LogAsync(guild, author, description, Configuration.UNMUTE_COLOR);
+            return LogAsync(guild, description, Configuration.UNMUTE_COLOR, moderator);
         }
 
-        public async Task LogAsync(IGuild guild, EmbedAuthorBuilder author, string description, Color color)
+        public Task LogAutoUnmuteAsync(IGuild guild, IUser subject)
+            => LogAsync(guild, $"**Action:** Automatic Unmute\n**User:** {subject} ({subject.Id})\n", Configuration.UNMUTE_COLOR);
+
+        public Task LogClearAsync(IGuild guild, IUser moderator, IUser subject, Rule rule, int quantity, string reason = null)
+        {
+            var description = $"**Action:** Clear\n" +
+                              $"**User:** {subject} ({subject.Id})\n" +
+                              $"**Rule:** {rule.Content}\n" +
+                              $"**Quantity:** {quantity}\n" +
+                              (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}\n");
+
+            return LogAsync(guild, description, Configuration.CLEAR_COLOR, moderator);
+        }
+
+        public async Task LogAsync(IGuild guild, string description, Color color, IUser moderator = null)
         {
             var dbGuild = await _ffaContext.GetGuildAsync(guild.Id);
 
@@ -67,12 +69,20 @@ namespace FFA.Services
 
             var builder = new EmbedBuilder()
             {
-                Author = author,
                 Timestamp = DateTimeOffset.Now,
                 Footer = new EmbedFooterBuilder { Text = $"Case #{dbGuild.LogCase}" },
                 Description = description,
                 Color = color
             };
+
+            if (moderator != null)
+            {
+                builder.WithAuthor(new EmbedAuthorBuilder
+                {
+                    Name = $"{moderator} ({moderator.Id})",
+                    IconUrl = moderator.GetAvatarUrl()
+                });
+            }
 
             await logChannel.SendMessageAsync("", false, builder.Build());
             await _ffaContext.UpdateAsync(dbGuild, x => x.LogCase++);

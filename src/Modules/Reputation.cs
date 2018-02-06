@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace FFA.Modules
 {
-    // TODO: move reputation increase to config
     [Name("Reputation")]
     [GuildOnly]
     public sealed class Reputation : ModuleBase<Context>
@@ -28,7 +27,7 @@ namespace FFA.Modules
         [Summary("Informs you whether you are a moderator.")]
         public async Task ModAsync()
         {
-            if (await _repService.IsInTopAsync(Configuration.TOP_REP, Context.User.Id, Context.Guild.Id))
+            if (await _repService.IsInTopAsync(Configuration.TOP_MOD, Context.User.Id, Context.Guild.Id))
             {
                 await Context.ReplyAsync("You are currently a moderator.");
             }
@@ -38,8 +37,9 @@ namespace FFA.Modules
             }
         }
 
+        // TODO: rework resign
         [Command("Resign")]
-        [Top(Configuration.TOP_REP)]
+        [Top(Configuration.TOP_MOD)]
         [Summary("Reset your reputation to zero.")]
         public async Task ResignAsync()
         {
@@ -51,7 +51,7 @@ namespace FFA.Modules
         [Summary("Give reputation to any user.")]
         public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(Configuration.REP_COOLDOWN)] [NoSelf] IGuildUser user)
         {
-            await _ffaContext.UpsertUserAsync(user, x => x.Reputation++);
+            await _ffaContext.UpsertUserAsync(user, x => x.Reputation += Configuration.REP_INCREASE);
             await Context.ReplyAsync($"You have successfully repped {user.Bold()}.");
         }
 
@@ -59,7 +59,7 @@ namespace FFA.Modules
         [Summary("Remove reputation from any user.")]
         public async Task UnRepAsync([Summary("PapaFag#6666")] [Cooldown(Configuration.UNREP_COOLDOWN)] [NoSelf] IGuildUser user)
         {
-            await _ffaContext.UpsertUserAsync(user, x => x.Reputation--);
+            await _ffaContext.UpsertUserAsync(user, x => x.Reputation -= Configuration.UNREP_DECREASE);
             await Context.ReplyAsync($"You have successfully unrepped {user.Bold()}.");
         }
 
