@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 // TODO: README, contributing, all other github things.
 // TODO: Rules revamp
 // TODO: make public things that don't need to be public internal.
+// TODO: move all command checks to preconditions!
 namespace FFA
 {
     internal sealed class Program
