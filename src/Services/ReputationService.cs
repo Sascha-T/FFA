@@ -14,11 +14,11 @@ namespace FFA.Services
             _ffaContext = ffaContext;
         }
 
-        public async Task<bool> IsInTopAsync(int count, ulong userId, ulong guildId)
+        public Task<bool> IsInTopAsync(int count, ulong userId, ulong guildId)
         {
             var topUsers = _ffaContext.Users.Where(x => x.GuildId == guildId).OrderByDescending(x => x.Reputation).Take(count);
             
-            return await topUsers.AnyAsync(x => x.Id == userId);
+            return topUsers.AnyAsync(x => x.Id == userId);
         }
     }
 }
