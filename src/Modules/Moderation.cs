@@ -83,6 +83,7 @@ namespace FFA.Modules
         }
 
         [Command("Clear")]
+        [Alias("prune", "purge")]
         [Summary("Delete a specified amount of messages sent by any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task Clear([Summary("SteveJr#3333")] [NoSelf] IGuildUser guildUser,
