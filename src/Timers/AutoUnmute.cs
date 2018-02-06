@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Timers
 {
-    public class AutoUnmute
+    internal sealed class AutoUnmute
     {
         private readonly IDiscordClient _client;
         private readonly FFAContext _ffaContext;
@@ -21,7 +21,7 @@ namespace FFA.Timers
         private readonly Timer _timer;
         private readonly AutoResetEvent _autoEvent;
 
-        public AutoUnmute(IServiceProvider provider)
+        internal AutoUnmute(IServiceProvider provider)
         {
             _client = provider.GetRequiredService<DiscordSocketClient>();
             _ffaContext = provider.GetRequiredService<FFAContext>();

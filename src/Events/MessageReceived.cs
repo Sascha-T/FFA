@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace FFA.Events
 {
-    public sealed class MessageReceived
+    internal sealed class MessageReceived
     {
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commandService;
         private readonly IServiceProvider _provider;
 
-        public MessageReceived(IServiceProvider provider)
+        internal MessageReceived(IServiceProvider provider)
         {
             _provider = provider;
             _client = _provider.GetRequiredService<DiscordSocketClient>();
@@ -61,7 +61,8 @@ namespace FFA.Events
                             break;
                     }
 
-                    await context.ReplyErrorAsync(message);
+
+                    _ = Task.Run(() => context.ReplyErrorAsync(message));
                 }
             }
         }

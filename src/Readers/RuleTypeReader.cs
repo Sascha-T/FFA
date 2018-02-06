@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Readers
 {
-    public class RuleTypeReader : TypeReader
+    public sealed class RuleTypeReader : TypeReader
     {
         public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {

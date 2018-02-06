@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace FFA.Events
 {
-    public sealed class Ready
+    internal sealed class Ready
     {
         private readonly IServiceProvider _provider;
         private readonly DiscordSocketClient _client;
 
-        public Ready(IServiceProvider provider)
+        internal Ready(IServiceProvider provider)
         {
             _provider = provider;
             _client = provider.GetRequiredService<DiscordSocketClient>();
@@ -24,7 +24,7 @@ namespace FFA.Events
         {
             new AutoUnmute(_provider);
 
-            return _client.SetGameAsync(Configuration.GAME);
+            return Task.Run(() => _client.SetGameAsync(Configuration.GAME));
         }
     }
 }

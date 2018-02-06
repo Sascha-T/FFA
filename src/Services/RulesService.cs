@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public class RulesService
+    public sealed class RulesService
     {
         private readonly FFAContext _ffaContext;
         private readonly SendingService _sender;

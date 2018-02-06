@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public class ModerationService
+    public sealed class ModerationService
     {
         private readonly FFAContext _ffaContext;
 
@@ -16,7 +16,7 @@ namespace FFA.Services
         {
             _ffaContext = ffaContext;
         }
-        
+
         public Task LogMuteAsync(IGuild guild, IUser moderator, IUser subject, Rule rule, TimeSpan length, string reason = null)
         {
             var author = new EmbedAuthorBuilder
@@ -33,7 +33,7 @@ namespace FFA.Services
 
             return LogAsync(guild, author, description, Configuration.MUTE_COLOR);
         }
-        
+
         public Task LogUnmuteAsync(IGuild guild, IUser moderator, IUser subject, string reason = null)
         {
             var author = new EmbedAuthorBuilder

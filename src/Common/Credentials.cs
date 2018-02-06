@@ -2,7 +2,7 @@
 
 namespace FFA.Common
 {
-    public class Credentials
+    internal class Credentials
     {
         public string Token { get; set; }
         public IReadOnlyList<ulong> OwnerIds { get; set; }

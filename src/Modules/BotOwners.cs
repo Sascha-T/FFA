@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace FFA.Modules
 {
     [BotOwner]
-    public class BotOwners : ModuleBase<Context>
+    public sealed class BotOwners : ModuleBase<Context>
     {
         private readonly FFAContext _ffaContext;
         private readonly SendingService _sender;

@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FFA.Preconditions
 {
-    public class BotOwner : PreconditionAttribute
+    public sealed class BotOwner : PreconditionAttribute
     {
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {

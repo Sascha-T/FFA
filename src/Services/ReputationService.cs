@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public class ReputationService
+    public sealed class ReputationService
     {
         private readonly FFAContext _ffaContext;
 

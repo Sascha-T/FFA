@@ -23,6 +23,7 @@ namespace FFA.Modules
         }
 
         [Command("Mod")]
+        [Alias("moderator")]
         [Summary("Informs you whether you are a moderator.")]
         public async Task ModAsync()
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Readers
 {
-    public class TimeSpanTypeReader : TypeReader
+    public sealed class TimeSpanTypeReader : TypeReader
     {
         private readonly Regex numberRegex = new Regex(@"^\d+(\.\d+)?", RegexOptions.ECMAScript);
         private readonly Dictionary<string, double> timeMultipliers = new Dictionary<string, double>()

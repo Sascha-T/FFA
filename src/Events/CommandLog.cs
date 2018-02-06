@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace FFA.Events
 {
-    public sealed class CommandLog
+    internal sealed class CommandLog
     {
         private readonly CommandService _commandService;
         private readonly LoggingService _logger;
         private readonly SendingService _sender;
 
-        public CommandLog(IServiceProvider provider)
+        internal CommandLog(IServiceProvider provider)
         {
             _commandService = provider.GetRequiredService<CommandService>();
             _logger = provider.GetRequiredService<LoggingService>();
@@ -58,7 +58,7 @@ namespace FFA.Events
                     await _logger.LogAsync(msg.Severity, $"{msg.Source}: {(msg.Exception?.ToString() ?? msg.Message)}");
                 }
 
-                await _sender.ReplyErrorAsync(commandException.Context.User, commandException.Context.Channel, message);
+                _ = Task.Run(() => _sender.ReplyErrorAsync(commandException.Context.User, commandException.Context.Channel, message));
             }
         }
     }

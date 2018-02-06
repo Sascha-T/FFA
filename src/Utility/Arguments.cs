@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace FFA.Utility
 {
-    public static class Arguments
+    internal static class Arguments
     {
         // TODO: proper parsing instead of reading files inside parser LOL
-        public static async Task<string[]> ParseAsync(string[] args)
+        internal static async Task<string[]> ParseAsync(string[] args)
         {
             var credentialsFile = "Credentials.json";
 
@@ -32,7 +32,7 @@ namespace FFA.Utility
             return new string[] { await File.ReadAllTextAsync(credentialsFile) };
         }
 
-        private static async Task TerminateAsync(string message)
+        internal static async Task TerminateAsync(string message)
         {
             await ColoredConsole.WriteLineAsync($"\n{message}", ConsoleColor.Red);
             await Console.Out.WriteLineAsync("\nUsage: dotnet FFA.dll [options]\n\n" +

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace FFA.Common
 {
-    public static class Configuration
+    internal static class Configuration
     {
         // Command handler
         public const string PREFIX = ";";

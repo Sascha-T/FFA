@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace FFA.Events
 {
-    public sealed class UserJoined
+    internal sealed class UserJoined
     {
         private readonly DiscordSocketClient _client;
         private readonly FFAContext _ffaContext;
 
-        public UserJoined(IServiceProvider provider)
+        internal UserJoined(IServiceProvider provider)
         {
             _client = provider.GetRequiredService<DiscordSocketClient>();
             _ffaContext = provider.GetRequiredService<FFAContext>();
@@ -35,7 +35,7 @@ namespace FFA.Events
                     return;
                 }
 
-                await guildUser.AddRoleAsync(mutedRole);
+                _ = Task.Run(() => guildUser.AddRoleAsync(mutedRole));
             }
         }
     }

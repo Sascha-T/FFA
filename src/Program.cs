@@ -20,12 +20,12 @@ using System.Threading.Tasks;
 // TODO: make public things that don't need to be public internal.
 namespace FFA
 {
-    public class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
             => new Program().StartAsync(args).GetAwaiter().GetResult();
 
-        public async Task StartAsync(string[] args)
+        private async Task StartAsync(string[] args)
         {
             var parsedArgs = await Arguments.ParseAsync(args);
             var credentials = JsonConvert.DeserializeObject<Credentials>(parsedArgs[0], Configuration.JSON_SETTINGS);
@@ -33,7 +33,8 @@ namespace FFA
             var client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Info,
-                MessageCacheSize = 10
+                MessageCacheSize = 10,
+                AlwaysDownloadUsers = true
             });
 
             var commandService = new CommandService(new CommandServiceConfig

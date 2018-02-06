@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public sealed class LoggingService
+    internal sealed class LoggingService
     {
-        public async Task LogAsync(LogSeverity severity, string message)
+        internal async Task LogAsync(LogSeverity severity, string message)
         {
             // TODO: log to a file + different file for errors
             await Console.Out.WriteAsync($"{DateTime.UtcNow.ToString("hh:mm:ss")} ");

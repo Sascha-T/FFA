@@ -4,7 +4,7 @@ using Discord.Commands;
 
 namespace FFA.Preconditions
 {
-    public class MinimumHours : ParameterPreconditionAttribute
+    public sealed class MinimumHours : ParameterPreconditionAttribute
     {
         private readonly int _minimumHours;
 

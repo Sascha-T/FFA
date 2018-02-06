@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace FFA.Events
 {
-    public sealed class ClientLog
+    internal sealed class ClientLog
     {
         private readonly DiscordSocketClient _client;
         private readonly LoggingService _logger;
         
-        public ClientLog(IServiceProvider provider)
+        internal ClientLog(IServiceProvider provider)
         {
             _client = provider.GetRequiredService<DiscordSocketClient>();
             _logger = provider.GetRequiredService<LoggingService>();
