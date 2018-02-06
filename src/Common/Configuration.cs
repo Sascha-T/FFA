@@ -68,7 +68,7 @@ namespace FFA.Common
                 .WithReferences(AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic && 
                                 !string.IsNullOrWhiteSpace(x.Location)));
 
-        // JSON serialization
+        // JSON serialization settings
         public static readonly JsonSerializerSettings JSON_SETTINGS = new JsonSerializerSettings
         {
             MissingMemberHandling = MissingMemberHandling.Error

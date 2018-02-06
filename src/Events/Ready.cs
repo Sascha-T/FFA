@@ -22,9 +22,12 @@ namespace FFA.Events
 
         private Task OnReadyAsync()
         {
-            new AutoUnmute(_provider);
+            Task.Run(() => 
+            {
+                new AutoUnmute(_provider);
 
-            _ = Task.Run(() => _client.SetGameAsync(Configuration.GAME));
+                _client.SetGameAsync(Configuration.GAME);
+            });
 
             return Task.CompletedTask;
         }

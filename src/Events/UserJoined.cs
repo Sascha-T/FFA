@@ -22,21 +22,26 @@ namespace FFA.Events
             _client.UserJoined += OnUserJoinedAsync;
         }
 
-        private async Task OnUserJoinedAsync(IGuildUser guildUser)
+        private Task OnUserJoinedAsync(IGuildUser guildUser)
         {
-            var dbGuild = await _ffaContext.GetGuildAsync(guildUser.Guild.Id);
-
-            if (dbGuild.MutedRoleId.HasValue && await _ffaContext.Mutes.AnyAsync(x => x.GuildId == guildUser.Guild.Id && x.UserId == guildUser.Id))
+            Task.Run(async () =>
             {
-                var mutedRole = guildUser.Guild.GetRole(dbGuild.MutedRoleId.Value);
+                var dbGuild = await _ffaContext.GetGuildAsync(guildUser.Guild.Id);
 
-                if (mutedRole == null || !await mutedRole.CanUseRoleAsync())
+                if (dbGuild.MutedRoleId.HasValue && await _ffaContext.Mutes.AnyAsync(x => x.GuildId == guildUser.Guild.Id && x.UserId == guildUser.Id))
                 {
-                    return;
-                }
+                    var mutedRole = guildUser.Guild.GetRole(dbGuild.MutedRoleId.Value);
 
-                _ = Task.Run(() => guildUser.AddRoleAsync(mutedRole));
-            }
+                    if (mutedRole == null || !await mutedRole.CanUseRoleAsync())
+                    {
+                        return;
+                    }
+
+                    await guildUser.AddRoleAsync(mutedRole);
+                }
+            });
+
+            return Task.CompletedTask;
         }
     }
 }
