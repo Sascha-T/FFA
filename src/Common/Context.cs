@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.WebSocket;
 using FFA.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -8,15 +7,30 @@ using System.Threading.Tasks;
 
 namespace FFA.Common
 {
-    public class Context : SocketCommandContext
+    public class Context : ICommandContext
     {
         private readonly IServiceProvider _provider;
         private readonly SendingService _sender;
 
-        public Context(DiscordSocketClient client, SocketUserMessage msg, IServiceProvider provider) : base(client, msg)
+        public IDiscordClient Client { get; private set; }
+        public IGuild Guild { get; private set; }
+        public IMessageChannel Channel { get; private set; }
+        public ITextChannel TextChannel { get; private set; }
+        public IUser User { get; private set; }
+        public IGuildUser GuildUser { get { return User as IGuildUser; } }
+        public IUserMessage Message { get; private set; }
+
+        public Context(IDiscordClient client, IUserMessage msg, IServiceProvider provider)
         {
             _provider = provider;
             _sender = _provider.GetRequiredService<SendingService>();
+
+            Client = client;
+            Message = msg;
+            Channel = msg.Channel;
+            TextChannel = msg.Channel as ITextChannel;
+            Guild = TextChannel?.Guild;
+            User = msg.Author;
         }
 
         public async Task<IUserMessage> DmAsync(string description, string title = null)

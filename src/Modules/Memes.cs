@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Modules
 {
+    [Name("Memes")]
     public sealed class Memes : ModuleBase<Context>
     {
         [Command("Bully")]
