@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using FFA.Common;
@@ -71,6 +71,7 @@ namespace FFA
             commandService.AddTypeReader<Rule>(new RuleTypeReader());
             commandService.AddTypeReader<TimeSpan>(new TimeSpanTypeReader());
             commandService.AddTypeReader<Color>(new ColorTypeReader());
+
             await commandService.AddModulesAsync(Assembly.GetEntryAssembly());
             await client.LoginAsync(TokenType.Bot, credentials.Token);
             await client.StartAsync();

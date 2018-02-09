@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using FFA.Common;
 using FFA.Database;
@@ -37,16 +37,6 @@ namespace FFA.Modules
             }
         }
 
-        // TODO: rework resign
-        [Command("Resign")]
-        [Top(Configuration.TOP_MOD)]
-        [Summary("Reset your reputation to zero.")]
-        public async Task ResignAsync()
-        {
-            await _ffaContext.UpsertUserAsync(Context.User.Id, Context.Guild.Id, x => x.Reputation = 0);
-            await Context.ReplyAsync($"You have successfully resigned.");
-        }
-
         [Command("Rep")]
         [Summary("Give reputation to any user.")]
         public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(Configuration.REP_COOLDOWN)] [NoSelf] IGuildUser user)
@@ -67,9 +57,7 @@ namespace FFA.Modules
         [Summary("Get your current reputation.")]
         public async Task MyRepAsync()
         {
-            var dbUser = await _ffaContext.GetUserAsync(Context.GuildUser);
-
-            await Context.DmAsync($"You currently have {dbUser.Reputation} reputation.");
+            await Context.DmAsync($"You currently have {Context.DbUser.Reputation} reputation.");
             await Context.ReplyAsync($"You have been DMed with your reputation.");
         }
     }

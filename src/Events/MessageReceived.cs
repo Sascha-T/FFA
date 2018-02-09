@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using FFA.Common;
 using FFA.Services;
@@ -25,11 +26,11 @@ namespace FFA.Events
             _client.MessageReceived += OnMessageReceivedAsync;
         }
 
-        private Task OnMessageReceivedAsync(SocketMessage socketMsg)
+        private Task OnMessageReceivedAsync(IMessage socketMsg)
         {
             Task.Run(async () =>
             {
-                var msg = socketMsg as SocketUserMessage;
+                var msg = socketMsg as IUserMessage;
 
                 if (msg == null || msg.Author.IsBot)
                 {
@@ -37,6 +38,8 @@ namespace FFA.Events
                 }
 
                 var context = new Context(_client, msg, _provider);
+
+                await context.InitializeAsync();
 
                 int argPos = 0;
 

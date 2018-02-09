@@ -1,5 +1,7 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
+using FFA.Database;
+using FFA.Database.Models;
 using FFA.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -7,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace FFA.Common
 {
-    public class Context : ICommandContext
+    public sealed class Context : ICommandContext
     {
         private readonly IServiceProvider _provider;
+        private readonly FFAContext _ffaContext;
         private readonly SendingService _sender;
 
         public IDiscordClient Client { get; }
@@ -17,12 +20,15 @@ namespace FFA.Common
         public IMessageChannel Channel { get; }
         public ITextChannel TextChannel { get; }
         public IUser User { get; }
-        public IGuildUser GuildUser { get { return User as IGuildUser; } }
+        public IGuildUser GuildUser { get; }
         public IUserMessage Message { get; }
+        public Guild DbGuild { get; private set; }
+        public User DbUser { get; private set; }
 
         public Context(IDiscordClient client, IUserMessage msg, IServiceProvider provider)
         {
             _provider = provider;
+            _ffaContext = _provider.GetRequiredService<FFAContext>();
             _sender = _provider.GetRequiredService<SendingService>();
 
             Client = client;
@@ -31,6 +37,16 @@ namespace FFA.Common
             TextChannel = msg.Channel as ITextChannel;
             Guild = TextChannel?.Guild;
             User = msg.Author;
+            GuildUser = User as IGuildUser;
+        }
+
+        public async Task InitializeAsync()
+        {
+            if (Guild != null)
+            {
+                DbUser = await _ffaContext.GetUserAsync(GuildUser);
+                DbGuild = await _ffaContext.GetGuildAsync(Guild.Id);
+            }
         }
 
         public async Task<IUserMessage> DmAsync(string description, string title = null)
