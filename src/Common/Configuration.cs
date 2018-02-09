@@ -24,7 +24,7 @@ namespace FFA.Common
         public const int REP_INCREASE = 1, UNREP_DECREASE = 1;
 
         // Reputation requirements
-        public const int TOP_MOD = 20, TOP_COLOR = 30, TOP_BULLY = 40;
+        public const int TOP_MOD = 30, TOP_BULLY = 40, TOP_COLOR = 50;
 
         // Maximums
         public const int MAX_NICKNAME_LENGTH = 32, MAX_CLEAR = 100, MAX_ROLES = 500;
@@ -36,7 +36,7 @@ namespace FFA.Common
         public const int CLEAR_DEFAULT = 20;
 
         // Cooldowns in hours
-        public const int REP_COOLDOWN = 24, UNREP_COOLDOWN = 24, BULLY_COOLDOWN = 1, COLOR_COOLDOWN = 1;
+        public const int REP_COOLDOWN = 6, UNREP_COOLDOWN = 6, BULLY_COOLDOWN = 1, COLOR_COOLDOWN = 1;
 
         // Timers in milliseconds
         public const int AUTO_UNMUTE_TIMER = 60000;
