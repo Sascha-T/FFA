@@ -34,14 +34,21 @@ namespace FFA.Services
         public Task<IUserMessage> SendFieldsErrorAsync(IMessageChannel channel, params string[] fieldOrValue)
             => SendFieldsAsync(channel, Configuration.ERROR_COLOR, fieldOrValue);
 
-        public Task<IUserMessage> SendAsync(IMessageChannel channel, string description, string title = null, Color? color = null)
+        public Task<IUserMessage> SendAsync(IMessageChannel channel, string description, string title = null, Color? color = null, IGuild guild = null)
         {
-            return SendEmbedAsync(channel, new EmbedBuilder
+            var builder = new EmbedBuilder
             {
                 Color = color ?? _random.Value.ArrayElement(Configuration.DEFAULT_COLORS),
                 Description = description,
                 Title = title
-            });
+            };
+
+            if (guild != null)
+            {
+                builder.WithFooter(guild.Name, guild.IconUrl);
+            }
+
+            return SendEmbedAsync(channel, builder);
         }
 
         public async Task<IUserMessage> SendEmbedAsync(IMessageChannel channel, EmbedBuilder builder)

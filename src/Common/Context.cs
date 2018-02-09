@@ -12,13 +12,13 @@ namespace FFA.Common
         private readonly IServiceProvider _provider;
         private readonly SendingService _sender;
 
-        public IDiscordClient Client { get; private set; }
-        public IGuild Guild { get; private set; }
-        public IMessageChannel Channel { get; private set; }
-        public ITextChannel TextChannel { get; private set; }
-        public IUser User { get; private set; }
+        public IDiscordClient Client { get; }
+        public IGuild Guild { get; }
+        public IMessageChannel Channel { get; }
+        public ITextChannel TextChannel { get; }
+        public IUser User { get; }
         public IGuildUser GuildUser { get { return User as IGuildUser; } }
-        public IUserMessage Message { get; private set; }
+        public IUserMessage Message { get; }
 
         public Context(IDiscordClient client, IUserMessage msg, IServiceProvider provider)
         {
@@ -34,7 +34,7 @@ namespace FFA.Common
         }
 
         public async Task<IUserMessage> DmAsync(string description, string title = null)
-            => await _sender.SendAsync(await User.GetOrCreateDMChannelAsync(), description, title);
+            => await _sender.SendAsync(await User.GetOrCreateDMChannelAsync(), description, title, guild: Guild);
 
         public Task<IUserMessage> SendFieldsAsync(Color? color = null, params string[] fieldOrValue)
             => _sender.SendFieldsAsync(Channel, color, fieldOrValue);

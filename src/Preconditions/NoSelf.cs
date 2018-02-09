@@ -9,7 +9,7 @@ namespace FFA.Preconditions
     {
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value, IServiceProvider services)
         {
-            if (context.User.Id == (value as IUser).Id)
+            if (context.User.Id == ((IUser)value).Id)
             {
                 return Task.FromResult(PreconditionResult.FromError("This command may not be used on yourself."));
             }

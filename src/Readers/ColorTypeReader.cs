@@ -11,18 +11,13 @@ namespace FFA.Readers
 
         public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
-            var color = System.Drawing.Color.FromName(input);
-
-            if (color.ToArgb() != 0)
-            {
-                return Task.FromResult(TypeReaderResult.FromSuccess(new Discord.Color(color.R, color.G, color.B)));
-            }
-            else if (uint.TryParse(input, NumberStyles.HexNumber, _numberFormat, out uint result))
+            // change string replace to regex replace
+            if (uint.TryParse(input.Replace("#", string.Empty), NumberStyles.HexNumber, _numberFormat, out uint result))
             {
                 return Task.FromResult(TypeReaderResult.FromSuccess(new Discord.Color(result)));
             }
 
-            return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid color."));
+            return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid color hex value."));
         }
     }
 }

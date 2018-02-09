@@ -94,7 +94,7 @@ namespace FFA.Modules
             var messages = await Context.Channel.GetMessagesAsync().FlattenAsync();
             var filtered = messages.Where(x => x.Author.Id == guildUser.Id).Take(quantity);
 
-            await (Context.Channel as ITextChannel).DeleteMessagesAsync(filtered);
+            await Context.TextChannel.DeleteMessagesAsync(filtered);
 
             var msg = await Context.ReplyAsync($"You have successfully deleted {quantity} messages sent by {guildUser.Bold()}.");
 

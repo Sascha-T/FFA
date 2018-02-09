@@ -67,7 +67,7 @@ namespace FFA.Modules
         [Summary("Get your current reputation.")]
         public async Task MyRepAsync()
         {
-            var dbUser = await _ffaContext.GetUserAsync(Context.User as IGuildUser);
+            var dbUser = await _ffaContext.GetUserAsync(Context.GuildUser);
 
             await Context.DmAsync($"You currently have {dbUser.Reputation} reputation.");
             await Context.ReplyAsync($"You have been DMed with your reputation.");

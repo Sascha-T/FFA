@@ -34,7 +34,7 @@ namespace FFA.Common
         // Defaults
         public const int CLEAR_DEFAULT = 20;
 
-        // Cooldowns in days
+        // Cooldowns in hours
         public const int REP_COOLDOWN = 24, UNREP_COOLDOWN = 24, BULLY_COOLDOWN = 1, COLOR_COOLDOWN = 1;
 
         // Timers in milliseconds

@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
+// TODO: custom commands added by users!
 // TODO: README, contributing, all other github things.
 // TODO: Rules revamp
 // TODO: move all command checks to preconditions!

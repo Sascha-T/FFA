@@ -23,11 +23,13 @@ namespace FFA.Modules
         }
 
         [Command("Color")]
+        [Alias("colour")]
         [Summary("Give yourself a role with any color you please.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         [Top(Configuration.TOP_COLOR)]
         public async Task ColorAsync([Summary("purple")] [Remainder] [Cooldown(Configuration.COLOR_COOLDOWN)] Color color)
         {
+            // move role finding & creation to helper method
             var role = Context.Guild.Roles.FirstOrDefault(x => x.Name.StartsWith('#') && x.Color.RawValue == color.RawValue);
 
             if (role == default(IRole))
@@ -37,6 +39,7 @@ namespace FFA.Modules
                     await Context.Guild.Roles.First(x => x.Name.StartsWith('#')).DeleteAsync();
                 }
 
+                // TODO: fixed length for role name
                 role = await Context.Guild.CreateRoleAsync($"{color}".ToUpper(), color: color);
             }
 
