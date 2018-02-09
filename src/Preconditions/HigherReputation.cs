@@ -12,6 +12,7 @@ namespace FFA.Preconditions
     {
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value, IServiceProvider services)
         {
+            // TODO: make Context have a public FFAContext property to avoid recreating new db context
             var ffaContext = services.GetRequiredService<FFAContext>();
             var dbUser = await ffaContext.GetUserAsync(value as IGuildUser);
 
