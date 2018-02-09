@@ -44,7 +44,7 @@ namespace FFA.Common
         // Discord code responses
         public static readonly IReadOnlyDictionary<int, string> DISCORD_CODE_RESPONSES = new Dictionary<int, string>()
         {
-            { 20001, "Only a user account may perform this action." },
+            { 20001, "Only an user account may perform this action." },
             { 50007, "I cannot DM you. Please allow direct messages from guild users." },
             { 50013, "I do not have permission to do that." },
             { 50034, "Discord does not allow bulk deletion of messages that are more than two weeks old." }
