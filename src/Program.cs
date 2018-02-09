@@ -56,6 +56,7 @@ namespace FFA
                 .AddSingleton(credentials)
                 .AddSingleton<SendingService>()
                 .AddSingleton<RulesService>()
+                .AddSingleton<ResultService>()
                 .AddSingleton<MessageReceived>()
                 .AddSingleton<ModerationService>()
                 .AddSingleton<ReputationService>();

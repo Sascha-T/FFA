@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Net;
 
 namespace FFA.Common
 {
@@ -40,9 +41,22 @@ namespace FFA.Common
         // Timers in milliseconds
         public const int AUTO_UNMUTE_TIMER = 60000;
 
-        // Discord error codes
-        // TODO: move to some constants file
-        public const int CANNOT_DM_CODE = 50007, OLD_MSG_CODE = 50034;
+        // Discord code responses
+        public static readonly IReadOnlyDictionary<int, string> DISCORD_CODE_RESPONSES = new Dictionary<int, string>()
+        {
+            { 20001, "Only a user account may perform this action." },
+            { 50007, "I cannot DM you. Please allow direct messages from guild users." },
+            { 50013, "I do not have permission to do that." },
+            { 50034, "Discord does not allow bulk deletion of messages that are more than two weeks old." }
+        };
+
+        // HTTP code responses
+        public static readonly IReadOnlyDictionary<HttpStatusCode, string> HTTP_CODE_RESPONSES = new Dictionary<HttpStatusCode, string>()
+        {
+            { HttpStatusCode.Forbidden, "I do not have permission to do that." },
+            { HttpStatusCode.InternalServerError, "An unexpected error has occurred, please try again later." },
+            { HttpStatusCode.RequestTimeout, "The request has timed out, please try again later." }
+        };
 
         // Custom colors
         public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65),

@@ -4,23 +4,22 @@ using Discord.Net;
 using FFA.Common;
 using FFA.Extensions;
 using System;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    internal sealed class ResultService
+    public sealed class ResultService
     {
         private readonly LoggingService _logger;
         private readonly CommandService _commandService;
         
-        internal ResultService(LoggingService logger, CommandService commandService)
+        public ResultService(LoggingService logger, CommandService commandService)
         {
             _logger = logger;
             _commandService = commandService;
         }
 
-        internal Task HandleResult(Context context, IResult result, int argPos)
+        public Task HandleResult(Context context, IResult result, int argPos)
         {
             var message = result.ErrorReason;
 
@@ -42,29 +41,16 @@ namespace FFA.Services
             return context.ReplyErrorAsync(message);
         }
 
-        internal async Task HandleException(Context context, Exception exception)
+        public async Task HandleException(Context context, Exception exception)
         {
             var last = exception.Last();
             var message = last.Message;
 
-            if (last is HttpException discordException)
+            if (last is HttpException httpEx)
             {
-                switch (discordException.HttpCode)
+                if (!Configuration.DISCORD_CODE_RESPONSES.TryGetValue(httpEx.DiscordCode.GetValueOrDefault(), out message))
                 {
-                    case HttpStatusCode.Forbidden:
-                        switch (discordException.DiscordCode)
-                        {
-                            case Configuration.CANNOT_DM_CODE:
-                                message = "I cannot DM you. Please allow direct messages from guild users.";
-                                break;
-                            case Configuration.OLD_MSG_CODE:
-                                message = "Discord does not allow bulk deletion of messages that are more than two weeks old.";
-                                break;
-                            case null:
-                                message = "I do not have permission to do that.";
-                                break;
-                        }
-                        break;
+                    Configuration.HTTP_CODE_RESPONSES.TryGetValue(httpEx.HttpCode, out message);
                 }
             }
             else
