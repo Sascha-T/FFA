@@ -29,7 +29,7 @@ namespace FFA.Modules
         [Top(Configuration.TOP_COLOR)]
         public async Task ColorAsync([Summary("#FF0000")] [Remainder] [Cooldown(Configuration.COLOR_COOLDOWN)] Color color)
         {
-            // move role finding & creation to helper method
+            // TODO: move role finding & creation to helper method
             var role = Context.Guild.Roles.FirstOrDefault(x => x.Name.StartsWith('#') && x.Color.RawValue == color.RawValue);
 
             if (role == default(IRole))
