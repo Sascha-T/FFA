@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using FFA.Common;
 using FFA.Database;
@@ -29,7 +29,7 @@ namespace FFA.Modules
         [Command("Mute")]
         [Summary("Mute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task MuteAsync([Summary("Jimbo#5555")] [NoSelf] IGuildUser guildUser, 
+        public async Task MuteAsync([Summary("Jimbo#5555")] [NoSelf] [HigherReputation] IGuildUser guildUser, 
                                     [Summary("2c")] Rule rule, 
                                     [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] TimeSpan length, 
                                     [Summary("stop with all that ruckus!")] [Remainder] string reason = null)
@@ -60,7 +60,7 @@ namespace FFA.Modules
         [Command("Unmute")]
         [Summary("Unmute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task UnmuteAsync([Summary("Billy#6969")] [NoSelf] IGuildUser guildUser, 
+        public async Task UnmuteAsync([Summary("Billy#6969")] [NoSelf] [HigherReputation] IGuildUser guildUser, 
                                       [Summary("you best stop flirting with Mrs Ruckus")] [Remainder] string reason = null)
         {
             var dbGuild = await _ffaContext.GetGuildAsync(Context.Guild.Id);
@@ -86,7 +86,7 @@ namespace FFA.Modules
         [Alias("prune", "purge")]
         [Summary("Delete a specified amount of messages sent by any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task Clear([Summary("SteveJr#3333")] [NoSelf] IGuildUser guildUser,
+        public async Task Clear([Summary("SteveJr#3333")] [NoSelf] [HigherReputation] IGuildUser guildUser,
                                 [Summary("3a")] Rule rule,
                                 [Summary("20")] [Between(Configuration.MIN_CLEAR, Configuration.MAX_CLEAR)] int quantity = Configuration.CLEAR_DEFAULT,
                                 [Summary("that's enough pornos for tonight Steve")] [Remainder] string reason = null)
