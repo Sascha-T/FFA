@@ -1,7 +1,7 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
 using FFA.Common;
-using FFA.Extensions;
+using FFA.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
@@ -12,6 +12,7 @@ namespace FFA.Events
     {
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commandService;
+        private readonly ResultService _resultService;
         private readonly IServiceProvider _provider;
 
         internal MessageReceived(IServiceProvider provider)
@@ -19,6 +20,7 @@ namespace FFA.Events
             _provider = provider;
             _client = _provider.GetRequiredService<DiscordSocketClient>();
             _commandService = _provider.GetRequiredService<CommandService>();
+            _resultService = _provider.GetRequiredService<ResultService>();
 
             _client.MessageReceived += OnMessageReceivedAsync;
         }
@@ -44,27 +46,7 @@ namespace FFA.Events
 
                     if (!result.IsSuccess)
                     {
-                        var message = string.Empty;
-
-                        switch (result.Error.Value)
-                        {
-                            case CommandError.UnknownCommand:
-                                // TODO: check for command similarity
-                                return;
-                            case CommandError.BadArgCount:
-                                var cmd = _commandService.GetCommand(context, argPos);
-
-                                message = $"You are incorrectly using this command.\n" +
-                                          $"**Usage:** `{Configuration.PREFIX}{cmd.GetUsage()}`\n" +
-                                          $"**Example:** `{Configuration.PREFIX}{cmd.GetExample()}`";
-                                break;
-                            default:
-                                message = result.ErrorReason;
-                                break;
-                        }
-
-
-                        await context.ReplyErrorAsync(message);
+                        await _resultService.HandleResult(context, result, argPos);
                     }
                 }
             });

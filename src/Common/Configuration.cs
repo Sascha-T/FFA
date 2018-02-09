@@ -40,6 +40,10 @@ namespace FFA.Common
         // Timers in milliseconds
         public const int AUTO_UNMUTE_TIMER = 60000;
 
+        // Discord error codes
+        // TODO: move to some constants file
+        public const int CANNOT_DM_CODE = 50007, OLD_MSG_CODE = 50034;
+
         // Custom colors
         public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65),
                                      CLEAR_COLOR = new Color(0x4D3DFF);

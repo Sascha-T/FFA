@@ -63,7 +63,6 @@ namespace FFA
             var provider = services.BuildServiceProvider();
 
             new ClientLog(provider);
-            new CommandLog(provider);
             new MessageReceived(provider);
             new Ready(provider);
             new UserJoined(provider);
