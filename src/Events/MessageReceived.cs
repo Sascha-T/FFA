@@ -31,7 +31,7 @@ namespace FFA.Events
             {
                 var msg = socketMsg as SocketUserMessage;
 
-                if (msg == null)
+                if (msg == null || msg.Author.IsBot)
                 {
                     return;
                 }
