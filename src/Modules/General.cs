@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using FFA.Common;
 using FFA.Extensions;
@@ -10,6 +10,7 @@ namespace FFA.Modules
 {
     public sealed class General : ModuleBase<Context>
     {
+        // TODO: require role hierarchy to bully, preconditions > exceptions
         [Command("Bully")]
         [Summary("Change anyone's nickname to whatever you please.")]
         [RequireBotPermission(GuildPermission.ManageNicknames)]
@@ -29,23 +30,10 @@ namespace FFA.Modules
         [Top(Configuration.TOP_COLOR)]
         public async Task ColorAsync([Summary("#FF0000")] [Remainder] [Cooldown(Configuration.COLOR_COOLDOWN)] Color color)
         {
-            // TODO: move role finding & creation to helper method
-            var role = Context.Guild.Roles.FirstOrDefault(x => x.Name.StartsWith('#') && x.Color.RawValue == color.RawValue);
+            var role = await Context.Guild.GetOrCreateRoleAsync(color.GetFormattedString(), color);
+            var existingColorRoles = Context.GuildUser.GetRoles().Where(x => x.Name.StartsWith('#'));
 
-            if (role == default(IRole))
-            {
-                if (Context.Guild.Roles.Count == Configuration.MAX_ROLES)
-                {
-                    await Context.Guild.Roles.First(x => x.Name.StartsWith('#')).DeleteAsync();
-                }
-
-                // TODO: fixed length for role name
-                role = await Context.Guild.CreateRoleAsync($"{color}".ToUpper(), color: color);
-            }
-
-            var existingRoles = Context.GuildUser.GetRoles().Where(x => x.Name.StartsWith('#'));
-
-            await Context.GuildUser.RemoveRolesAsync(existingRoles);
+            await Context.GuildUser.RemoveRolesAsync(existingColorRoles);
             await Context.GuildUser.AddRoleAsync(role);
             await Context.ReplyAsync("You have successfully set your role color.");
         }

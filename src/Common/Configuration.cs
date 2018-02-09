@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Microsoft.CodeAnalysis.Scripting;
 using Newtonsoft.Json;
 using System;
@@ -27,7 +27,7 @@ namespace FFA.Common
         public const int TOP_MOD = 30, TOP_BULLY = 40, TOP_COLOR = 50;
 
         // Maximums
-        public const int MAX_NICKNAME_LENGTH = 32, MAX_CLEAR = 100, MAX_ROLES = 500;
+        public const int MAX_NICKNAME_LENGTH = 32, MAX_CLEAR = 100, MAX_ROLES = 500, MAX_HEX_LENGTH = 6;
 
         // Minimums
         public const int MIN_CLEAR = 3;
