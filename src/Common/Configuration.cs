@@ -48,7 +48,7 @@ namespace FFA.Common
             { 50007, "I cannot DM you. Please allow direct messages from guild users." },
             { 50013, "I do not have permission to do that." },
             { 50034, "Discord does not allow bulk deletion of messages that are more than two weeks old." }
-        };
+        }.ToImmutableDictionary();
 
         // HTTP code responses
         public static readonly IReadOnlyDictionary<HttpStatusCode, string> HTTP_CODE_RESPONSES = new Dictionary<HttpStatusCode, string>()
@@ -56,7 +56,7 @@ namespace FFA.Common
             { HttpStatusCode.Forbidden, "I do not have permission to do that." },
             { HttpStatusCode.InternalServerError, "An unexpected error has occurred, please try again later." },
             { HttpStatusCode.RequestTimeout, "The request has timed out, please try again later." }
-        };
+        }.ToImmutableDictionary();
 
         // Custom colors
         public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65),
