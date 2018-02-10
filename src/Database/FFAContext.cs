@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using FFA.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using System;

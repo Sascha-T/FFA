@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using FFA.Utility;
 using System;
 using System.Threading.Tasks;

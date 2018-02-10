@@ -1,4 +1,4 @@
-﻿namespace FFA.Database.Models
+namespace FFA.Database.Models
 {
     public class Vote
     {

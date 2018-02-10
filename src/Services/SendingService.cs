@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using FFA.Common;
 using FFA.Extensions;
 using System;

@@ -1,4 +1,4 @@
-﻿using Discord.Commands;
+using Discord.Commands;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
