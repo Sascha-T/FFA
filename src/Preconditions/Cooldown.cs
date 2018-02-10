@@ -26,6 +26,7 @@ namespace FFA.Preconditions
 
                 if (difference.Ticks > 0)
                 {
+                    // TODO: Make cooldown response slick?
                     return Task.FromResult(PreconditionResult.FromError($"You may use this command in {difference.ToString(@"hh\:mm\:ss")}."));
                 }
 

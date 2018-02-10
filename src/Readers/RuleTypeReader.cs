@@ -11,6 +11,7 @@ namespace FFA.Readers
     {
         public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
+            // TODO: move to rules service
             if (input.Length != 2 || !int.TryParse(input[0].ToString(), out int categoryNumber))
             {
                 return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid rule format."));
