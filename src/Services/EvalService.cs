@@ -26,22 +26,14 @@ namespace FFA.Services
             var diagnostics = script.Compile();
             var compilerErrors = diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error);
 
-            if (compilerErrors.Count() == 0)
-            {
-                errorMessage = null;
-                return true;
-            }
-            else
-            {
-                errorMessage = string.Empty;
+            errorMessage = string.Empty;
 
-                foreach (var error in compilerErrors)
-                {
-                    errorMessage += $"{error.GetMessage()}\n";
-                }
-
-                return false;
+            foreach (var error in compilerErrors)
+            {
+                errorMessage += $"{error.GetMessage()}\n";
             }
+
+            return !string.IsNullOrWhiteSpace(errorMessage);
         }
 
         public async Task<EvalResult> EvalAsync(IDiscordClient client, IGuild guild, FFAContext ffaContext, Script script)
