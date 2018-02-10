@@ -8,8 +8,6 @@ namespace FFA.Extensions
     {
         // TODO: D.NET PR to add guildUser.Roles
         public static IEnumerable<IRole> GetRoles(this IGuildUser guildUser)
-        {
-            return guildUser.RoleIds.Select(x => guildUser.Guild.GetRole(x)).Where(x => x != null);
-        }
+            => guildUser.RoleIds.Select(x => guildUser.Guild.GetRole(x)).Where(x => x != null);
     }
 }
