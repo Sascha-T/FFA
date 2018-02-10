@@ -15,14 +15,12 @@ namespace FFA.Modules
     [BotOwner]
     public sealed class BotOwners : ModuleBase<Context>
     {
-        private readonly FFAContext _ffaContext;
         private readonly SendingService _sender;
         private readonly RulesService _rulesService;
         private readonly ReputationService _repService;
 
-        public BotOwners(FFAContext ffaContext, SendingService sender, RulesService rulesService, ReputationService repService)
+        public BotOwners(SendingService sender, RulesService rulesService, ReputationService repService)
         {
-            _ffaContext = ffaContext;
             _sender = sender;
             _rulesService = rulesService;
             _repService = repService;
@@ -44,7 +42,7 @@ namespace FFA.Modules
             {
                 try
                 {
-                    var result = await script.RunAsync(new Globals(Context, _ffaContext, _sender, _rulesService, _repService));
+                    var result = await script.RunAsync(new Globals(Context, Context.Db, _sender, _rulesService, _repService));
                     await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.ReturnValue?.ToString() ?? "Success."}```");
                 }
                 catch (Exception ex)

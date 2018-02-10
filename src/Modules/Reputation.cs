@@ -1,7 +1,6 @@
 using Discord;
 using Discord.Commands;
 using FFA.Common;
-using FFA.Database;
 using FFA.Extensions;
 using FFA.Preconditions;
 using FFA.Services;
@@ -13,12 +12,10 @@ namespace FFA.Modules
     [GuildOnly]
     public sealed class Reputation : ModuleBase<Context>
     {
-        private readonly FFAContext _ffaContext;
         private readonly ReputationService _repService;
 
-        public Reputation(FFAContext ffaContext, ReputationService repService)
+        public Reputation(ReputationService repService)
         {
-            _ffaContext = ffaContext;
             _repService = repService;
         }
 
@@ -41,7 +38,7 @@ namespace FFA.Modules
         [Summary("Give reputation to any user.")]
         public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(Configuration.REP_COOLDOWN)] [NoSelf] IGuildUser user)
         {
-            await _ffaContext.UpsertUserAsync(user, x => x.Reputation += Configuration.REP_INCREASE);
+            await Context.Db.UpsertUserAsync(user, x => x.Reputation += Configuration.REP_INCREASE);
             await Context.ReplyAsync($"You have successfully repped {user.Bold()}.");
         }
 
@@ -49,7 +46,7 @@ namespace FFA.Modules
         [Summary("Remove reputation from any user.")]
         public async Task UnRepAsync([Summary("PapaFag#6666")] [Cooldown(Configuration.UNREP_COOLDOWN)] [NoSelf] IGuildUser user)
         {
-            await _ffaContext.UpsertUserAsync(user, x => x.Reputation -= Configuration.UNREP_DECREASE);
+            await Context.Db.UpsertUserAsync(user, x => x.Reputation -= Configuration.UNREP_DECREASE);
             await Context.ReplyAsync($"You have successfully unrepped {user.Bold()}.");
         }
 

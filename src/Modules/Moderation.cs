@@ -17,12 +17,10 @@ namespace FFA.Modules
     [Top(Configuration.TOP_MOD)]
     public sealed class Moderation : ModuleBase<Context>
     {
-        private readonly FFAContext _ffaContext;
         private readonly ModerationService _moderationService;
 
-        public Moderation(FFAContext ffaContext, ModerationService moderationService)
+        public Moderation(ModerationService moderationService)
         {
-            _ffaContext = ffaContext;
             _moderationService = moderationService;
         }
 
@@ -34,9 +32,7 @@ namespace FFA.Modules
                                     [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] TimeSpan length,
                                     [Summary("stop with all that ruckus!")] [Remainder] string reason = null)
         {
-            var dbGuild = await _ffaContext.GetGuildAsync(Context.Guild.Id);
-
-            if (!dbGuild.MutedRoleId.HasValue)
+            if (!Context.DbGuild.MutedRoleId.HasValue)
             {
                 await Context.ReplyErrorAsync("The muted role has not been set.");
             }
@@ -44,14 +40,14 @@ namespace FFA.Modules
             {
                 await Context.ReplyErrorAsync($"The maximum mute length of this rule is {rule.MaxMuteLength.Value.TotalHours}h.");
             }
-            else if (guildUser.RoleIds.Contains(dbGuild.MutedRoleId.Value))
+            else if (guildUser.RoleIds.Contains(Context.DbGuild.MutedRoleId.Value))
             {
                 await Context.ReplyErrorAsync("This user is already muted.");
             }
             else
             {
-                await guildUser.AddRoleAsync(Context.Guild.GetRole(dbGuild.MutedRoleId.Value));
-                await _ffaContext.AddAsync(new Mute(Context.Guild.Id, guildUser.Id, DateTime.UtcNow.Add(length)));
+                await guildUser.AddRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
+                await Context.Db.AddAsync(new Mute(Context.Guild.Id, guildUser.Id, DateTime.UtcNow.Add(length)));
                 await Context.ReplyAsync($"You have successfully muted {guildUser.Bold()}.");
                 await _moderationService.LogMuteAsync(Context, guildUser, rule, length, reason);
             }
@@ -63,20 +59,18 @@ namespace FFA.Modules
         public async Task UnmuteAsync([Summary("Billy#6969")] [NoSelf] IGuildUser guildUser,
                                       [Summary("you best stop flirting with Mrs Ruckus")] [Remainder] string reason = null)
         {
-            var dbGuild = await _ffaContext.GetGuildAsync(Context.Guild.Id);
-
-            if (!dbGuild.MutedRoleId.HasValue)
+            if (!Context.DbGuild.MutedRoleId.HasValue)
             {
                 await Context.ReplyErrorAsync("The muted role has not been set.");
             }
-            else if (!guildUser.RoleIds.Contains(dbGuild.MutedRoleId.Value))
+            else if (!guildUser.RoleIds.Contains(Context.DbGuild.MutedRoleId.Value))
             {
                 await Context.ReplyErrorAsync("This user is not muted.");
             }
             else
             {
-                await _ffaContext.RemoveAsync<Mute>(x => x.UserId == guildUser.Id);
-                await guildUser.RemoveRoleAsync(Context.Guild.GetRole(dbGuild.MutedRoleId.Value));
+                await Context.Db.RemoveAsync<Mute>(x => x.UserId == guildUser.Id);
+                await guildUser.RemoveRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
                 await Context.ReplyAsync($"You have successfully unmuted {guildUser.Bold()}.");
                 await _moderationService.LogUnmuteAsync(Context, guildUser, reason);
             }

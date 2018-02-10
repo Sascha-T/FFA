@@ -16,7 +16,7 @@ namespace FFA.Modules
     {
         private readonly RulesService _rulesService;
 
-        public Owner(FFAContext ffaContext, RulesService rulesService)
+        public Owner(RulesService rulesService)
         {
             _rulesService = rulesService;
         }
