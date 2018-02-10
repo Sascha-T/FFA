@@ -61,8 +61,7 @@ namespace FFA.Database
         public async Task<T> UpdateAsync<T>(T entity, Action<T> update) where T : class
         {
             update(entity);
-
-            Set<T>().Update(entity);
+            
             await SaveChangesAsync();
 
             return entity;
