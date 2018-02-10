@@ -25,13 +25,13 @@ namespace FFA.Modules
             _ffaContext = ffaContext;
             _moderationService = moderationService;
         }
-        
+
         [Command("Mute")]
         [Summary("Mute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task MuteAsync([Summary("Jimbo#5555")] [NoSelf] [HigherReputation] IGuildUser guildUser, 
-                                    [Summary("2c")] Rule rule, 
-                                    [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] TimeSpan length, 
+        public async Task MuteAsync([Summary("Jimbo#5555")] [NoSelf] [HigherReputation] IGuildUser guildUser,
+                                    [Summary("2c")] Rule rule,
+                                    [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] TimeSpan length,
                                     [Summary("stop with all that ruckus!")] [Remainder] string reason = null)
         {
             var dbGuild = await _ffaContext.GetGuildAsync(Context.Guild.Id);
@@ -60,7 +60,7 @@ namespace FFA.Modules
         [Command("Unmute")]
         [Summary("Unmute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task UnmuteAsync([Summary("Billy#6969")] [NoSelf] IGuildUser guildUser, 
+        public async Task UnmuteAsync([Summary("Billy#6969")] [NoSelf] IGuildUser guildUser,
                                       [Summary("you best stop flirting with Mrs Ruckus")] [Remainder] string reason = null)
         {
             var dbGuild = await _ffaContext.GetGuildAsync(Context.Guild.Id);

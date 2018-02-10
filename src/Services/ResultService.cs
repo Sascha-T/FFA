@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using Discord.Net;
 using FFA.Common;
@@ -12,7 +12,7 @@ namespace FFA.Services
     {
         private readonly LoggingService _logger;
         private readonly CommandService _commandService;
-        
+
         public ResultService(LoggingService logger, CommandService commandService)
         {
             _logger = logger;

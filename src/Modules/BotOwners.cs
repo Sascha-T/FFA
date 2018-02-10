@@ -1,4 +1,4 @@
-﻿using Discord.Commands;
+using Discord.Commands;
 using FFA.Common;
 using FFA.Database;
 using FFA.Extensions;
@@ -19,7 +19,7 @@ namespace FFA.Modules
         private readonly SendingService _sender;
         private readonly RulesService _rulesService;
         private readonly ReputationService _repService;
-        
+
         public BotOwners(FFAContext ffaContext, SendingService sender, RulesService rulesService, ReputationService repService)
         {
             _ffaContext = ffaContext;

@@ -93,7 +93,7 @@ namespace FFA.Common
         // Eval script options
         public static readonly ScriptOptions SCRIPT_OPTIONS = ScriptOptions.Default
                 .WithImports(EVAL_IMPORTS)
-                .WithReferences(AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic && 
+                .WithReferences(AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic &&
                                 !string.IsNullOrWhiteSpace(x.Location)));
 
         // JSON serialization settings

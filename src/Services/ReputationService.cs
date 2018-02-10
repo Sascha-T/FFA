@@ -10,7 +10,7 @@ namespace FFA.Services
         public Task<bool> IsInTopAsync(FFAContext ffaContext, int count, ulong userId, ulong guildId)
         {
             var topUsers = ffaContext.Users.Where(x => x.GuildId == guildId).OrderByDescending(x => x.Reputation).Take(count);
-            
+
             return topUsers.AnyAsync(x => x.Id == userId);
         }
     }

@@ -1,4 +1,4 @@
-﻿using Discord.Commands;
+using Discord.Commands;
 using FFA.Database;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -18,7 +18,7 @@ namespace FFA.Readers
 
             var ffaContext = services.GetRequiredService<FFAContext>();
             var groups = ffaContext.Rules.OrderBy(x => x.Category).GroupBy(x => x.Category).ToArray();
-            
+
             if (groups.Length < categoryNumber || categoryNumber <= 0)
             {
                 return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid rule category number."));

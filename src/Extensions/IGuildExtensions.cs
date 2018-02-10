@@ -17,7 +17,7 @@ namespace FFA.Extensions
                 {
                     await guild.Roles.First(x => x.Name.StartsWith('#')).DeleteAsync();
                 }
-                
+
                 role = await guild.CreateRoleAsync(name, color: color);
             }
 

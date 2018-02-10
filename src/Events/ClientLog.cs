@@ -11,7 +11,7 @@ namespace FFA.Events
     {
         private readonly DiscordSocketClient _client;
         private readonly LoggingService _logger;
-        
+
         internal ClientLog(IServiceProvider provider)
         {
             _client = provider.GetRequiredService<DiscordSocketClient>();

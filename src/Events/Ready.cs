@@ -1,4 +1,4 @@
-﻿using Discord.WebSocket;
+using Discord.WebSocket;
 using FFA.Common;
 using FFA.Timers;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +22,7 @@ namespace FFA.Events
 
         private Task OnReadyAsync()
         {
-            Task.Run(() => 
+            Task.Run(() =>
             {
                 new AutoUnmute(_provider);
 

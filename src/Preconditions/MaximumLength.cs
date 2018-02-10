@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Discord.Commands;
 
@@ -7,7 +7,7 @@ namespace FFA.Preconditions
     public sealed class MaximumLength : ParameterPreconditionAttribute
     {
         private readonly int _length;
-        
+
         public MaximumLength(int length)
         {
             _length = length;

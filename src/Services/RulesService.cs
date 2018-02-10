@@ -13,7 +13,7 @@ namespace FFA.Services
         private readonly SendingService _sender;
         private readonly SemaphoreSlim _semaphore;
 
-        public RulesService( SendingService sender)
+        public RulesService(SendingService sender)
         {
             _sender = sender;
             _semaphore = new SemaphoreSlim(1);

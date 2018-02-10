@@ -1,4 +1,4 @@
-﻿namespace FFA.Database.Models
+namespace FFA.Database.Models
 {
     public class User
     {
@@ -7,7 +7,7 @@
         public User(ulong id, ulong guildId)
         {
             Id = id;
-            
+
         }
 
         public ulong Id { get; set; }

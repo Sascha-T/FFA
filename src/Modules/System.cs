@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using FFA.Common;
 using FFA.Extensions;
@@ -25,7 +25,7 @@ namespace FFA.Modules
         {
             if (!string.IsNullOrWhiteSpace(commandName))
             {
-                var cmd = _commandService.Commands.FirstOrDefault(x => x.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase) || 
+                var cmd = _commandService.Commands.FirstOrDefault(x => x.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase) ||
                                                                        x.Aliases.Any(y => y.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
 
                 if (cmd == default(CommandInfo))
