@@ -1,13 +1,8 @@
 using Discord.Commands;
 using FFA.Common;
-using FFA.Database;
-using FFA.Extensions;
 using FFA.Preconditions;
 using FFA.Services;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FFA.Modules
@@ -15,15 +10,11 @@ namespace FFA.Modules
     [BotOwner]
     public sealed class BotOwners : ModuleBase<Context>
     {
-        private readonly SendingService _sender;
-        private readonly RulesService _rulesService;
-        private readonly ReputationService _repService;
+        private readonly EvalService _evalService;
 
-        public BotOwners(SendingService sender, RulesService rulesService, ReputationService repService)
+        public BotOwners(EvalService evalService)
         {
-            _sender = sender;
-            _rulesService = rulesService;
-            _repService = repService;
+            _evalService = evalService;
         }
 
         [Command("Eval")]
@@ -31,43 +22,24 @@ namespace FFA.Modules
         public async Task EvalAsync([Summary("Client.Token")] [Remainder] string code)
         {
             var script = CSharpScript.Create(code, Configuration.SCRIPT_OPTIONS, typeof(Globals));
-            var diagnostics = script.Compile();
-            var compilerError = diagnostics.FirstOrDefault(x => x.Severity == DiagnosticSeverity.Error);
 
-            if (compilerError != default(Diagnostic))
+            if (!_evalService.TryCompile(script, out string errorMessage))
             {
-                await Context.SendFieldsErrorAsync("Eval", $"```cs\n{code}```", "Compilation Error", $"```{compilerError.GetMessage()}```");
+                await Context.SendFieldsErrorAsync("Eval", $"```cs\n{code}```", "Compilation Error", $"```{errorMessage}```");
             }
             else
             {
-                try
+                var result = await _evalService.EvalAsync(Context.Client, Context.Guild, Context.Db, script);
+
+                if (result.Success)
                 {
-                    var result = await script.RunAsync(new Globals(Context, Context.Db, _sender, _rulesService, _repService));
-                    await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.ReturnValue?.ToString() ?? "Success."}```");
+                    await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.Result}```");
                 }
-                catch (Exception ex)
+                else
                 {
-                    await Context.SendFieldsErrorAsync("Eval", $"```cs\n{code}```", "Runtime Error", $"```{ex.LastMessage()}```");
+                    await Context.SendFieldsErrorAsync("Eval", $"```cs\n{code}```", "Runtime Error", $"```{result.Exception}```");
                 }
             }
         }
-    }
-
-    public class Globals
-    {
-        public Globals(Context context, FFAContext ffaContext, SendingService sender, RulesService rulesService, ReputationService reputationService)
-        {
-            Context = context;
-            FFAContext = ffaContext;
-            Sender = sender;
-            RulesService = rulesService;
-            ReputationService = reputationService;
-        }
-
-        public Context Context { get; }
-        public FFAContext FFAContext { get; }
-        public SendingService Sender { get; }
-        public RulesService RulesService { get; }
-        public ReputationService ReputationService { get; }
     }
 }

@@ -1,7 +1,6 @@
 using Discord;
 using Discord.Commands;
 using FFA.Common;
-using FFA.Database;
 using FFA.Database.Models;
 using FFA.Extensions;
 using FFA.Preconditions;
