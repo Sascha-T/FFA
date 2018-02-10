@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using FFA.Common;
 using FFA.Database;
 using FFA.Database.Models;
@@ -10,14 +10,7 @@ namespace FFA.Services
 {
     public sealed class ModerationService
     {
-        private readonly FFAContext _ffaContext;
-
-        public ModerationService(FFAContext ffaContext)
-        {
-            _ffaContext = ffaContext;
-        }
-
-        public Task LogMuteAsync(IGuild guild, IUser moderator, IUser subject, Rule rule, TimeSpan length, string reason = null)
+        public Task LogMuteAsync(Context context, IUser subject, Rule rule, TimeSpan length, string reason = null)
         {
             var description = $"**Action:** Mute\n" +
                               $"**User:** {subject} ({subject.Id})\n" +
@@ -25,22 +18,22 @@ namespace FFA.Services
                               (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}\n") +
                               $"**Length:** {length.TotalHours}h";
 
-            return LogAsync(guild, description, Configuration.MUTE_COLOR, moderator);
+            return LogAsync(context.Db, context.Guild, description, Configuration.MUTE_COLOR, context.User);
         }
 
-        public Task LogUnmuteAsync(IGuild guild, IUser moderator, IUser subject, string reason = null)
+        public Task LogUnmuteAsync(Context context, IUser subject, string reason = null)
         {
             var description = $"**Action:** Unmute\n" +
                               $"**User:** {subject} ({subject.Id})\n" +
                               (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}");
 
-            return LogAsync(guild, description, Configuration.UNMUTE_COLOR, moderator);
+            return LogAsync(context.Db, context.Guild, description, Configuration.UNMUTE_COLOR, context.User);
         }
 
-        public Task LogAutoUnmuteAsync(IGuild guild, IUser subject)
-            => LogAsync(guild, $"**Action:** Automatic Unmute\n**User:** {subject} ({subject.Id})\n", Configuration.UNMUTE_COLOR);
+        public Task LogAutoUnmuteAsync(FFAContext ffaContext, IGuild guild, IUser subject)
+            => LogAsync(ffaContext, guild, $"**Action:** Automatic Unmute\n**User:** {subject} ({subject.Id})\n", Configuration.UNMUTE_COLOR);
 
-        public Task LogClearAsync(IGuild guild, IUser moderator, IUser subject, Rule rule, int quantity, string reason = null)
+        public Task LogClearAsync(Context context, IUser subject, Rule rule, int quantity, string reason = null)
         {
             var description = $"**Action:** Clear\n" +
                               $"**User:** {subject} ({subject.Id})\n" +
@@ -48,12 +41,12 @@ namespace FFA.Services
                               $"**Quantity:** {quantity}\n" +
                               (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}\n");
 
-            return LogAsync(guild, description, Configuration.CLEAR_COLOR, moderator);
+            return LogAsync(context.Db, context.Guild, description, Configuration.CLEAR_COLOR, context.User);
         }
 
-        public async Task LogAsync(IGuild guild, string description, Color color, IUser moderator = null)
+        public async Task LogAsync(FFAContext ffaContext, IGuild guild, string description, Color color, IUser moderator = null)
         {
-            var dbGuild = await _ffaContext.GetGuildAsync(guild.Id);
+            var dbGuild = await ffaContext.GetGuildAsync(guild.Id);
 
             if (!dbGuild.LogChannelId.HasValue)
             {
@@ -85,7 +78,7 @@ namespace FFA.Services
             }
 
             await logChannel.SendMessageAsync("", false, builder.Build());
-            await _ffaContext.UpdateAsync(dbGuild, x => x.LogCase++);
+            await ffaContext.UpdateAsync(dbGuild, x => x.LogCase++);
         }
     }
 }

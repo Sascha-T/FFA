@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using FFA.Database;
 using FFA.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -10,24 +10,22 @@ namespace FFA.Services
 {
     public sealed class RulesService
     {
-        private readonly FFAContext _ffaContext;
         private readonly SendingService _sender;
         private readonly SemaphoreSlim _semaphore;
 
-        public RulesService(FFAContext ffaContext, SendingService sender)
+        public RulesService( SendingService sender)
         {
-            _ffaContext = ffaContext;
             _sender = sender;
             _semaphore = new SemaphoreSlim(1);
         }
 
-        public async Task UpdateAsync(IGuild guild)
+        public async Task UpdateAsync(FFAContext ffaContext, IGuild guild)
         {
             await _semaphore.WaitAsync();
 
             try
             {
-                var dbGuild = await _ffaContext.GetGuildAsync(guild.Id);
+                var dbGuild = await ffaContext.GetGuildAsync(guild.Id);
 
                 if (!dbGuild.RulesChannelId.HasValue)
                 {
@@ -43,7 +41,7 @@ namespace FFA.Services
 
                 var messages = await rulesChannel.GetMessagesAsync().FlattenAsync();
                 await rulesChannel.DeleteMessagesAsync(messages);
-                var groups = await _ffaContext.Rules.Where(x => x.GuildId == guild.Id).OrderBy(x => x.Category).GroupBy(x => x.Category).ToListAsync();
+                var groups = await ffaContext.Rules.Where(x => x.GuildId == guild.Id).OrderBy(x => x.Category).GroupBy(x => x.Category).ToListAsync();
 
                 for (var i = 0; i < groups.Count; i++)
                 {

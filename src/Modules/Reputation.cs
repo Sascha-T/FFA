@@ -27,7 +27,7 @@ namespace FFA.Modules
         [Summary("Informs you whether you are a moderator.")]
         public async Task ModAsync()
         {
-            if (await _repService.IsInTopAsync(Configuration.TOP_MOD, Context.User.Id, Context.Guild.Id))
+            if (await _repService.IsInTopAsync(Context.Db, Configuration.TOP_MOD, Context.User.Id, Context.Guild.Id))
             {
                 await Context.ReplyAsync("You are currently a moderator.");
             }

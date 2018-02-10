@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.WebSocket;
 using FFA.Database;
 using FFA.Extensions;
@@ -11,13 +11,13 @@ namespace FFA.Events
 {
     internal sealed class UserJoined
     {
+        private readonly IServiceProvider _provider;
         private readonly DiscordSocketClient _client;
-        private readonly FFAContext _ffaContext;
 
         internal UserJoined(IServiceProvider provider)
         {
-            _client = provider.GetRequiredService<DiscordSocketClient>();
-            _ffaContext = provider.GetRequiredService<FFAContext>();
+            _provider = provider;
+            _client = _provider.GetRequiredService<DiscordSocketClient>();
 
             _client.UserJoined += OnUserJoinedAsync;
         }
@@ -26,9 +26,10 @@ namespace FFA.Events
         {
             Task.Run(async () =>
             {
-                var dbGuild = await _ffaContext.GetGuildAsync(guildUser.Guild.Id);
+                var ffaContext = _provider.GetRequiredService<FFAContext>();
+                var dbGuild = await ffaContext.GetGuildAsync(guildUser.Guild.Id);
 
-                if (dbGuild.MutedRoleId.HasValue && await _ffaContext.Mutes.AnyAsync(x => x.GuildId == guildUser.Guild.Id && x.UserId == guildUser.Id))
+                if (dbGuild.MutedRoleId.HasValue && await ffaContext.Mutes.AnyAsync(x => x.GuildId == guildUser.Guild.Id && x.UserId == guildUser.Id))
                 {
                     var mutedRole = guildUser.Guild.GetRole(dbGuild.MutedRoleId.Value);
 

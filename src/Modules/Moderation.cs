@@ -53,7 +53,7 @@ namespace FFA.Modules
                 await guildUser.AddRoleAsync(Context.Guild.GetRole(dbGuild.MutedRoleId.Value));
                 await _ffaContext.AddAsync(new Mute(Context.Guild.Id, guildUser.Id, DateTime.UtcNow.Add(length)));
                 await Context.ReplyAsync($"You have successfully muted {guildUser.Bold()}.");
-                await _moderationService.LogMuteAsync(Context.Guild, Context.User, guildUser, rule, length, reason);
+                await _moderationService.LogMuteAsync(Context, guildUser, rule, length, reason);
             }
         }
 
@@ -78,7 +78,7 @@ namespace FFA.Modules
                 await _ffaContext.RemoveAsync<Mute>(x => x.UserId == guildUser.Id);
                 await guildUser.RemoveRoleAsync(Context.Guild.GetRole(dbGuild.MutedRoleId.Value));
                 await Context.ReplyAsync($"You have successfully unmuted {guildUser.Bold()}.");
-                await _moderationService.LogUnmuteAsync(Context.Guild, Context.User, guildUser, reason);
+                await _moderationService.LogUnmuteAsync(Context, guildUser, reason);
             }
         }
 
@@ -100,7 +100,7 @@ namespace FFA.Modules
 
             await Task.Delay(Configuration.CLEAR_DELETE_DELAY);
             await msg.DeleteAsync();
-            await _moderationService.LogClearAsync(Context.Guild, Context.User, guildUser, rule, quantity, reason);
+            await _moderationService.LogClearAsync(Context, guildUser, rule, quantity, reason);
         }
     }
 }

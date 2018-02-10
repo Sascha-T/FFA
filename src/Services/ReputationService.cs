@@ -1,4 +1,4 @@
-﻿using FFA.Database;
+using FFA.Database;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,16 +7,9 @@ namespace FFA.Services
 {
     public sealed class ReputationService
     {
-        private readonly FFAContext _ffaContext;
-
-        public ReputationService(FFAContext ffaContext)
+        public Task<bool> IsInTopAsync(FFAContext ffaContext, int count, ulong userId, ulong guildId)
         {
-            _ffaContext = ffaContext;
-        }
-
-        public Task<bool> IsInTopAsync(int count, ulong userId, ulong guildId)
-        {
-            var topUsers = _ffaContext.Users.Where(x => x.GuildId == guildId).OrderByDescending(x => x.Reputation).Take(count);
+            var topUsers = ffaContext.Users.Where(x => x.GuildId == guildId).OrderByDescending(x => x.Reputation).Take(count);
             
             return topUsers.AnyAsync(x => x.Id == userId);
         }

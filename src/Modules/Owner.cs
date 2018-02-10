@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using FFA.Common;
 using FFA.Database;
@@ -14,12 +14,10 @@ namespace FFA.Modules
     [GuildOwner]
     public sealed class Owner : ModuleBase<Context>
     {
-        private readonly FFAContext _ffaContext;
         private readonly RulesService _rulesService;
 
         public Owner(FFAContext ffaContext, RulesService rulesService)
         {
-            _ffaContext = ffaContext;
             _rulesService = rulesService;
         }
 
@@ -28,7 +26,7 @@ namespace FFA.Modules
         [Summary("Sets the log channel.")]
         public async Task SetLogChannelAsync([Summary("OldManJenkins")] [Remainder] ITextChannel logChannel)
         {
-            await _ffaContext.UpsertGuildAsync(Context.Guild.Id, x => x.LogChannelId = logChannel.Id);
+            await Context.Db.UpsertGuildAsync(Context.Guild.Id, x => x.LogChannelId = logChannel.Id);
             await Context.ReplyAsync($"You have successfully set to log channel to {logChannel.Mention}.");
         }
 
@@ -37,7 +35,7 @@ namespace FFA.Modules
         [Summary("Sets the rules channel.")]
         public async Task SetRulesChannelAsync([Summary("MrsPuff")] [Remainder] ITextChannel rulesChannel)
         {
-            await _ffaContext.UpsertGuildAsync(Context.Guild.Id, x => x.RulesChannelId = rulesChannel.Id);
+            await Context.Db.UpsertGuildAsync(Context.Guild.Id, x => x.RulesChannelId = rulesChannel.Id);
             await Context.ReplyAsync($"You have successfully set to rules channel to {rulesChannel.Mention}.");
         }
 
@@ -46,19 +44,45 @@ namespace FFA.Modules
         [Summary("Sets the muted role.")]
         public async Task SetMutedRoleAsync([Summary("BarnacleBoy")] [Remainder] IRole mutedRole)
         {
-            await _ffaContext.UpsertGuildAsync(Context.Guild.Id, x => x.MutedRoleId = mutedRole.Id);
+            await Context.Db.UpsertGuildAsync(Context.Guild.Id, x => x.MutedRoleId = mutedRole.Id);
             await Context.ReplyAsync($"You have successfully set to muted role to {mutedRole.Mention}.");
         }
 
         [Command("AddRule")]
         [Summary("Adds a rule.")]
-        public async Task AddRuleAsync([Summary("\"Sending 10 images in 5 seconds\"")] string content,
-                                       [Summary("Spam")] string category,
-                                       [Summary("24h")] TimeSpan? maxMuteLength = null)
+        public async Task AddRuleAsync([Summary("\"Cracking your willy in broad daylight\"")] string content,
+                                       [Summary("Harassment")] string category,
+                                       [Summary("72h")] TimeSpan? maxMuteLength = null)
         {
-            await _ffaContext.AddAsync(new Rule(Context.Guild.Id, content, category, maxMuteLength));
+            await Context.Db.AddAsync(new Rule(Context.Guild.Id, content, category, maxMuteLength));
             await Context.ReplyAsync($"You have successfully added a new rule.");
-            await _rulesService.UpdateAsync(Context.Guild);
+            await _rulesService.UpdateAsync(Context.Db, Context.Guild);
+        }
+
+        [Command("ModifyRule")]
+        [Alias("modrule", "editrule", "changerule")]
+        [Summary("Modifies any rule.")]
+        public async Task ModifyRuleAsync([Summary("3b")] Rule rule,
+                                          [Summary("\"Nutting faster than Willy Wonka\"")] string content,
+                                          [Summary("420h")] TimeSpan? maxMuteLength = null)
+        {
+            await Context.Db.UpdateAsync(rule, x =>
+            {
+                x.Content = content;
+                x.MaxMuteLength = maxMuteLength;
+            });
+            await Context.ReplyAsync($"You have successfully modified this rule.");
+            await _rulesService.UpdateAsync(Context.Db, Context.Guild);
+        }
+
+        [Command("RemoveRule")]
+        [Alias("deleterule")]
+        [Summary("Removes any rule.")]
+        public async Task RemoveRuleAsync([Summary("2d")] Rule rule)
+        {
+            await Context.Db.RemoveAsync(rule);
+            await Context.ReplyAsync($"You have successfully removed this rule.");
+            await _rulesService.UpdateAsync(Context.Db, Context.Guild);
         }
     }
 }

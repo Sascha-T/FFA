@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+using Discord.Commands;
+using FFA.Common;
 using FFA.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -15,11 +16,12 @@ namespace FFA.Preconditions
             _count = count;
         }
 
-        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext ctx, CommandInfo command, IServiceProvider services)
         {
             var repService = services.GetRequiredService<ReputationService>();
+            var context = ctx as Context;
 
-            if (!await repService.IsInTopAsync(_count, context.User.Id, context.Guild.Id))
+            if (!await repService.IsInTopAsync(context.Db, _count, context.User.Id, context.Guild.Id))
             {
                 return PreconditionResult.FromError($"This command may only be used by the top {_count} most reputable users.");
             }

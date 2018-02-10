@@ -12,9 +12,9 @@ namespace FFA.Common
     public sealed class Context : ICommandContext
     {
         private readonly IServiceProvider _provider;
-        private readonly FFAContext _ffaContext;
         private readonly SendingService _sender;
 
+        public FFAContext Db { get; }
         public IDiscordClient Client { get; }
         public IGuild Guild { get; }
         public IMessageChannel Channel { get; }
@@ -28,9 +28,9 @@ namespace FFA.Common
         public Context(IDiscordClient client, IUserMessage msg, IServiceProvider provider)
         {
             _provider = provider;
-            _ffaContext = _provider.GetRequiredService<FFAContext>();
             _sender = _provider.GetRequiredService<SendingService>();
 
+            Db = _provider.GetRequiredService<FFAContext>();
             Client = client;
             Message = msg;
             Channel = msg.Channel;
@@ -44,8 +44,8 @@ namespace FFA.Common
         {
             if (Guild != null)
             {
-                DbUser = await _ffaContext.GetUserAsync(GuildUser);
-                DbGuild = await _ffaContext.GetGuildAsync(Guild.Id);
+                DbUser = await Db.GetUserAsync(GuildUser);
+                DbGuild = await Db.GetGuildAsync(Guild.Id);
             }
         }
 
