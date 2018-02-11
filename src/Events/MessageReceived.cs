@@ -14,6 +14,7 @@ namespace FFA.Events
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commandService;
         private readonly ResultService _resultService;
+        private readonly SpamService _spamService;
         private readonly IServiceProvider _provider;
 
         internal MessageReceived(IServiceProvider provider)
@@ -22,6 +23,7 @@ namespace FFA.Events
             _client = _provider.GetRequiredService<DiscordSocketClient>();
             _commandService = _provider.GetRequiredService<CommandService>();
             _resultService = _provider.GetRequiredService<ResultService>();
+            _spamService = _provider.GetRequiredService<SpamService>();
 
             _client.MessageReceived += OnMessageReceivedAsync;
         }
@@ -40,6 +42,8 @@ namespace FFA.Events
                 var context = new Context(_client, msg, _provider);
 
                 await context.InitializeAsync();
+                // TODO: guild property to make auto spam detection optional
+                await _spamService.Authenticate(context);
 
                 int argPos = 0;
 

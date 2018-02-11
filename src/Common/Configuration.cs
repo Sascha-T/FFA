@@ -20,6 +20,11 @@ namespace FFA.Common
         // Moderation settings
         public const int MIN_MUTE_LENGTH = 1, CLEAR_DELETE_DELAY = 3000;
 
+        // Spam settings
+        public const int SPAM_LIMIT = 4, SPAM_REP_PENALTY = 2;
+        public const double SPAM_SIMILARITY = 0.8;
+        public static readonly TimeSpan SPAM_DURATION = TimeSpan.FromSeconds(5), SPAM_MUTE_LENGTH = TimeSpan.FromHours(2);
+
         // Reputation commands
         public const int REP_INCREASE = 1, UNREP_DECREASE = 1;
 

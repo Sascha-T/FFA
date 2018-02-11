@@ -33,7 +33,7 @@ namespace FFA.Events
                 {
                     var mutedRole = guildUser.Guild.GetRole(dbGuild.MutedRoleId.Value);
 
-                    if (mutedRole == null || !await mutedRole.CanUseRoleAsync())
+                    if (mutedRole == null || !await mutedRole.CanUseAsync())
                     {
                         return;
                     }
