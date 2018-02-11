@@ -25,8 +25,6 @@ namespace FFA.Services
         {
             var description = $"**Action:** Automatic Mute\n" +
                               $"**User:** {context.User} ({context.User.Id})\n" +
-                              $"**Reason:** Sending {Configuration.SPAM_LIMIT} or more similar messges in " +
-                              $"{Configuration.SPAM_DURATION.TotalSeconds} seconds or less.\n" +
                               $"**Length:** {length.TotalHours}h";
 
             return LogAsync(context.Db, context.Guild, description, Configuration.MUTE_COLOR);
