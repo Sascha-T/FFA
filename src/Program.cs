@@ -61,7 +61,8 @@ namespace FFA
                 .AddSingleton<MessageReceived>()
                 .AddSingleton<ModerationService>()
                 .AddSingleton<SpamService>()
-                .AddSingleton<ReputationService>();
+                .AddSingleton<ReputationService>()
+                .AddSingleton<EvalService>();
 
             var provider = services.BuildServiceProvider();
 
