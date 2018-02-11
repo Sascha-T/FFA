@@ -33,7 +33,7 @@ namespace FFA.Services
                 errorMessage += $"{error.GetMessage()}\n";
             }
 
-            return !string.IsNullOrWhiteSpace(errorMessage);
+            return string.IsNullOrWhiteSpace(errorMessage);
         }
 
         public async Task<EvalResult> EvalAsync(IDiscordClient client, IGuild guild, FFAContext ffaContext, Script script)
