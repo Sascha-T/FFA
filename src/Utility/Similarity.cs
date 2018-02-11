@@ -25,10 +25,10 @@ namespace FFA.Utility
             {
                 return n;
             }
-            
-            for (int i = 0; i <= n; d[i, 0] = i++) { }
 
-            for (int j = 0; j <= m; d[0, j] = j++) { }
+            for (int i = 0; i <= n; d[i, 0] = i++);
+
+            for (int j = 0; j <= m; d[0, j] = j++);
             
             for (int i = 1; i <= n; i++)
             {
