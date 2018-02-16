@@ -1,4 +1,5 @@
 using Discord;
+using FFA.Common;
 using FFA.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,7 +10,13 @@ namespace FFA.Database
 {
     public class FFAContext : DbContext
     {
-        // TODO: rejection reasons for polls
+        private readonly Credentials _credentials;
+
+        public FFAContext(Credentials credentials)
+        {
+            _credentials = credentials;
+        }
+
         public DbSet<Guild> Guilds { get; set; }
         public DbSet<Poll> Polls { get; set; }
         public DbSet<Vote> Votes { get; set; }
@@ -17,9 +24,8 @@ namespace FFA.Database
         public DbSet<Rule> Rules { get; set; }
         public DbSet<Mute> Mutes { get; set; }
 
-        // TODO: move connection string to credentials
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlite("Data Source=FFA.db");
+            => optionsBuilder.UseSqlite(_credentials.DbConnectionString);
 
         // Generic methods
         public async Task AddAsync<T>(T entity) where T : class

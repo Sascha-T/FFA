@@ -46,7 +46,7 @@ namespace FFA.Modules
             else
             {
                 await guildUser.AddRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
-                await Context.Db.AddAsync(new Mute(Context.Guild.Id, guildUser.Id, DateTime.UtcNow.Add(length)));
+                await Context.Db.AddAsync(new Mute(Context.Guild.Id, guildUser.Id, DateTimeOffset.Now.Add(length)));
                 await Context.ReplyAsync($"You have successfully muted {guildUser.Bold()}.");
                 await _moderationService.LogMuteAsync(Context, guildUser, rule, length, reason);
             }

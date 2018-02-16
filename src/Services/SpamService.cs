@@ -44,7 +44,7 @@ namespace FFA.Services
                                 {
                                     await context.GuildUser.AddRoleAsync(mutedRole);
                                     await context.Db.AddAsync(new Mute(context.Guild.Id, context.User.Id,
-                                                              DateTime.UtcNow.Add(Configuration.SPAM_MUTE_LENGTH)));
+                                                              DateTimeOffset.Now.Add(Configuration.SPAM_MUTE_LENGTH)));
                                     await _moderationService.LogAutoMuteAsync(context, Configuration.SPAM_MUTE_LENGTH);
                                 }
                             }

@@ -12,42 +12,42 @@ namespace FFA.Common
     internal static class Configuration
     {
         // Command handler
-        public const string PREFIX = ";";
+        internal const string PREFIX = ";";
 
         // Current user
-        public const string GAME = PREFIX + "help";
+        internal const string GAME = PREFIX + "help";
 
         // Moderation settings
-        public const int MIN_MUTE_LENGTH = 1, CLEAR_DELETE_DELAY = 3000;
+        internal const int MIN_MUTE_LENGTH = 1, CLEAR_DELETE_DELAY = 3000;
 
         // Spam settings
-        public const int SPAM_LIMIT = 4, SPAM_REP_PENALTY = 2;
-        public const double SPAM_SIMILARITY = 0.8;
-        public static readonly TimeSpan SPAM_DURATION = TimeSpan.FromSeconds(5), SPAM_MUTE_LENGTH = TimeSpan.FromHours(2);
+        internal const int SPAM_LIMIT = 4, SPAM_REP_PENALTY = 2;
+        internal const double SPAM_SIMILARITY = 0.8;
+        internal static readonly TimeSpan SPAM_DURATION = TimeSpan.FromSeconds(5), SPAM_MUTE_LENGTH = TimeSpan.FromHours(2);
 
         // Reputation commands
-        public const int REP_INCREASE = 1, UNREP_DECREASE = 1;
+        internal const int REP_INCREASE = 1, UNREP_DECREASE = 1;
 
         // Reputation requirements
-        public const int TOP_MOD = 30, TOP_BULLY = 40, TOP_COLOR = 50;
+        internal const int TOP_MOD = 30, TOP_BULLY = 40, TOP_COLOR = 50;
 
         // Maximums
-        public const int MAX_NICKNAME_LENGTH = 32, MAX_CLEAR = 100, MAX_ROLES = 500, MAX_HEX_LENGTH = 6;
+        internal const int MAX_NICKNAME_LENGTH = 32, MAX_CLEAR = 100, MAX_ROLES = 500, MAX_HEX_LENGTH = 6;
 
         // Minimums
-        public const int MIN_CLEAR = 3;
+        internal const int MIN_CLEAR = 3;
 
         // Defaults
-        public const int CLEAR_DEFAULT = 20;
+        internal const int CLEAR_DEFAULT = 20;
 
         // Cooldowns in hours
-        public const int REP_COOLDOWN = 6, UNREP_COOLDOWN = 6, BULLY_COOLDOWN = 1, COLOR_COOLDOWN = 1;
+        internal const int REP_COOLDOWN = 6, UNREP_COOLDOWN = 6, BULLY_COOLDOWN = 1, COLOR_COOLDOWN = 1;
 
         // Timers in milliseconds
-        public const int AUTO_UNMUTE_TIMER = 60000;
+        internal const int AUTO_UNMUTE_TIMER = 60000;
 
         // Discord code responses
-        public static readonly IReadOnlyDictionary<int, string> DISCORD_CODE_RESPONSES = new Dictionary<int, string>()
+        internal static readonly IReadOnlyDictionary<int, string> DISCORD_CODE_RESPONSES = new Dictionary<int, string>()
         {
             { 20001, "Only a user account may perform this action." },
             { 50007, "I cannot DM you. Please allow direct messages from guild users." },
@@ -56,7 +56,7 @@ namespace FFA.Common
         }.ToImmutableDictionary();
 
         // HTTP code responses
-        public static readonly IReadOnlyDictionary<HttpStatusCode, string> HTTP_CODE_RESPONSES = new Dictionary<HttpStatusCode, string>()
+        internal static readonly IReadOnlyDictionary<HttpStatusCode, string> HTTP_CODE_RESPONSES = new Dictionary<HttpStatusCode, string>()
         {
             { HttpStatusCode.Forbidden, "I do not have permission to do that." },
             { HttpStatusCode.InternalServerError, "An unexpected error has occurred, please try again later." },
@@ -64,12 +64,12 @@ namespace FFA.Common
         }.ToImmutableDictionary();
 
         // Custom colors
-        public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65),
+        internal static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65),
                                      CLEAR_COLOR = new Color(0x4D3DFF);
 
         // Default colors
         // TODO: more colors!!!
-        public static readonly IReadOnlyList<Color> DEFAULT_COLORS = new Color[]
+        internal static readonly IReadOnlyList<Color> DEFAULT_COLORS = new Color[]
         {
             new Color(0xFF269A),
             new Color(0x00FF00),
@@ -85,7 +85,7 @@ namespace FFA.Common
         }.ToImmutableArray();
 
         // Eval imports
-        public static readonly IReadOnlyList<string> EVAL_IMPORTS = new string[]
+        internal static readonly IReadOnlyList<string> EVAL_IMPORTS = new string[]
         {
             "System",
             "System.Linq",
@@ -96,13 +96,13 @@ namespace FFA.Common
         }.ToImmutableArray();
 
         // Eval script options
-        public static readonly ScriptOptions SCRIPT_OPTIONS = ScriptOptions.Default
+        internal static readonly ScriptOptions SCRIPT_OPTIONS = ScriptOptions.Default
                 .WithImports(EVAL_IMPORTS)
                 .WithReferences(AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic &&
                                 !string.IsNullOrWhiteSpace(x.Location)));
 
         // JSON serialization settings
-        public static readonly JsonSerializerSettings JSON_SETTINGS = new JsonSerializerSettings
+        internal static readonly JsonSerializerSettings JSON_SETTINGS = new JsonSerializerSettings
         {
             MissingMemberHandling = MissingMemberHandling.Error
         };

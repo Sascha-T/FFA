@@ -48,12 +48,12 @@ namespace FFA
             // TODO: reorganize ordering of additions to service collection
             // TODO: reflexion to add all services/events/timers
             var services = new ServiceCollection()
+                .AddSingleton(credentials)
                 .AddDbContext<FFAContext>(ServiceLifetime.Transient)
                 .AddSingleton<LoggingService>()
                 .AddSingleton(client)
                 .AddSingleton(commandService)
                 .AddSingleton(new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode())))
-                .AddSingleton(credentials)
                 .AddSingleton<SendingService>()
                 .AddSingleton<RulesService>()
                 .AddSingleton<ResultService>()
@@ -64,6 +64,8 @@ namespace FFA
                 .AddSingleton<EvalService>();
 
             var provider = services.BuildServiceProvider();
+
+            await provider.GetRequiredService<FFAContext>().Database.EnsureCreatedAsync();
 
             new ClientLog(provider);
             new MessageReceived(provider);

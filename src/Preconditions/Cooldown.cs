@@ -8,7 +8,7 @@ namespace FFA.Preconditions
     // TODO: no paramter cheap hack
     public sealed class CooldownAttribute : ParameterPreconditionAttribute
     {
-        private readonly ConcurrentDictionary<Cooldown, DateTime> _cooldowns = new ConcurrentDictionary<Cooldown, DateTime>();
+        private readonly ConcurrentDictionary<Cooldown, DateTimeOffset> _cooldowns = new ConcurrentDictionary<Cooldown, DateTimeOffset>();
         private readonly TimeSpan _cooldownLength;
 
         public CooldownAttribute(int hours)
@@ -20,9 +20,9 @@ namespace FFA.Preconditions
         {
             var key = new Cooldown(context.User.Id, parameter.Command.GetHashCode());
 
-            if (_cooldowns.TryGetValue(key, out DateTime endsAt))
+            if (_cooldowns.TryGetValue(key, out DateTimeOffset endsAt))
             {
-                var difference = endsAt.Subtract(DateTime.UtcNow);
+                var difference = endsAt.Subtract(DateTimeOffset.Now);
 
                 if (difference.Ticks > 0)
                 {
@@ -30,13 +30,13 @@ namespace FFA.Preconditions
                     return Task.FromResult(PreconditionResult.FromError($"You may use this command in {difference.ToString(@"hh\:mm\:ss")}."));
                 }
 
-                var time = DateTime.UtcNow.Add(_cooldownLength);
+                var time = DateTimeOffset.Now.Add(_cooldownLength);
 
                 _cooldowns.TryUpdate(key, time, endsAt);
             }
             else
             {
-                _cooldowns.TryAdd(key, DateTime.UtcNow.Add(_cooldownLength));
+                _cooldowns.TryAdd(key, DateTimeOffset.Now.Add(_cooldownLength));
             }
 
             return Task.FromResult(PreconditionResult.FromSuccess());
