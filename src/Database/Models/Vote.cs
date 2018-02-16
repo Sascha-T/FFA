@@ -1,6 +1,6 @@
 namespace FFA.Database.Models
 {
-    public class Vote
+    public sealed class Vote
     {
         public int Id { get; set; }
         public ulong VoterId { get; set; }

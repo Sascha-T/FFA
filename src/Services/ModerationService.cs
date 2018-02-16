@@ -87,7 +87,7 @@ namespace FFA.Services
 
             var builder = new EmbedBuilder()
             {
-                Timestamp = DateTimeOffset.Now,
+                Timestamp = DateTimeOffset.UtcNow,
                 Footer = new EmbedFooterBuilder { Text = $"Case #{dbGuild.LogCase}" },
                 Description = description,
                 Color = color

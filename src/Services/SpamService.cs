@@ -24,7 +24,7 @@ namespace FFA.Services
         {
             if (_spamEntries.TryGetValue(context.User.Id, out SpamEntry entry))
             {
-                if (DateTimeOffset.Now.Subtract(entry.FirstTimestamp) <= Configuration.SPAM_DURATION)
+                if (DateTimeOffset.UtcNow.Subtract(entry.FirstTimestamp) <= Configuration.SPAM_DURATION)
                 {
                     if (Similarity.Compare(context.Message.Content, entry.LastContent, Configuration.SPAM_SIMILARITY))
                     {
@@ -44,7 +44,7 @@ namespace FFA.Services
                                 {
                                     await context.GuildUser.AddRoleAsync(mutedRole);
                                     await context.Db.AddAsync(new Mute(context.Guild.Id, context.User.Id,
-                                                              DateTimeOffset.Now.Add(Configuration.SPAM_MUTE_LENGTH)));
+                                                              DateTimeOffset.UtcNow.Add(Configuration.SPAM_MUTE_LENGTH)));
                                     await _moderationService.LogAutoMuteAsync(context, Configuration.SPAM_MUTE_LENGTH);
                                 }
                             }

@@ -55,7 +55,7 @@ namespace FFA.Timers
 
                     foreach (var mute in mutes)
                     {
-                        if (mute.EndsAt.Subtract(DateTimeOffset.Now).Ticks <= 0)
+                        if (mute.EndsAt.Subtract(DateTimeOffset.UtcNow).Ticks <= 0)
                         {
                             await ffaContext.RemoveAsync<Mute>(mute.Id);
 

@@ -22,7 +22,7 @@ namespace FFA.Preconditions
 
             if (_cooldowns.TryGetValue(key, out DateTimeOffset endsAt))
             {
-                var difference = endsAt.Subtract(DateTimeOffset.Now);
+                var difference = endsAt.Subtract(DateTimeOffset.UtcNow);
 
                 if (difference.Ticks > 0)
                 {
@@ -30,13 +30,13 @@ namespace FFA.Preconditions
                     return Task.FromResult(PreconditionResult.FromError($"You may use this command in {difference.ToString(@"hh\:mm\:ss")}."));
                 }
 
-                var time = DateTimeOffset.Now.Add(_cooldownLength);
+                var time = DateTimeOffset.UtcNow.Add(_cooldownLength);
 
                 _cooldowns.TryUpdate(key, time, endsAt);
             }
             else
             {
-                _cooldowns.TryAdd(key, DateTimeOffset.Now.Add(_cooldownLength));
+                _cooldowns.TryAdd(key, DateTimeOffset.UtcNow.Add(_cooldownLength));
             }
 
             return Task.FromResult(PreconditionResult.FromSuccess());

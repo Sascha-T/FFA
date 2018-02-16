@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Database
 {
-    public class FFAContext : DbContext
+    public sealed class FFAContext : DbContext
     {
         private readonly Credentials _credentials;
 

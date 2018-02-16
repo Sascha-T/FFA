@@ -3,7 +3,7 @@ using System;
 namespace FFA.Database.Models
 {
     // TODO: make unmuting remove ALL the mutes under that person's id and guild id.
-    public class Mute
+    public sealed class Mute
     {
         public Mute() { }
 

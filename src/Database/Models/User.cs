@@ -1,6 +1,6 @@
 namespace FFA.Database.Models
 {
-    public class User
+    public sealed class User
     {
         public User() { }
 

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace FFA.Common
 {
-    public class Credentials
+    public sealed class Credentials
     {
         public string Token { get; set; }
         public string DbConnectionString { get; set; }

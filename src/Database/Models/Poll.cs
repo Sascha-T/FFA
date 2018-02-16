@@ -2,7 +2,7 @@ using System;
 
 namespace FFA.Database.Models
 {
-    public class Poll
+    public sealed class Poll
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -12,6 +12,6 @@ namespace FFA.Database.Models
         public ulong GuildId { get; set; }
         public bool Approved { get; set; } = false;
         public bool CanDeny { get; set; } = true;
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     }
 }

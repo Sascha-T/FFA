@@ -2,7 +2,7 @@ using System;
 
 namespace FFA.Database.Models
 {
-    public class Rule
+    public sealed class Rule
     {
         public Rule() { }
 
