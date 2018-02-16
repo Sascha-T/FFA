@@ -5,6 +5,7 @@ using FFA.Extensions;
 using FFA.Utility;
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FFA.Services
@@ -38,7 +39,8 @@ namespace FFA.Services
                             {
                                 var mutedRole = context.Guild.GetRole(context.DbGuild.MutedRoleId.Value);
 
-                                if (mutedRole != null && await mutedRole.CanUseAsync())
+                                if (mutedRole != null && await mutedRole.CanUseAsync() &&
+                                    !context.GuildUser.RoleIds.Any(x => x == mutedRole.Id))
                                 {
                                     await context.GuildUser.AddRoleAsync(mutedRole);
                                     await context.Db.AddAsync(new Mute(context.Guild.Id, context.User.Id,
