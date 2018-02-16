@@ -4,6 +4,7 @@ using FFA.Database;
 using FFA.Database.Models;
 using FFA.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FFA.Services
@@ -12,48 +13,56 @@ namespace FFA.Services
     {
         public Task LogMuteAsync(Context context, IUser subject, Rule rule, TimeSpan length, string reason = null)
         {
-            var description = $"**Action:** Mute\n" +
-                              $"**User:** {subject} ({subject.Id})\n" +
-                              $"**Rule:** {rule.Content}\n" +
-                              (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}\n") +
-                              $"**Length:** {length.TotalHours}h";
+            var elements = new List<(string, string)>
+            {
+                ("Action", "Mute"),
+                ("User", $"{subject} ({subject.Id})"),
+                ("Rule", rule.Content),
+                ("Length", $"{length.TotalHours}h")
+            };
 
-            return LogAsync(context.Db, context.Guild, description, Configuration.MUTE_COLOR, context.User);
+            if (!string.IsNullOrWhiteSpace(reason))
+            {
+                elements.Add(("Reason", reason));
+            }
+
+            return LogAsync(context.Db, context.Guild, elements, Configuration.MUTE_COLOR, context.User);
         }
 
         public Task LogAutoMuteAsync(Context context, TimeSpan length)
-        {
-            var description = $"**Action:** Automatic Mute\n" +
-                              $"**User:** {context.User} ({context.User.Id})\n" +
-                              $"**Length:** {length.TotalHours}h";
-
-            return LogAsync(context.Db, context.Guild, description, Configuration.MUTE_COLOR);
-        }
-
-        public Task LogUnmuteAsync(Context context, IUser subject, string reason = null)
-        {
-            var description = $"**Action:** Unmute\n" +
-                              $"**User:** {subject} ({subject.Id})\n" +
-                              (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}");
-
-            return LogAsync(context.Db, context.Guild, description, Configuration.UNMUTE_COLOR, context.User);
-        }
+            => LogAsync(context.Db, context.Guild, new(string, string)[]
+            {
+                ("Action", "Automatic Mute"),
+                ("User", $"{context.User} ({context.User.Id})"),
+                ("Length", $"{length.TotalHours}h")
+            }, Configuration.MUTE_COLOR);
 
         public Task LogAutoUnmuteAsync(FFAContext ffaContext, IGuild guild, IUser subject)
-            => LogAsync(ffaContext, guild, $"**Action:** Automatic Unmute\n**User:** {subject} ({subject.Id})\n", Configuration.UNMUTE_COLOR);
+            => LogAsync(ffaContext, guild, new (string, string)[]
+            {
+                ("Action", "Automatic Unmute"),
+                ("User", $"{subject} ({subject.Id})")
+            }, Configuration.UNMUTE_COLOR);
 
         public Task LogClearAsync(Context context, IUser subject, Rule rule, int quantity, string reason = null)
         {
-            var description = $"**Action:** Clear\n" +
-                              $"**User:** {subject} ({subject.Id})\n" +
-                              $"**Rule:** {rule.Content}\n" +
-                              $"**Quantity:** {quantity}\n" +
-                              (string.IsNullOrWhiteSpace(reason) ? "" : $"**Reason:** {reason}\n");
+            var elements = new List<(string, string)>
+            {
+                ("Action", "Clear"),
+                ("User", $"{subject} ({subject.Id})"),
+                ("Rule", rule.Content),
+                ("Quantity", quantity.ToString())
+            };
 
-            return LogAsync(context.Db, context.Guild, description, Configuration.CLEAR_COLOR, context.User);
+            if (!string.IsNullOrWhiteSpace(reason))
+            {
+                elements.Add(("Reason", reason));
+            }
+
+            return LogAsync(context.Db, context.Guild, elements, Configuration.CLEAR_COLOR, context.User);
         }
 
-        public async Task LogAsync(FFAContext ffaContext, IGuild guild, string description, Color color, IUser moderator = null)
+        public async Task LogAsync(FFAContext ffaContext, IGuild guild, IReadOnlyList<(string, string)> elements, Color color, IUser moderator = null)
         {
             var dbGuild = await ffaContext.GetGuildAsync(guild.Id);
 
@@ -67,6 +76,13 @@ namespace FFA.Services
             if (logChannel == null || !await logChannel.CanSendAsync())
             {
                 return;
+            }
+
+            var description = string.Empty;
+
+            foreach (var element in elements)
+            {
+                description += $"**{element.Item1}:** {element.Item2}\n";
             }
 
             var builder = new EmbedBuilder()

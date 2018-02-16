@@ -15,7 +15,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-// TODO: spam detection struct with => count, firstMsgTime, currentMessageContent (use with levenshtein)
 // TODO: custom commands added by users!
 // TODO: README, contributing, all other github things.
 // TODO: Rules revamp

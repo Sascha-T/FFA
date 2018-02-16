@@ -21,7 +21,7 @@ namespace FFA.Common
         public const int MIN_MUTE_LENGTH = 1, CLEAR_DELETE_DELAY = 3000;
 
         // Spam settings
-        public const int SPAM_LIMIT = 3, SPAM_REP_PENALTY = 2;
+        public const int SPAM_LIMIT = 4, SPAM_REP_PENALTY = 2;
         public const double SPAM_SIMILARITY = 0.8;
         public static readonly TimeSpan SPAM_DURATION = TimeSpan.FromSeconds(5), SPAM_MUTE_LENGTH = TimeSpan.FromHours(2);
 

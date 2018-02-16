@@ -6,5 +6,6 @@ namespace FFA.Database.Models
         public ulong VoterId { get; set; }
         public bool For { get; set; }
         public int PollId { get; set; }
+        public Poll Poll { get; set; }
     }
 }
