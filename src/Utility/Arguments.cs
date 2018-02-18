@@ -9,7 +9,7 @@ namespace FFA.Utility
         // TODO: proper parsing instead of reading files inside parser LOL
         internal static async Task<string[]> ParseAsync(string[] args)
         {
-            var credentialsFile = "../data/credentials.json";
+            var credentialsFile = "credentials.json";
 
             for (var i = 0; i < args.Length; i++)
             {
@@ -39,7 +39,7 @@ namespace FFA.Utility
                                              "Options:\n" +
                                              "  -C, --creds    The credentials file.\n\n" +
                                              "Defaults:\n" +
-                                             "  -C, --creds    ../data/credentials.json\n");
+                                             "  -C, --creds    credentials.json\n");
 
 #if DEBUG
             Console.Read();
