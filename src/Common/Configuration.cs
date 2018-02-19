@@ -29,10 +29,10 @@ namespace FFA.Common
         internal const int REP_INCREASE = 1, UNREP_DECREASE = 1;
 
         // Reputation requirements
-        internal const int TOP_MOD = 30, TOP_BULLY = 40, TOP_COLOR = 50;
+        internal const int TOP_MOD = 30, TOP_COLOR = 40;
 
         // Maximums
-        internal const int MAX_NICKNAME_LENGTH = 32, MAX_CLEAR = 100, MAX_ROLES = 500, MAX_HEX_LENGTH = 6;
+        internal const int MAX_CLEAR = 100, MAX_ROLES = 500, MAX_HEX_LENGTH = 6;
 
         // Minimums
         internal const int MIN_CLEAR = 3;
@@ -41,7 +41,7 @@ namespace FFA.Common
         internal const int CLEAR_DEFAULT = 20;
 
         // Cooldowns in hours
-        internal const int REP_COOLDOWN = 6, UNREP_COOLDOWN = 6, BULLY_COOLDOWN = 1, COLOR_COOLDOWN = 1;
+        internal const int REP_COOLDOWN = 6, UNREP_COOLDOWN = 6, COLOR_COOLDOWN = 1;
 
         // Timers in milliseconds
         internal const int AUTO_UNMUTE_TIMER = 60000;
@@ -65,7 +65,7 @@ namespace FFA.Common
 
         // Custom colors
         internal static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65),
-                                     CLEAR_COLOR = new Color(0x4D3DFF);
+                                       CLEAR_COLOR = new Color(0x4D3DFF);
 
         // Default colors
         // TODO: more colors!!!
