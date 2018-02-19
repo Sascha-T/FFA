@@ -56,7 +56,7 @@ namespace FFA.Modules
         [Summary("Unmute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task UnmuteAsync([Summary("Billy#6969")] [NoSelf] [Cooldown(Configuration.UNMUTE_COOLDOWN)] IGuildUser guildUser,
-                                      [Summary("you best stop flirting with Mrs Ruckus")] [Remainder] string reason = null)
+                                      [Summary("you best stop flirting with Mrs Ruckus")] [Remainder] string reason)
         {
             if (!Context.DbGuild.MutedRoleId.HasValue)
             {
