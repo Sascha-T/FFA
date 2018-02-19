@@ -41,7 +41,7 @@ namespace FFA.Common
         internal const int CLEAR_DEFAULT = 20;
 
         // Cooldowns in hours
-        internal const int REP_COOLDOWN = 6, UNREP_COOLDOWN = 6, COLOR_COOLDOWN = 1;
+        internal const int REP_COOLDOWN = 6, UNREP_COOLDOWN = 6, COLOR_COOLDOWN = 1, UNMUTE_COOLDOWN = 12;
 
         // Timers in milliseconds
         internal const int AUTO_UNMUTE_TIMER = 60000;

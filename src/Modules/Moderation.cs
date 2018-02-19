@@ -52,6 +52,29 @@ namespace FFA.Modules
             }
         }
 
+        [Command("Unmute")]
+        [Summary("Unmute any guild user.")]
+        [RequireBotPermission(GuildPermission.ManageRoles)]
+        public async Task UnmuteAsync([Summary("Billy#6969")] [NoSelf] [Cooldown(Configuration.UNMUTE_COOLDOWN)] IGuildUser guildUser,
+                                      [Summary("you best stop flirting with Mrs Ruckus")] [Remainder] string reason = null)
+        {
+            if (!Context.DbGuild.MutedRoleId.HasValue)
+            {
+                await Context.ReplyErrorAsync("The muted role has not been set.");
+            }
+            else if (!guildUser.RoleIds.Contains(Context.DbGuild.MutedRoleId.Value))
+            {
+                await Context.ReplyErrorAsync("This user is not muted.");
+            }
+            else
+            {
+                await Context.Db.RemoveAsync<Mute>(x => x.UserId == guildUser.Id);
+                await guildUser.RemoveRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
+                await Context.ReplyAsync($"You have successfully unmuted {guildUser.Bold()}.");
+                await _moderationService.LogUnmuteAsync(Context, guildUser, reason);
+            }
+        }
+
         [Command("Clear")]
         [Alias("prune", "purge")]
         [Summary("Delete a specified amount of messages sent by any guild user.")]

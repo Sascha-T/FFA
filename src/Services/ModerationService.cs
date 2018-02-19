@@ -29,6 +29,22 @@ namespace FFA.Services
             return LogAsync(context.Db, context.Guild, elements, Configuration.MUTE_COLOR, context.User);
         }
 
+        public Task LogUnmuteAsync(Context context, IUser subject, string reason = null)
+        {
+            var elements = new List<(string, string)>
+            {
+                ("Action", "Unmute"),
+                ("User", $"{subject} ({subject.Id})")
+            };
+
+            if (!string.IsNullOrWhiteSpace(reason))
+            {
+                elements.Add(("Reason", reason));
+            }
+
+            return LogAsync(context.Db, context.Guild, elements, Configuration.MUTE_COLOR, context.User);
+        }
+
         public Task LogAutoMuteAsync(Context context, TimeSpan length)
             => LogAsync(context.Db, context.Guild, new(string, string)[]
             {
