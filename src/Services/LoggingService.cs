@@ -1,19 +1,47 @@
 using Discord;
+using FFA.Common;
 using FFA.Utility;
 using System;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FFA.Services
 {
     public sealed class LoggingService
     {
+        private readonly SemaphoreSlim _semaphore;
+
+        public LoggingService()
+        {
+            _semaphore = new SemaphoreSlim(1);
+
+            Directory.CreateDirectory(Configuration.LOGS_DIRECTORY);
+        }
+
         public async Task LogAsync(LogSeverity severity, string message)
         {
-            // TODO: log to a file + different file for errors
-            await Console.Out.WriteAsync($"{DateTimeOffset.UtcNow.ToString("hh:mm:ss")} ");
-            await ColoredConsole.WriteAsync($"[{severity}]", GetSeverityColor(severity));
-            await Console.Out.WriteLineAsync($" {message}");
+            await _semaphore.WaitAsync();
+
+            try
+            {
+                var formattedTime = DateTimeOffset.UtcNow.ToString("hh:mm:ss");
+
+                await Console.Out.WriteAsync($"{formattedTime} ");
+                await ColoredConsole.WriteAsync($"[{severity}]", GetSeverityColor(severity));
+                await Console.Out.WriteLineAsync($" {message}");
+
+                await File.AppendAllTextAsync(LogFileName(severity), $"{formattedTime} [{severity}] {message}\n");
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
+
+        public string LogFileName(LogSeverity severity)
+            => Configuration.LOGS_DIRECTORY + DateTimeOffset.UtcNow.ToString("dd'.'MM'.'yyyy") +
+               (severity == LogSeverity.Error ? " Errors" : "") + ".txt";
 
         private ConsoleColor GetSeverityColor(LogSeverity severity)
         {

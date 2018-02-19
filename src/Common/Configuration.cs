@@ -46,6 +46,9 @@ namespace FFA.Common
         // Timers in milliseconds
         internal const int AUTO_UNMUTE_TIMER = 60000;
 
+        // Logs
+        internal const string LOGS_DIRECTORY = "logs/";
+
         // Discord code responses
         internal static readonly IReadOnlyDictionary<int, string> DISCORD_CODE_RESPONSES = new Dictionary<int, string>()
         {

@@ -21,6 +21,10 @@ namespace FFA.Events
         }
 
         private Task OnLogAsync(LogMessage msg)
-            => _logger.LogAsync(msg.Severity, msg.Source + ": " + (msg.Exception?.ToString() ?? msg.Message));
+        {
+            Task.Run(() => _logger.LogAsync(msg.Severity, msg.Source + ": " + (msg.Exception?.ToString() ?? msg.Message)));
+
+            return Task.CompletedTask;
+        }
     }
 }
