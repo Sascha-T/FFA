@@ -38,7 +38,7 @@ namespace FFA.Services
             if (!string.IsNullOrWhiteSpace(reason))
                 elements.Add(("Reason", reason));
 
-            return LogAsync(context.Db, context.Guild, elements, Configuration.MUTE_COLOR, context.User);
+            return LogAsync(context.Db, context.Guild, elements, Configuration.UNMUTE_COLOR, context.User);
         }
 
         public Task LogAutoMuteAsync(Context context, TimeSpan length)
