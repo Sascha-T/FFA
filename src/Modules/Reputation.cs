@@ -65,7 +65,7 @@ namespace FFA.Modules
 
             for (int i = 0; i < orderedDbUsers.Length; i++)
             {
-                var user = Context.Guild.GetUserAsync(orderedDbUsers[i].Id);
+                var user = await Context.Guild.GetUserAsync(orderedDbUsers[i].Id);
                 
                 if (user != null)
                     description += $"{(i + 1)} {user}: **{orderedDbUsers[i].Reputation}**\n";
@@ -86,7 +86,7 @@ namespace FFA.Modules
 
             for (int i = 0; i < orderedDbUsers.Length; i++)
             {
-                var user = Context.Guild.GetUserAsync(orderedDbUsers[i].Id);
+                var user = await Context.Guild.GetUserAsync(orderedDbUsers[i].Id);
                 
                 if (user != null)
                     description += $"{(i + 1)} {user}: **{orderedDbUsers[i].Reputation}**\n";
