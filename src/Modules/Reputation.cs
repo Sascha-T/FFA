@@ -68,7 +68,7 @@ namespace FFA.Modules
                 var user = await Context.Guild.GetUserAsync(orderedDbUsers[i].Id);
                 
                 if (user != null)
-                    description += $"{(i + 1)} {user}: **{orderedDbUsers[i].Reputation}**\n";
+                    description += $"{(i + 1)}. **{user}:** {orderedDbUsers[i].Reputation}\n";
             }
 
             await Context.SendAsync(description, "The Most Reputable Users");
@@ -89,7 +89,7 @@ namespace FFA.Modules
                 var user = await Context.Guild.GetUserAsync(orderedDbUsers[i].Id);
                 
                 if (user != null)
-                    description += $"{(i + 1)} {user}: **{orderedDbUsers[i].Reputation}**\n";
+                    description += $"{(i + 1)}. **{user}:** {orderedDbUsers[i].Reputation}\n";
             }
 
             await Context.SendAsync(description, "The Least Reputable Users");
