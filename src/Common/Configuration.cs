@@ -38,7 +38,7 @@ namespace FFA.Common
         internal const int MIN_CLEAR = 3;
 
         // Defaults
-        internal const int CLEAR_DEFAULT = 20, LB_COUNT_DEFAULT = 20;
+        internal const int CLEAR_DEFAULT = 20, LB_COUNT_DEFAULT = 10;
 
         // Cooldowns in hours
         internal const int REP_COOLDOWN = 6, UNREP_COOLDOWN = 6, COLOR_COOLDOWN = 1, UNMUTE_COOLDOWN = 12;
