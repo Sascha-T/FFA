@@ -16,9 +16,7 @@ namespace FFA.Preconditions
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value, IServiceProvider services)
         {
             if (((string)value).Length > _length)
-            {
                 return Task.FromResult(PreconditionResult.FromError($"The maximum {parameter.Name} length is {_length} characters."));
-            }
 
             return Task.FromResult(PreconditionResult.FromSuccess());
         }

@@ -14,9 +14,7 @@ namespace FFA.Preconditions
             var dbUser = await context.Db.GetUserAsync(value as IGuildUser);
 
             if (context.DbUser.Reputation < dbUser.Reputation)
-            {
                 return PreconditionResult.FromError("You may not use this command on users with a higher reputation than yourself.");
-            }
 
             return PreconditionResult.FromSuccess();
         }

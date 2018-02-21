@@ -22,9 +22,7 @@ namespace FFA.Preconditions
             var context = ctx as Context;
 
             if (!await repService.IsInTopAsync(context.Db, _count, context.User.Id, context.Guild.Id))
-            {
                 return PreconditionResult.FromError($"This command may only be used by the top {_count} most reputable users.");
-            }
 
             return PreconditionResult.FromSuccess();
         }

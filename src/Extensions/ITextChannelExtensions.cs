@@ -8,9 +8,8 @@ namespace FFA.Extensions
         public static async Task<bool> CanSendAsync(this ITextChannel channel)
         {
             var currentUser = await channel.Guild.GetCurrentUserAsync();
-            var permissionOverwrites = currentUser.GetPermissions(channel);
 
-            return permissionOverwrites.SendMessages;
+            return currentUser.GetPermissions(channel).SendMessages;
         }
     }
 }
