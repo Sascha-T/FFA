@@ -49,7 +49,7 @@ namespace FFA.Modules
             var orderedDbUsers = await Context.Db.Users.Where(x => x.GuildId == dbUser.GuildId).OrderByDescending(x => x.Reputation).ToArrayAsync();
             var position = Array.FindIndex(orderedDbUsers, x => x.Id == user.Id) + 1;
 
-            await Context.SendAsync($"**Reputation:** {dbUser.Reputation}\n**Rank:** {position}", $"{user}'s Reputation");
+            await Context.SendAsync($"**Reputation:** {dbUser.Reputation}\n**Rank:** #{position}", $"{user}'s Reputation");
         }
 
         // TODO: variable count in rep lb
