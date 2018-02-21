@@ -4,6 +4,9 @@ using FFA.Common;
 using FFA.Extensions;
 using FFA.Preconditions;
 using FFA.Services;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FFA.Modules
@@ -17,21 +20,6 @@ namespace FFA.Modules
         public Reputation(ReputationService repService)
         {
             _repService = repService;
-        }
-
-        [Command("Mod")]
-        [Alias("moderator")]
-        [Summary("Informs you whether you are a moderator.")]
-        public async Task ModAsync()
-        {
-            if (await _repService.IsInTopAsync(Context.Db, Configuration.TOP_MOD, Context.User.Id, Context.Guild.Id))
-            {
-                await Context.ReplyAsync("You are currently a moderator.");
-            }
-            else
-            {
-                await Context.ReplyErrorAsync("You are currently not a moderator.");
-            }
         }
 
         [Command("Rep")]
@@ -50,12 +38,61 @@ namespace FFA.Modules
             await Context.ReplyAsync($"You have successfully unrepped {user.Bold()}.");
         }
 
-        [Command("MyRep")]
-        [Summary("Get your current reputation.")]
-        public async Task MyRepAsync()
+        [Command("GetRep")]
+        [Alias("GetRank")]
+        [Summary("Get anyone's reputation.")]
+        public async Task GetRepAsync([Summary("Black Nugs#1234")] [Remainder] IGuildUser user = null)
         {
-            await Context.DmAsync($"You currently have {Context.DbUser.Reputation} reputation.");
-            await Context.ReplyAsync($"You have been DMed with your reputation.");
+            user = user ?? Context.GuildUser;
+
+            var dbUser = user.Id == Context.User.Id ? Context.DbUser : await Context.Db.GetUserAsync(user.Id, user.GuildId);
+            var orderedDbUsers = await Context.Db.Users.Where(x => x.GuildId == dbUser.GuildId).OrderByDescending(x => x.Reputation).ToArrayAsync();
+            var position = Array.FindIndex(orderedDbUsers, x => x.Id == user.Id) + 1;
+
+            await Context.SendAsync($"**Reputation:** {dbUser.Reputation}\n**Rank:** {position}", $"{user}'s Reputation");
+        }
+
+        // TODO: variable count in rep lb
+        // TODO: proper indentation for new lines
+        [Command("RepLeaderboards")]
+        [Alias("replb", "top", "toprep")]
+        [Summary("The most reputable users.")]
+        public async Task RepLeaderboardsAsync()
+        {
+            var orderedDbUsers = await Context.Db.Users.Where(x => x.GuildId == Context.Guild.Id)
+                .OrderByDescending(x => x.Reputation).Take(Configuration.LB_COUNT_DEFAULT).ToArrayAsync();
+            var description = string.Empty;
+
+            for (int i = 0; i < orderedDbUsers.Length; i++)
+            {
+                var user = Context.Guild.GetUserAsync(orderedDbUsers[i].Id);
+                
+                if (user != null)
+                    description += $"{(i + 1)} {user}: **{orderedDbUsers[i].Reputation}**\n";
+            }
+
+            await Context.SendAsync(description, "The Most Reputable Users");
+        }
+
+        [Command("UnRepLeaderboards")]
+        [Alias("unreplb", "lowrep", "low")]
+        [Summary("The least reputable users.")]
+        public async Task UnRepLeaderboardsAsync()
+        {
+            // TODO: helper method for leaderboard commands
+            var orderedDbUsers = await Context.Db.Users.Where(x => x.GuildId == Context.Guild.Id)
+                .OrderBy(x => x.Reputation).Take(Configuration.LB_COUNT_DEFAULT).ToArrayAsync();
+            var description = string.Empty;
+
+            for (int i = 0; i < orderedDbUsers.Length; i++)
+            {
+                var user = Context.Guild.GetUserAsync(orderedDbUsers[i].Id);
+                
+                if (user != null)
+                    description += $"{(i + 1)} {user}: **{orderedDbUsers[i].Reputation}**\n";
+            }
+
+            await Context.SendAsync(description, "The Least Reputable Users");
         }
     }
 }

@@ -20,9 +20,7 @@ namespace FFA.Preconditions
             var castedValue = (int)value;
 
             if (castedValue < _minimum || castedValue > _maximum)
-            {
                 return Task.FromResult(PreconditionResult.FromError($"The {parameter.Name} must be between {_minimum} and {_maximum}."));
-            }
 
             return Task.FromResult(PreconditionResult.FromSuccess());
         }

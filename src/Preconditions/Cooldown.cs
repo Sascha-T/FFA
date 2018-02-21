@@ -24,11 +24,9 @@ namespace FFA.Preconditions
             {
                 var difference = endsAt.Subtract(DateTimeOffset.UtcNow);
 
+                // TODO: Make cooldown response slick?
                 if (difference.Ticks > 0)
-                {
-                    // TODO: Make cooldown response slick?
                     return Task.FromResult(PreconditionResult.FromError($"You may use this command in {difference.ToString(@"hh\:mm\:ss")}."));
-                }
 
                 var time = DateTimeOffset.UtcNow.Add(_cooldownLength);
 

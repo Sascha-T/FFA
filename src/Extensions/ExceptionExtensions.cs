@@ -9,9 +9,7 @@ namespace FFA.Extensions
             var next = err;
 
             while (next.InnerException != null)
-            {
                 next = next.InnerException;
-            }
 
             return next;
         }

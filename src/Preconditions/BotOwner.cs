@@ -14,9 +14,7 @@ namespace FFA.Preconditions
             var credentials = services.GetRequiredService<Credentials>();
 
             if (!credentials.OwnerIds.Any(x => x == context.User.Id))
-            {
                 return Task.FromResult(PreconditionResult.FromError("This command may only be used by the bot owners."));
-            }
 
             return Task.FromResult(PreconditionResult.FromSuccess());
         }

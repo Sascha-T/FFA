@@ -24,9 +24,7 @@ namespace FFA.Services
             };
 
             for (var i = 0; i < fieldOrValue.Length; i += 2)
-            {
                 builder.AddField(fieldOrValue[i], fieldOrValue[i + 1]);
-            }
 
             return SendEmbedAsync(channel, builder);
         }
@@ -44,9 +42,7 @@ namespace FFA.Services
             };
 
             if (guild != null)
-            {
                 builder.WithFooter(guild.Name, guild.IconUrl);
-            }
 
             return SendEmbedAsync(channel, builder);
         }
@@ -54,9 +50,7 @@ namespace FFA.Services
         public async Task<IUserMessage> SendEmbedAsync(IMessageChannel channel, EmbedBuilder builder)
         {
             if (channel is ITextChannel textChannel && !await textChannel.CanSendAsync())
-            {
                 return null;
-            }
 
             return await channel.SendMessageAsync("", false, builder.Build());
         }

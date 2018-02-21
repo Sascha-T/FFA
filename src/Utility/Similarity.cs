@@ -17,14 +17,9 @@ namespace FFA.Utility
             int[,] d = new int[n + 1, m + 1];
             
             if (n == 0)
-            {
                 return m;
-            }
-
-            if (m == 0)
-            {
+            else if (m == 0)
                 return n;
-            }
 
             for (int i = 0; i <= n; d[i, 0] = i++);
 

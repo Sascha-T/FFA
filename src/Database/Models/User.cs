@@ -10,6 +10,7 @@ namespace FFA.Database.Models
 
         }
 
+        // TODO: composite key with guild id OR int id?
         public ulong Id { get; set; }
         public int Reputation { get; set; } = 0;
         public ulong GuildId { get; set; }

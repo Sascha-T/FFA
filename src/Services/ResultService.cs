@@ -49,9 +49,7 @@ namespace FFA.Services
             if (last is HttpException httpEx)
             {
                 if (!Configuration.DISCORD_CODE_RESPONSES.TryGetValue(httpEx.DiscordCode.GetValueOrDefault(), out message))
-                {
                     Configuration.HTTP_CODE_RESPONSES.TryGetValue(httpEx.HttpCode, out message);
-                }
             }
             else
             {

@@ -35,9 +35,7 @@ namespace FFA.Events
                 var msg = socketMsg as IUserMessage;
 
                 if (msg == null || msg.Author.IsBot)
-                {
                     return;
-                }
 
                 var context = new Context(_client, msg, _provider);
 
@@ -52,9 +50,7 @@ namespace FFA.Events
                     var result = await _commandService.ExecuteAsync(context, argPos, _provider);
 
                     if (!result.IsSuccess)
-                    {
                         await _resultService.HandleResult(context, result, argPos);
-                    }
                 }
             });
 

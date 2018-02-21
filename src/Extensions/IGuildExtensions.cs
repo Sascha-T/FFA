@@ -14,9 +14,7 @@ namespace FFA.Extensions
             if (role == default(IRole))
             {
                 if (guild.Roles.Count == Configuration.MAX_ROLES)
-                {
                     await guild.Roles.First(x => x.Name.StartsWith('#')).DeleteAsync();
-                }
 
                 role = await guild.CreateRoleAsync(name, color: color);
             }

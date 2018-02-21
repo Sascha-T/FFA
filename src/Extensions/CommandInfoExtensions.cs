@@ -10,9 +10,7 @@ namespace FFA.Extensions
             var usage = command.Name;
 
             foreach (var param in command.Parameters)
-            {
                 usage += $" {(param.IsOptional ? "[" : "<")}{param.Name}{(param.IsOptional ? "]" : ">")}";
-            }
 
             return usage;
         }
@@ -26,13 +24,9 @@ namespace FFA.Extensions
                 var before = string.Empty;
 
                 if (typeof(IUser).IsAssignableFrom(param.Type) || typeof(IRole).IsAssignableFrom(param.Type))
-                {
                     before += "@";
-                }
                 else if (typeof(ITextChannel).IsAssignableFrom(param.Type))
-                {
                     before += "#";
-                }
 
                 example += $" {before}{param.Summary ?? param.Name}";
             }

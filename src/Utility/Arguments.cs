@@ -14,20 +14,13 @@ namespace FFA.Utility
             for (var i = 0; i < args.Length; i++)
             {
                 if (args[i] == "-C" || args[i] == "--creds")
-                {
-                    credentialsFile = args[i + 1];
-                    i++;
-                }
+                    credentialsFile = args[i++ + 1];
                 else
-                {
                     await TerminateAsync($"Unknown argument: {args[i]}");
-                }
             }
 
             if (!File.Exists(credentialsFile))
-            {
                 await TerminateAsync($"The {credentialsFile} file does not exist.");
-            }
 
             return new string[] { await File.ReadAllTextAsync(credentialsFile) };
         }

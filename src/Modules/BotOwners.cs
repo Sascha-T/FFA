@@ -39,13 +39,9 @@ namespace FFA.Modules
             var fileName = _logger.LogFileName(LogSeverity.Error);
             
             if (!File.Exists(fileName))
-            {
                 await Context.ReplyErrorAsync("No error log file has been created.");
-            }
             else
-            {
                 await Context.Channel.SendFileAsync(fileName);
-            }
         }
 
         [Command("LastErrorLogs")]
@@ -65,10 +61,8 @@ namespace FFA.Modules
                 var message = "```";
 
                 for (int i = lineCount >= lines.Length ? 0 : lines.Length - lineCount; i < lines.Length; i++)
-                {
                     message += $"{lines[i]}\n";
-                }
-                
+
                 await ReplyAsync($"{message}```");
             }
         }
@@ -88,13 +82,9 @@ namespace FFA.Modules
                 var result = await _evalService.EvalAsync(Context.Client, Context.Guild, Context.Db, script);
 
                 if (result.Success)
-                {
                     await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.Result}```");
-                }
                 else
-                {
                     await Context.SendFieldsErrorAsync("Eval", $"```cs\n{code}```", "Runtime Error", $"```{result.Exception}```");
-                }
             }
         }
     }

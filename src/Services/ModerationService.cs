@@ -22,9 +22,7 @@ namespace FFA.Services
             };
 
             if (!string.IsNullOrWhiteSpace(reason))
-            {
                 elements.Add(("Reason", reason));
-            }
 
             return LogAsync(context.Db, context.Guild, elements, Configuration.MUTE_COLOR, context.User);
         }
@@ -38,9 +36,7 @@ namespace FFA.Services
             };
 
             if (!string.IsNullOrWhiteSpace(reason))
-            {
                 elements.Add(("Reason", reason));
-            }
 
             return LogAsync(context.Db, context.Guild, elements, Configuration.MUTE_COLOR, context.User);
         }
@@ -71,9 +67,7 @@ namespace FFA.Services
             };
 
             if (!string.IsNullOrWhiteSpace(reason))
-            {
                 elements.Add(("Reason", reason));
-            }
 
             return LogAsync(context.Db, context.Guild, elements, Configuration.CLEAR_COLOR, context.User);
         }
@@ -83,16 +77,12 @@ namespace FFA.Services
             var dbGuild = await ffaContext.GetGuildAsync(guild.Id);
 
             if (!dbGuild.LogChannelId.HasValue)
-            {
                 return;
-            }
 
             var logChannel = await guild.GetChannelAsync(dbGuild.LogChannelId.Value) as ITextChannel;
 
             if (logChannel == null || !await logChannel.CanSendAsync())
-            {
                 return;
-            }
 
             var description = string.Empty;
 

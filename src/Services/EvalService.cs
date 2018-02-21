@@ -29,9 +29,7 @@ namespace FFA.Services
             errorMessage = string.Empty;
 
             foreach (var error in compilerErrors)
-            {
                 errorMessage += $"{error.GetMessage()}\n";
-            }
 
             return string.IsNullOrWhiteSpace(errorMessage);
         }

@@ -40,18 +40,14 @@ namespace FFA.Timers
                     var dbGuild = await ffaContext.GetGuildAsync(guild.Id);
 
                     if (!dbGuild.MutedRoleId.HasValue)
-                    {
                         continue;
-                    }
 
                     var mutedRole = guild.GetRole(dbGuild.MutedRoleId.Value);
 
                     if (mutedRole == null || !await mutedRole.CanUseAsync())
-                    {
                         continue;
-                    }
 
-                    var mutes = await ffaContext.Mutes.ToListAsync();
+                    var mutes = await ffaContext.Mutes.ToArrayAsync();
 
                     foreach (var mute in mutes)
                     {
