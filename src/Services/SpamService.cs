@@ -32,9 +32,7 @@ namespace FFA.Services
                         entry.LastContent = context.Message.Content;
 
                         if (entry.Count >= Configuration.SPAM_LIMIT)
-                        {
-                            await context.Db.UpdateAsync(context.DbUser, x => x.Reputation -= Configuration.SPAM_REP_PENALTY);
-
+                        {                            
                             if (context.DbGuild.MutedRoleId.HasValue)
                             {
                                 var mutedRole = context.Guild.GetRole(context.DbGuild.MutedRoleId.Value);
@@ -46,6 +44,7 @@ namespace FFA.Services
                                     await context.Db.AddAsync(new Mute(context.Guild.Id, context.User.Id,
                                                               DateTimeOffset.UtcNow.Add(Configuration.SPAM_MUTE_LENGTH)));
                                     await _moderationService.LogAutoMuteAsync(context, Configuration.SPAM_MUTE_LENGTH);
+                                    await context.Db.UpdateAsync(context.DbUser, x => x.Reputation -= Configuration.SPAM_REP_PENALTY);
                                 }
                             }
                         }
