@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Modules
 {
+    // TODO: add a NotMuted precondition, only allow mod cmd use while not muted.
     [Name("Moderation")]
     [GuildOnly]
     [Top(Configuration.TOP_MOD)]
