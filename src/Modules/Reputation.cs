@@ -75,7 +75,7 @@ namespace FFA.Modules
         }
 
         [Command("UnRepLeaderboards")]
-        [Alias("unreplb", "lowrep", "low")]
+        [Alias("unreplb", "bottomrep", "bottom")]
         [Summary("The least reputable users.")]
         public async Task UnRepLeaderboardsAsync()
         {
