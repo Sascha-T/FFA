@@ -2,10 +2,10 @@ using Discord;
 using Discord.Commands;
 using FFA.Common;
 using FFA.Database.Models;
-using FFA.Extensions;
+using FFA.Extensions.Discord;
 using FFA.Preconditions;
 using FFA.Services;
-using System;
+using MongoDB.Driver;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,10 +18,12 @@ namespace FFA.Modules
     public sealed class Moderation : ModuleBase<Context>
     {
         private readonly ModerationService _moderationService;
+        private readonly IMongoCollection<Mute> _muteCollection;
 
-        public Moderation(ModerationService moderationService)
+        public Moderation(ModerationService moderationService, IMongoCollection<Mute> muteCollection)
         {
             _moderationService = moderationService;
+            _muteCollection = muteCollection;
         }
 
         [Command("Mute")]
@@ -29,16 +31,17 @@ namespace FFA.Modules
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task MuteAsync([Summary("Jimbo#5555")] [NoSelf] [HigherReputation] IGuildUser guildUser,
                                     [Summary("2c")] Rule rule,
-                                    [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] TimeSpan length,
-                                    [Summary("stop with all that ruckus!")] [Remainder] string reason = null)
+                                    [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] uint length,
+                                    [Summary("stop with all that ruckus!")] [Remainder]
+                                    [MaximumLength(Configuration.MAX_REASON_LENGTH)] string reason = null)
         {
             if (!Context.DbGuild.MutedRoleId.HasValue)
             {
                 await Context.ReplyErrorAsync("The muted role has not been set.");
             }
-            else if (rule.MaxMuteLength.HasValue && length > rule.MaxMuteLength)
+            else if (rule.MaxMuteHours.HasValue && length > rule.MaxMuteHours)
             {
-                await Context.ReplyErrorAsync($"The maximum mute length of this rule is {rule.MaxMuteLength.Value.TotalHours}h.");
+                await Context.ReplyErrorAsync($"The maximum mute length of this rule is {rule.MaxMuteHours.Value}h.");
             }
             else if (guildUser.RoleIds.Contains(Context.DbGuild.MutedRoleId.Value))
             {
@@ -47,17 +50,19 @@ namespace FFA.Modules
             else
             {
                 await guildUser.AddRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
-                await Context.Db.AddAsync(new Mute(Context.Guild.Id, guildUser.Id, DateTimeOffset.UtcNow.Add(length)));
+                await _muteCollection.InsertOneAsync(new Mute(Context.Guild.Id, guildUser.Id, length));
                 await Context.ReplyAsync($"You have successfully muted {guildUser.Bold()}.");
                 await _moderationService.LogMuteAsync(Context, guildUser, rule, length, reason);
             }
         }
 
+        // TODO: fix indentation of all commands to only have one level of indents
         [Command("Unmute")]
         [Summary("Unmute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task UnmuteAsync([Summary("Billy#6969")] [NoSelf] IGuildUser guildUser,
-                                      [Summary("you best stop flirting with Mrs Ruckus")] [Remainder] string reason)
+                                      [Summary("you best stop flirting with Mrs Ruckus")] [Remainder]
+                                      [MaximumLength(Configuration.MAX_REASON_LENGTH)] string reason)
         {
             if (!Context.DbGuild.MutedRoleId.HasValue)
             {
@@ -69,7 +74,7 @@ namespace FFA.Modules
             }
             else
             {
-                await Context.Db.RemoveAsync<Mute>(x => x.UserId == guildUser.Id);
+                await _muteCollection.DeleteManyAsync(x => x.UserId == guildUser.Id && x.GuildId == Context.Guild.Id);
                 await guildUser.RemoveRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
                 await Context.ReplyAsync($"You have successfully unmuted {guildUser.Bold()}.");
                 await _moderationService.LogUnmuteAsync(Context, guildUser, reason);
@@ -83,7 +88,8 @@ namespace FFA.Modules
         public async Task Clear([Summary("SteveJr#3333")] [NoSelf] IUser user,
                                 [Summary("3a")] Rule rule,
                                 [Summary("20")] [Between(Configuration.MIN_CLEAR, Configuration.MAX_CLEAR)] int quantity = Configuration.CLEAR_DEFAULT,
-                                [Summary("that's enough pornos for tonight Steve")] [Remainder] string reason = null)
+                                [Summary("that's enough pornos for tonight Steve")] [Remainder]
+                                [MaximumLength(Configuration.MAX_REASON_LENGTH)] string reason = null)
         {
             var messages = await Context.Channel.GetMessagesAsync().FlattenAsync();
             var filtered = messages.Where(x => x.Author.Id == user.Id).Take(quantity);

@@ -2,13 +2,13 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using FFA.Common;
-using FFA.Database;
 using FFA.Database.Models;
 using FFA.Events;
 using FFA.Readers;
 using FFA.Services;
 using FFA.Utility;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
 using System.Reflection;
@@ -45,17 +45,29 @@ namespace FFA
                 IgnoreExtraArgs = true
             });
 
+            var mongoClient = new MongoClient(credentials.DbConnectionString);
+            var database = mongoClient.GetDatabase(credentials.DbName);
+
             // TODO: reorganize ordering of additions to service collection
             // TODO: reflexion to add all services/events/timers
             var services = new ServiceCollection()
                 .AddSingleton(credentials)
-                .AddDbContext<FFAContext>(ServiceLifetime.Transient)
+                .AddSingleton(mongoClient)
+                .AddSingleton(database)
+                // TODO: array of collections and loop to get?
+                .AddSingleton(database.GetCollection<User>("users"))
+                .AddSingleton(database.GetCollection<Guild>("guilds"))
+                .AddSingleton(database.GetCollection<Mute>("mutes"))
+                .AddSingleton(database.GetCollection<Rule>("rules"))
+                .AddSingleton(database.GetCollection<Poll>("polls"))
+                .AddSingleton(database.GetCollection<Vote>("votes"))
                 .AddSingleton<LoggingService>()
                 .AddSingleton(client)
                 .AddSingleton(commandService)
                 .AddSingleton(new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode())))
                 .AddSingleton<SendingService>()
                 .AddSingleton<RulesService>()
+                .AddSingleton<RateLimitService>()
                 .AddSingleton<ResultService>()
                 .AddSingleton<MessageReceived>()
                 .AddSingleton<ModerationService>()
@@ -65,18 +77,15 @@ namespace FFA
 
             var provider = services.BuildServiceProvider();
 
-            await provider.GetRequiredService<FFAContext>().Database.EnsureCreatedAsync();
-
             new ClientLog(provider);
             new MessageReceived(provider);
             new Ready(provider);
             new UserJoined(provider);
 
             commandService.AddTypeReader<Rule>(new RuleTypeReader());
-            commandService.AddTypeReader<TimeSpan>(new TimeSpanTypeReader());
             commandService.AddTypeReader<Color>(new ColorTypeReader());
 
-            await commandService.AddModulesAsync(Assembly.GetEntryAssembly());
+            await commandService.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
             await client.LoginAsync(TokenType.Bot, credentials.Token);
             await client.StartAsync();
 

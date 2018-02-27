@@ -1,11 +1,11 @@
 using Discord;
 using System.Threading.Tasks;
 
-namespace FFA.Extensions
+namespace FFA.Extensions.Discord
 {
-    public static class ITextChannelExtensions
+    internal static class ITextChannelExtensions
     {
-        public static async Task<bool> CanSendAsync(this ITextChannel channel)
+        internal static async Task<bool> CanSendAsync(this ITextChannel channel)
         {
             var currentUser = await channel.Guild.GetCurrentUserAsync();
 

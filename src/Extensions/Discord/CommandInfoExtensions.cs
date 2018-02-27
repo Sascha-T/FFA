@@ -1,11 +1,11 @@
 using Discord;
 using Discord.Commands;
 
-namespace FFA.Extensions
+namespace FFA.Extensions.Discord
 {
-    public static class CommandInfoExtensions
+    internal static class CommandInfoExtensions
     {
-        public static string GetUsage(this CommandInfo command)
+        internal static string GetUsage(this CommandInfo command)
         {
             var usage = command.Name;
 
@@ -15,7 +15,7 @@ namespace FFA.Extensions
             return usage;
         }
 
-        public static string GetExample(this CommandInfo command)
+        internal static string GetExample(this CommandInfo command)
         {
             var example = command.Name;
 

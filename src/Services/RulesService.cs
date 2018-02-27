@@ -1,7 +1,8 @@
 using Discord;
-using FFA.Database;
-using FFA.Extensions;
-using Microsoft.EntityFrameworkCore;
+using FFA.Database.Models;
+using FFA.Extensions.Database;
+using FFA.Extensions.Discord;
+using MongoDB.Driver;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,20 +13,24 @@ namespace FFA.Services
     {
         private readonly SendingService _sender;
         private readonly SemaphoreSlim _semaphore;
+        private readonly IMongoCollection<Guild> _guildCollection;
+        private readonly IMongoCollection<Rule> _ruleCollection;
 
-        public RulesService(SendingService sender)
+        public RulesService(SendingService sender, IMongoCollection<Guild> guildCollection, IMongoCollection<Rule> ruleCollection)
         {
             _sender = sender;
+            _guildCollection = guildCollection;
+            _ruleCollection = ruleCollection;
             _semaphore = new SemaphoreSlim(1);
         }
 
-        public async Task UpdateAsync(FFAContext ffaContext, IGuild guild)
+        public async Task UpdateAsync(IGuild guild)
         {
             await _semaphore.WaitAsync();
 
             try
             {
-                var dbGuild = await ffaContext.GetGuildAsync(guild.Id);
+                var dbGuild = await _guildCollection.GetGuildAsync(guild.Id);
 
                 if (!dbGuild.RulesChannelId.HasValue)
                     return;
@@ -37,7 +42,9 @@ namespace FFA.Services
 
                 var messages = await rulesChannel.GetMessagesAsync().FlattenAsync();
                 await rulesChannel.DeleteMessagesAsync(messages);
-                var groups = await ffaContext.Rules.Where(x => x.GuildId == guild.Id).OrderBy(x => x.Category).GroupBy(x => x.Category).ToArrayAsync();
+
+                var result = await _ruleCollection.WhereAsync(x => x.GuildId == guild.Id);
+                var groups = result.OrderBy(x => x.Category).GroupBy(x => x.Category).ToArray();
 
                 for (var i = 0; i < groups.Length; i++)
                 {
@@ -45,7 +52,7 @@ namespace FFA.Services
 
                     foreach (var item in groups[i].OrderBy(x => x.Content).Select((Value, Index) => new { Value, Index }))
                         description += $"**{(char)('a' + item.Index)}.** {item.Value.Content} " +
-                                       $"({(item.Value.MaxMuteLength.HasValue ? item.Value.MaxMuteLength.Value.TotalHours + "h" : "Bannable")})\n";
+                                       $"({(item.Value.MaxMuteHours.HasValue ? item.Value.MaxMuteHours.Value + "h" : "Bannable")})\n";
 
                     await _sender.SendAsync(rulesChannel, description, $"{i + 1}. {groups[i].First().Category}:");
                     await Task.Delay(1000);

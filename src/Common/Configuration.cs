@@ -21,9 +21,11 @@ namespace FFA.Common
         internal const int MIN_MUTE_LENGTH = 1, CLEAR_DELETE_DELAY = 3000;
 
         // Spam settings
-        internal const int SPAM_LIMIT = 4, SPAM_REP_PENALTY = 2;
-        internal const double SPAM_SIMILARITY = 0.8;
-        internal static readonly TimeSpan SPAM_DURATION = TimeSpan.FromSeconds(5), SPAM_MUTE_LENGTH = TimeSpan.FromHours(2);
+        internal const int SPAM_LIMIT = 4, SPAM_REP_PENALTY = 2, SPAM_MUTE_HOURS = 2;
+        internal static readonly TimeSpan SPAM_DURATION = TimeSpan.FromSeconds(5);
+
+        // Rate limit service settings
+        internal static readonly TimeSpan IGNORE_DURATION = TimeSpan.FromHours(2);
 
         // Reputation commands
         internal const int REP_INCREASE = 1, UNREP_DECREASE = 1;
@@ -32,10 +34,14 @@ namespace FFA.Common
         internal const int TOP_MOD = 30, TOP_COLOR = 40;
 
         // Maximums
-        internal const int MAX_CLEAR = 100, MAX_ROLES = 500, MAX_HEX_LENGTH = 6;
+        internal const int MAX_CLEAR = 100, MAX_ROLES = 500, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 1000;
 
         // Minimums
         internal const int MIN_CLEAR = 3;
+
+        // Constants
+        internal const long MS_PER_HOUR = TimeSpan.TicksPerHour / 1000;
+        internal const ushort TOO_MANY_REQUESTS = 429;
 
         // Defaults
         internal const int CLEAR_DEFAULT = 20, LB_COUNT_DEFAULT = 10;
@@ -95,7 +101,9 @@ namespace FFA.Common
             "System.Threading.Tasks",
             "Discord",
             "Discord.Commands",
-            "Discord.WebSocket"
+            "Discord.WebSocket",
+            "FFA.Database.Models",
+            "MongoDB.Driver"
         }.ToImmutableArray();
 
         // Eval script options

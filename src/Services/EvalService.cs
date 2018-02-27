@@ -1,7 +1,8 @@
 using Discord;
-using FFA.Database;
+using Discord.WebSocket;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Scripting;
+using MongoDB.Driver;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,10 +14,15 @@ namespace FFA.Services
         private readonly SendingService _sender;
         private readonly RulesService _rulesService;
         private readonly ReputationService _repService;
+        private readonly IDiscordClient _client;
+        private readonly IMongoDatabase _database;
 
-        public EvalService(SendingService sender, RulesService rulesService, ReputationService repService)
+        public EvalService(SendingService sender, RulesService rulesService, ReputationService repService, DiscordSocketClient client,
+            IMongoDatabase database)
         {
             _sender = sender;
+            _client = client;
+            _database = database;
             _rulesService = rulesService;
             _repService = repService;
         }
@@ -34,11 +40,11 @@ namespace FFA.Services
             return string.IsNullOrWhiteSpace(errorMessage);
         }
 
-        public async Task<EvalResult> EvalAsync(IDiscordClient client, IGuild guild, FFAContext ffaContext, Script script)
+        public async Task<EvalResult> EvalAsync(IGuild guild, Script script)
         {
             try
             {
-                var scriptResult = await script.RunAsync(new Globals(client, guild, ffaContext, _sender, _rulesService, _repService));
+                var scriptResult = await script.RunAsync(new Globals(_client, guild, _database, _sender, _rulesService, _repService));
                 return EvalResult.FromSuccess(scriptResult.ReturnValue?.ToString() ?? "Success.");
             }
             catch (Exception ex)
@@ -70,12 +76,12 @@ namespace FFA.Services
 
     public class Globals
     {
-        public Globals(IDiscordClient client, IGuild guild, FFAContext ffaContext, SendingService sender, RulesService rulesService,
+        public Globals(IDiscordClient client, IGuild guild, IMongoDatabase database, SendingService sender, RulesService rulesService,
                        ReputationService reputationService)
         {
             Client = client;
             Guild = guild;
-            FFAContext = ffaContext;
+            Database = database;
             Sender = sender;
             RulesService = rulesService;
             ReputationService = reputationService;
@@ -83,7 +89,7 @@ namespace FFA.Services
 
         public IDiscordClient Client { get; }
         public IGuild Guild { get; }
-        public FFAContext FFAContext { get; }
+        public IMongoDatabase Database { get; }
         public SendingService Sender { get; }
         public RulesService RulesService { get; }
         public ReputationService ReputationService { get; }

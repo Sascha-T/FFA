@@ -1,9 +1,10 @@
 using Discord;
 using Discord.Commands;
-using FFA.Database;
 using FFA.Database.Models;
+using FFA.Extensions.Database;
 using FFA.Services;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
 
@@ -13,8 +14,11 @@ namespace FFA.Common
     {
         private readonly IServiceProvider _provider;
         private readonly SendingService _sender;
+        private readonly IMongoCollection<User> _userCollection;
+        private readonly IMongoCollection<Guild> _guildCollection;
 
-        public FFAContext Db { get; }
+        public User DbUser { get; private set; }
+        public Guild DbGuild { get; private set; }
         public IDiscordClient Client { get; }
         public IGuild Guild { get; }
         public IMessageChannel Channel { get; }
@@ -22,15 +26,14 @@ namespace FFA.Common
         public IUser User { get; }
         public IGuildUser GuildUser { get; }
         public IUserMessage Message { get; }
-        public Guild DbGuild { get; private set; }
-        public User DbUser { get; private set; }
 
         public Context(IDiscordClient client, IUserMessage msg, IServiceProvider provider)
         {
             _provider = provider;
             _sender = _provider.GetRequiredService<SendingService>();
+            _userCollection = _provider.GetRequiredService<IMongoCollection<User>>();
+            _guildCollection = _provider.GetRequiredService<IMongoCollection<Guild>>();
 
-            Db = _provider.GetRequiredService<FFAContext>();
             Client = client;
             Message = msg;
             Channel = msg.Channel;
@@ -44,8 +47,8 @@ namespace FFA.Common
         {
             if (Guild != null)
             {
-                DbUser = await Db.GetUserAsync(GuildUser);
-                DbGuild = await Db.GetGuildAsync(Guild.Id);
+                DbUser = await _userCollection.GetUserAsync(GuildUser);
+                DbGuild = await _guildCollection.GetGuildAsync(Guild.Id);
             }
         }
 

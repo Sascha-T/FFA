@@ -1,18 +1,17 @@
 namespace FFA.Database.Models
 {
-    public sealed class User
+    public sealed class User : Entity
     {
         public User() { }
 
-        public User(ulong id, ulong guildId)
+        public User(ulong userId, ulong guildId)
         {
-            Id = id;
-
+            UserId = userId;
+            GuildId = guildId;
         }
 
-        // TODO: composite key with guild id OR int id?
-        public ulong Id { get; set; }
-        public int Reputation { get; set; } = 0;
+        public ulong UserId { get; set; }
         public ulong GuildId { get; set; }
+        public int Reputation { get; set; } = 0;
     }
 }

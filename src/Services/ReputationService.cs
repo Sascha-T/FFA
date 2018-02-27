@@ -1,5 +1,6 @@
-using FFA.Database;
-using Microsoft.EntityFrameworkCore;
+using FFA.Database.Models;
+using FFA.Extensions.Database;
+using MongoDB.Driver;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,11 +8,19 @@ namespace FFA.Services
 {
     public sealed class ReputationService
     {
-        public Task<bool> IsInTopAsync(FFAContext ffaContext, int count, ulong userId, ulong guildId)
-        {
-            var topUsers = ffaContext.Users.Where(x => x.GuildId == guildId).OrderByDescending(x => x.Reputation).Take(count);
+        private readonly IMongoCollection<User> _userCollection;
 
-            return topUsers.AnyAsync(x => x.Id == userId);
+        public ReputationService(IMongoCollection<User> userCollection)
+        {
+            _userCollection = userCollection;
+        }
+
+        public async Task<bool> IsInTopAsync(int count, ulong userId, ulong guildId)
+        {
+            var result = await _userCollection.WhereAsync(x => x.GuildId == guildId);
+            var topUsers = result.OrderByDescending(x => x.Reputation).Take(count);
+            
+            return topUsers.Any(x => x.UserId == userId);
         }
     }
 }

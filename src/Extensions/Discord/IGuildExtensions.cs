@@ -3,11 +3,11 @@ using FFA.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FFA.Extensions
+namespace FFA.Extensions.Discord
 {
-    public static class IGuildExtensions
+    internal static class IGuildExtensions
     {
-        public static async Task<IRole> GetOrCreateRoleAsync(this IGuild guild, string name, Color color)
+        internal static async Task<IRole> GetOrCreateRoleAsync(this IGuild guild, string name, Color color)
         {
             var role = guild.Roles.FirstOrDefault(x => x.Name == name);
 

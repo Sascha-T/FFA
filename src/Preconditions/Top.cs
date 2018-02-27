@@ -1,5 +1,4 @@
 using Discord.Commands;
-using FFA.Common;
 using FFA.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,9 +18,8 @@ namespace FFA.Preconditions
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext ctx, CommandInfo command, IServiceProvider services)
         {
             var repService = services.GetRequiredService<ReputationService>();
-            var context = ctx as Context;
 
-            if (!await repService.IsInTopAsync(context.Db, _count, context.User.Id, context.Guild.Id))
+            if (!await repService.IsInTopAsync(_count, ctx.User.Id, ctx.Guild.Id))
                 return PreconditionResult.FromError($"This command may only be used by the top {_count} most reputable users.");
 
             return PreconditionResult.FromSuccess();

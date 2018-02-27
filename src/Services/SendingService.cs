@@ -1,6 +1,7 @@
 using Discord;
 using FFA.Common;
-using FFA.Extensions;
+using FFA.Extensions.Discord;
+using FFA.Extensions.System;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

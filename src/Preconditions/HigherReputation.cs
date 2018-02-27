@@ -1,6 +1,10 @@
 using Discord;
 using Discord.Commands;
 using FFA.Common;
+using FFA.Database.Models;
+using FFA.Extensions.Database;
+using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
 
@@ -11,7 +15,8 @@ namespace FFA.Preconditions
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext ctx, ParameterInfo parameter, object value, IServiceProvider services)
         {
             var context = ctx as Context;
-            var dbUser = await context.Db.GetUserAsync(value as IGuildUser);
+            var userCollection = services.GetRequiredService<IMongoCollection<User>>();
+            var dbUser = await userCollection.GetUserAsync(value as IGuildUser);
 
             if (context.DbUser.Reputation < dbUser.Reputation)
                 return PreconditionResult.FromError("You may not use this command on users with a higher reputation than yourself.");

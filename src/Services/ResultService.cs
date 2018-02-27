@@ -2,7 +2,8 @@ using Discord;
 using Discord.Commands;
 using Discord.Net;
 using FFA.Common;
-using FFA.Extensions;
+using FFA.Extensions.Discord;
+using FFA.Extensions.System;
 using System;
 using System.Threading.Tasks;
 
@@ -12,11 +13,13 @@ namespace FFA.Services
     {
         private readonly LoggingService _logger;
         private readonly CommandService _commandService;
+        private readonly RateLimitService _rateLimitService;
 
-        public ResultService(LoggingService logger, CommandService commandService)
+        public ResultService(LoggingService logger, CommandService commandService, RateLimitService rateLimitService)
         {
             _logger = logger;
             _commandService = commandService;
+            _rateLimitService = rateLimitService;
         }
 
         public Task HandleResult(Context context, IResult result, int argPos)
@@ -48,8 +51,17 @@ namespace FFA.Services
 
             if (last is HttpException httpEx)
             {
-                if (!Configuration.DISCORD_CODE_RESPONSES.TryGetValue(httpEx.DiscordCode.GetValueOrDefault(), out message))
+                if ((int)httpEx.HttpCode == Configuration.TOO_MANY_REQUESTS)
+                {
+                    _rateLimitService.IgnoreUser(context.User.Id, Configuration.IGNORE_DURATION);
+                    await context.DmAsync($"You will not be able to use commands for the next {Configuration.IGNORE_DURATION.TotalHours} hours." +
+                        $"Please do not rate limit me.");
+                    return;
+                }
+                else if (!Configuration.DISCORD_CODE_RESPONSES.TryGetValue(httpEx.DiscordCode.GetValueOrDefault(), out message))
+                {
                     Configuration.HTTP_CODE_RESPONSES.TryGetValue(httpEx.HttpCode, out message);
+                }    
             }
             else
             {

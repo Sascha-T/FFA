@@ -1,5 +1,7 @@
+using Discord;
 using Discord.WebSocket;
 using FFA.Common;
+using FFA.Services;
 using FFA.Timers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -11,22 +13,31 @@ namespace FFA.Events
     {
         private readonly IServiceProvider _provider;
         private readonly DiscordSocketClient _client;
+        private readonly LoggingService _logger;
 
         internal Ready(IServiceProvider provider)
         {
             _provider = provider;
             _client = provider.GetRequiredService<DiscordSocketClient>();
+            _logger = provider.GetRequiredService<LoggingService>();
 
             _client.Ready += OnReadyAsync;
         }
 
         private Task OnReadyAsync()
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
-                new AutoUnmute(_provider);
+                try
+                {
+                    new AutoUnmute(_provider);
 
-                _client.SetGameAsync(Configuration.GAME);
+                    await _client.SetGameAsync(Configuration.GAME);
+                }
+                catch (Exception ex)
+                {
+                    await _logger.LogAsync(LogSeverity.Error, ex.ToString());
+                }
             });
 
             return Task.CompletedTask;

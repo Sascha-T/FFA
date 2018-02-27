@@ -79,7 +79,7 @@ namespace FFA.Modules
             }
             else
             {
-                var result = await _evalService.EvalAsync(Context.Client, Context.Guild, Context.Db, script);
+                var result = await _evalService.EvalAsync(Context.Guild, script);
 
                 if (result.Success)
                     await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.Result}```");

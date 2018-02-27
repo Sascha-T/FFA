@@ -4,6 +4,7 @@ using Discord.Commands;
 
 namespace FFA.Preconditions
 {
+    // TODO: organize into param preconditions and command preconditions
     public class Between : ParameterPreconditionAttribute
     {
         private readonly int _minimum;
@@ -17,9 +18,9 @@ namespace FFA.Preconditions
 
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value, IServiceProvider services)
         {
-            var castedValue = (int)value;
+            var number = (int)value;
 
-            if (castedValue < _minimum || castedValue > _maximum)
+            if (number < _minimum || number > _maximum)
                 return Task.FromResult(PreconditionResult.FromError($"The {parameter.Name} must be between {_minimum} and {_maximum}."));
 
             return Task.FromResult(PreconditionResult.FromSuccess());

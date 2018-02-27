@@ -1,30 +1,39 @@
 using Discord;
 using FFA.Common;
-using FFA.Database;
 using FFA.Database.Models;
-using FFA.Extensions;
+using FFA.Extensions.Database;
+using FFA.Extensions.Discord;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FFA.Services
 {
+    // TODO: proper types, int vs uint, etc
     public sealed class ModerationService
     {
-        public Task LogMuteAsync(Context context, IUser subject, Rule rule, TimeSpan length, string reason = null)
+        private readonly IMongoCollection<Guild> _guildCollection;
+
+        public ModerationService(IMongoCollection<Guild> guildCollection)
+        {
+            _guildCollection = guildCollection;
+        }
+
+        public Task LogMuteAsync(Context context, IUser subject, Rule rule, uint hours, string reason = null)
         {
             var elements = new List<(string, string)>
             {
                 ("Action", "Mute"),
                 ("User", $"{subject} ({subject.Id})"),
                 ("Rule", rule.Content),
-                ("Length", $"{length.TotalHours}h")
+                ("Length", $"{hours}h")
             };
 
             if (!string.IsNullOrWhiteSpace(reason))
                 elements.Add(("Reason", reason));
 
-            return LogAsync(context.Db, context.Guild, elements, Configuration.MUTE_COLOR, context.User);
+            return LogAsync(context.Guild, elements, Configuration.MUTE_COLOR, context.User);
         }
 
         public Task LogUnmuteAsync(Context context, IUser subject, string reason = null)
@@ -38,19 +47,19 @@ namespace FFA.Services
             if (!string.IsNullOrWhiteSpace(reason))
                 elements.Add(("Reason", reason));
 
-            return LogAsync(context.Db, context.Guild, elements, Configuration.UNMUTE_COLOR, context.User);
+            return LogAsync(context.Guild, elements, Configuration.UNMUTE_COLOR, context.User);
         }
 
-        public Task LogAutoMuteAsync(Context context, TimeSpan length)
-            => LogAsync(context.Db, context.Guild, new(string, string)[]
+        public Task LogAutoMuteAsync(Context context, int hours)
+            => LogAsync(context.Guild, new(string, string)[]
             {
                 ("Action", "Automatic Mute"),
                 ("User", $"{context.User} ({context.User.Id})"),
-                ("Length", $"{length.TotalHours}h")
+                ("Length", $"{hours}h")
             }, Configuration.MUTE_COLOR);
 
-        public Task LogAutoUnmuteAsync(FFAContext ffaContext, IGuild guild, IUser subject)
-            => LogAsync(ffaContext, guild, new (string, string)[]
+        public Task LogAutoUnmuteAsync(IGuild guild, IUser subject)
+            => LogAsync(guild, new (string, string)[]
             {
                 ("Action", "Automatic Unmute"),
                 ("User", $"{subject} ({subject.Id})")
@@ -69,12 +78,12 @@ namespace FFA.Services
             if (!string.IsNullOrWhiteSpace(reason))
                 elements.Add(("Reason", reason));
 
-            return LogAsync(context.Db, context.Guild, elements, Configuration.CLEAR_COLOR, context.User);
+            return LogAsync(context.Guild, elements, Configuration.CLEAR_COLOR, context.User);
         }
 
-        public async Task LogAsync(FFAContext ffaContext, IGuild guild, IReadOnlyList<(string, string)> elements, Color color, IUser moderator = null)
+        public async Task LogAsync(IGuild guild, IReadOnlyCollection<(string, string)> elements, Color color, IUser moderator = null)
         {
-            var dbGuild = await ffaContext.GetGuildAsync(guild.Id);
+            var dbGuild = await _guildCollection.GetGuildAsync(guild.Id);
 
             if (!dbGuild.LogChannelId.HasValue)
                 return;
@@ -109,7 +118,7 @@ namespace FFA.Services
             }
 
             await logChannel.SendMessageAsync("", false, builder.Build());
-            await ffaContext.UpdateAsync(dbGuild, x => x.LogCase++);
+            await _guildCollection.UpdateAsync(dbGuild, x => x.LogCase++);
         }
     }
 }

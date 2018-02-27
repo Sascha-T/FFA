@@ -1,11 +1,12 @@
 namespace FFA.Database.Models
 {
-    public sealed class Vote
+    public sealed class Vote : Entity
     {
-        public int Id { get; set; }
-        public ulong VoterId { get; set; }
+        public Vote() { }
+
         public bool For { get; set; }
         public int PollId { get; set; }
-        public Poll Poll { get; set; }
+        public ulong VoterId { get; set; }
+        public ulong GuildId { get; set; }
     }
 }
