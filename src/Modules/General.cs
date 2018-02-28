@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Modules
 {
+    [NotMuted]
     public sealed class General : ModuleBase<Context>
     {
         private readonly IMongoCollection<CustomCommand> _customCommandCollection;
