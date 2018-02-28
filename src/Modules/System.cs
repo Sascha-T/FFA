@@ -26,7 +26,7 @@ namespace FFA.Modules
             if (!string.IsNullOrWhiteSpace(commandName))
             {
                 var cmd = _commandService.Commands.FirstOrDefault(x => x.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase) ||
-                                                                       x.Aliases.Any(y => y.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
+                    x.Aliases.Any(y => y.Equals(commandName, StringComparison.OrdinalIgnoreCase)));
 
                 if (cmd == default(CommandInfo))
                     await Context.ReplyErrorAsync("This command does not exist.");

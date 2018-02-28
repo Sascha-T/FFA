@@ -12,7 +12,8 @@ namespace FFA.Preconditions.Parameter
 {
     public sealed class HigherReputationAttribute : ParameterPreconditionAttribute
     {
-        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext ctx, ParameterInfo parameter, object value, IServiceProvider services)
+        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext ctx, ParameterInfo parameter, object value,
+            IServiceProvider services)
         {
             var context = ctx as Context;
             var userCollection = services.GetRequiredService<IMongoCollection<User>>();

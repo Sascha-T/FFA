@@ -15,7 +15,8 @@ namespace FFA.Preconditions.Parameter
             _maximum = maximum;
         }
 
-        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value, IServiceProvider services)
+        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value,
+            IServiceProvider services)
         {
             if (value is int number && (number < _minimum || number > _maximum))
                 return Task.FromResult(PreconditionResult.FromError($"The {parameter.Name} must be between {_minimum} and {_maximum}."));

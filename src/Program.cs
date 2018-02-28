@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 
 // TODO: custom commands added by users!
 // TODO: README, contributing, all other github things.
-// TODO: Rules revamp
 // TODO: move all command checks to preconditions!
 namespace FFA
 {
@@ -61,6 +60,7 @@ namespace FFA
                 .AddSingleton(database.GetCollection<Rule>("rules"))
                 .AddSingleton(database.GetCollection<Poll>("polls"))
                 .AddSingleton(database.GetCollection<Vote>("votes"))
+                .AddSingleton(database.GetCollection<CustomCommand>("commands"))
                 .AddSingleton<LoggingService>()
                 .AddSingleton(client)
                 .AddSingleton(commandService)
@@ -68,6 +68,7 @@ namespace FFA
                 .AddSingleton<SendingService>()
                 .AddSingleton<RulesService>()
                 .AddSingleton<RateLimitService>()
+                .AddSingleton<CustomCommandService>()
                 .AddSingleton<ResultService>()
                 .AddSingleton<MessageReceived>()
                 .AddSingleton<ModerationService>()
@@ -84,6 +85,7 @@ namespace FFA
 
             commandService.AddTypeReader<Rule>(new RuleTypeReader());
             commandService.AddTypeReader<Color>(new ColorTypeReader());
+            commandService.AddTypeReader<CustomCommand>(new CustomCommandTypeReader());
 
             await commandService.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
             await client.LoginAsync(TokenType.Bot, credentials.Token);

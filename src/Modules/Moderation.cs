@@ -31,10 +31,10 @@ namespace FFA.Modules
         [Summary("Mute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task MuteAsync([Summary("Jimbo#5555")] [NoSelf] [HigherReputation] IGuildUser guildUser,
-                                    [Summary("2c")] Rule rule,
-                                    [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] uint length,
-                                    [Summary("stop with all that ruckus!")] [Remainder]
-                                    [MaximumLength(Configuration.MAX_REASON_LENGTH)] string reason = null)
+            [Summary("2c")] Rule rule,
+            [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] uint length,
+            [Summary("stop with all that ruckus!")] [Remainder]
+            [MaximumLength(Configuration.MAX_REASON_LENGTH)] string reason = null)
         {
             if (!Context.DbGuild.MutedRoleId.HasValue)
             {
@@ -56,14 +56,13 @@ namespace FFA.Modules
                 await _moderationService.LogMuteAsync(Context, guildUser, rule, length, reason);
             }
         }
-
-        // TODO: fix indentation of all commands to only have one level of indents
+        
         [Command("Unmute")]
         [Summary("Unmute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task UnmuteAsync([Summary("Billy#6969")] [NoSelf] IGuildUser guildUser,
-                                      [Summary("you best stop flirting with Mrs Ruckus")] [Remainder]
-                                      [MaximumLength(Configuration.MAX_REASON_LENGTH)] string reason)
+            [Summary("you best stop flirting with Mrs Ruckus")] [Remainder]
+            [MaximumLength(Configuration.MAX_REASON_LENGTH)] string reason)
         {
             if (!Context.DbGuild.MutedRoleId.HasValue)
             {
@@ -87,10 +86,10 @@ namespace FFA.Modules
         [Summary("Delete a specified amount of messages sent by any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task Clear([Summary("SteveJr#3333")] [NoSelf] IUser user,
-                                [Summary("3a")] Rule rule,
-                                [Summary("20")] [Between(Configuration.MIN_CLEAR, Configuration.MAX_CLEAR)] int quantity = Configuration.CLEAR_DEFAULT,
-                                [Summary("that's enough pornos for tonight Steve")] [Remainder]
-                                [MaximumLength(Configuration.MAX_REASON_LENGTH)] string reason = null)
+            [Summary("3a")] Rule rule,
+            [Summary("20")] [Between(Configuration.MIN_CLEAR, Configuration.MAX_CLEAR)] int quantity = Configuration.CLEAR_DEFAULT,
+            [Summary("that's enough pornos for tonight Steve")] [Remainder]
+            [MaximumLength(Configuration.MAX_REASON_LENGTH)] string reason = null)
         {
             var messages = await Context.Channel.GetMessagesAsync().FlattenAsync();
             var filtered = messages.Where(x => x.Author.Id == user.Id).Take(quantity);

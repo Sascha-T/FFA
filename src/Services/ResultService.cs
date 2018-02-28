@@ -14,24 +14,27 @@ namespace FFA.Services
         private readonly LoggingService _logger;
         private readonly CommandService _commandService;
         private readonly RateLimitService _rateLimitService;
+        private readonly CustomCommandService _customCommandService;
 
-        public ResultService(LoggingService logger, CommandService commandService, RateLimitService rateLimitService)
+        public ResultService(LoggingService logger, CommandService commandService, RateLimitService rateLimitService,
+            CustomCommandService customCommandService)
         {
             _logger = logger;
             _commandService = commandService;
             _rateLimitService = rateLimitService;
+            _customCommandService = customCommandService;
         }
 
-        public Task HandleResult(Context context, IResult result, int argPos)
+        public Task HandleResultAsync(Context context, IResult result, int argPos)
         {
             var message = result.ErrorReason;
 
             switch (result.Error)
             {
                 case CommandError.UnknownCommand:
-                    return Task.CompletedTask;
+                    return _customCommandService.ExecuteAsync(context, argPos);
                 case CommandError.Exception:
-                    return HandleException(context, ((ExecuteResult)result).Exception);
+                    return HandleExceptionAsync(context, ((ExecuteResult)result).Exception);
                 case CommandError.BadArgCount:
                     var cmd = _commandService.GetCommand(context, argPos);
 
@@ -44,7 +47,7 @@ namespace FFA.Services
             return context.ReplyErrorAsync(message);
         }
 
-        public async Task HandleException(Context context, Exception exception)
+        public async Task HandleExceptionAsync(Context context, Exception exception)
         {
             var last = exception.Last();
             var message = last.Message;
@@ -61,7 +64,7 @@ namespace FFA.Services
                 else if (!Configuration.DISCORD_CODE_RESPONSES.TryGetValue(httpEx.DiscordCode.GetValueOrDefault(), out message))
                 {
                     Configuration.HTTP_CODE_RESPONSES.TryGetValue(httpEx.HttpCode, out message);
-                }    
+                }
             }
             else
             {

@@ -11,7 +11,7 @@ namespace FFA.Extensions.Database
     public static class IMongoCollectionExtensions
     {
         public static async Task<bool> AnyAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
-            => await collection.CountAsync(filter) == 0;
+            => await collection.CountAsync(filter) != 0;
 
         public static async Task<IList<T>> WhereAsync<T>(this IMongoCollection<T> collection)
         {
@@ -28,7 +28,12 @@ namespace FFA.Extensions.Database
             return result.ToEnumerable();
         }
 
-        // TODO: FirstOrDefault > Single LOL!!
+        public static async Task<T> FindOneAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
+        {
+            var result = await collection.FindAsync(filter);
+            return await result.FirstOrDefaultAsync();
+        }
+
         public static async Task<T> GetAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter,
             Action<T> factory) where T : Entity, new()
         {

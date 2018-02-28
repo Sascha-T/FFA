@@ -13,7 +13,8 @@ namespace FFA.Preconditions.Parameter
             _minimumHours = minimumHours;
         }
 
-        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value, IServiceProvider services)
+        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value,
+            IServiceProvider services)
         {
             if (value is uint hours && hours < _minimumHours)
                 return Task.FromResult(PreconditionResult.FromError($"The minimum {parameter.Name} is {_minimumHours}h."));

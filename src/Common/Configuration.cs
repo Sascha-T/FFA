@@ -24,14 +24,14 @@ namespace FFA.Common
         public const int SPAM_LIMIT = 4, SPAM_REP_PENALTY = 2, SPAM_MUTE_HOURS = 2;
         public static readonly TimeSpan SPAM_DURATION = TimeSpan.FromSeconds(5);
 
-        // Rate limit service settings
+        // Rate limit settings
         public static readonly TimeSpan IGNORE_DURATION = TimeSpan.FromHours(2);
 
         // Reputation commands
         public const int REP_INCREASE = 1, UNREP_DECREASE = 1;
 
         // Reputation requirements
-        public const int TOP_MOD = 30, TOP_COLOR = 40;
+        public const int TOP_MOD_COMMAND = 20, TOP_MOD = 30, TOP_COLOR = 40;
 
         // Maximums
         public const int MAX_CLEAR = 100, MAX_ROLES = 500, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 1000;
@@ -47,7 +47,7 @@ namespace FFA.Common
         public const int CLEAR_DEFAULT = 20, LB_COUNT_DEFAULT = 10;
 
         // Cooldowns in hours
-        public const int REP_COOLDOWN = 6, UNREP_COOLDOWN = 6, COLOR_COOLDOWN = 1, UNMUTE_COOLDOWN = 12;
+        public const int REP_COOLDOWN = 6, UNREP_COOLDOWN = 6, COLOR_COOLDOWN = 1, UNMUTE_COOLDOWN = 12, MOD_COMMAND_COOLDOWN = 1;
 
         // Timers in milliseconds
         public const int AUTO_UNMUTE_TIMER = 60000;

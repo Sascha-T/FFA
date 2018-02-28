@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace FFA.Extensions.Database
 {
-    // TODO: proper public vs public
     public static class UserCollectionExtensions
     {
         public static Task<User> GetUserAsync(this IMongoCollection<User> collection, ulong userId, ulong guildId)

@@ -56,18 +56,18 @@ namespace FFA.Timers
 
                         foreach (var mute in mutes.ToEnumerable())
                         {
-                            if (mute.EndsAt - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() <= 0)
-                            {
-                                await muteCollection.DeleteOneAsync(x => x.Id == mute.Id);
+                            if (mute.EndsAt - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() > 0)
+                                continue;
 
-                                var guildUser = await guild.GetUserAsync(mute.UserId);
+                            await muteCollection.DeleteOneAsync(x => x.Id == mute.Id);
 
-                                if (guildUser != null)
-                                {
-                                    await guildUser.RemoveRoleAsync(mutedRole);
-                                    await _moderationService.LogAutoUnmuteAsync(guild, guildUser);
-                                }
-                            }
+                            var guildUser = await guild.GetUserAsync(mute.UserId);
+
+                            if (guildUser == null)
+                                continue;
+
+                            await guildUser.RemoveRoleAsync(mutedRole);
+                            await _moderationService.LogAutoUnmuteAsync(guild, guildUser);
                         }
                     }
                 }

@@ -59,7 +59,7 @@ namespace FFA.Services
             }, Configuration.MUTE_COLOR);
 
         public Task LogAutoUnmuteAsync(IGuild guild, IUser subject)
-            => LogAsync(guild, new (string, string)[]
+            => LogAsync(guild, new(string, string)[]
             {
                 ("Action", "Automatic Unmute"),
                 ("User", $"{subject} ({subject.Id})")

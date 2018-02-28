@@ -14,7 +14,7 @@ namespace FFA.Database.Models
             UserId = userId;
             EndsAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (hours * Configuration.MS_PER_HOUR);
         }
-        
+
         public ulong UserId { get; set; }
         public long EndsAt { get; set; }
         public ulong GuildId { get; set; }

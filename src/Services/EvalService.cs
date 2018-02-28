@@ -26,7 +26,7 @@ namespace FFA.Services
             _rulesService = rulesService;
             _repService = repService;
         }
-        
+
         public bool TryCompile(Script script, out string errorMessage)
         {
             var diagnostics = script.Compile();

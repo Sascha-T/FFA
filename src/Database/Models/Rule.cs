@@ -11,7 +11,7 @@ namespace FFA.Database.Models
             Category = category;
             MaxMuteHours = maxMuteHours;
         }
-        
+
         public string Content { get; set; }
         public string Category { get; set; }
         public uint? MaxMuteHours { get; set; }

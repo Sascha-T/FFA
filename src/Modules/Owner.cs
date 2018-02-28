@@ -76,7 +76,7 @@ namespace FFA.Modules
                 x.MaxMuteHours = maxMuteHours;
             });
             await Context.ReplyAsync($"You have successfully modified this rule.");
-            await _rulesService.UpdateAsync( Context.Guild);
+            await _rulesService.UpdateAsync(Context.Guild);
         }
 
         [Command("RemoveRule")]

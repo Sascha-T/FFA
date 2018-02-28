@@ -16,7 +16,8 @@ namespace FFA.Preconditions.Parameter
             _cooldownLength = TimeSpan.FromHours(hours);
         }
 
-        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value, IServiceProvider services)
+        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value,
+            IServiceProvider services)
         {
             var key = new Cooldown(context.User.Id, parameter.Command.GetHashCode());
 

@@ -19,7 +19,7 @@ namespace FFA.Services
         {
             var result = await _userCollection.WhereAsync(x => x.GuildId == guildId);
             var topUsers = result.OrderByDescending(x => x.Reputation).Take(count);
-            
+
             return topUsers.Any(x => x.UserId == userId);
         }
     }
