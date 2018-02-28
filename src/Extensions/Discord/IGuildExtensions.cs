@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace FFA.Extensions.Discord
 {
-    internal static class IGuildExtensions
+    public static class IGuildExtensions
     {
-        internal static async Task<IRole> GetOrCreateRoleAsync(this IGuild guild, string name, Color color)
+        public static async Task<IRole> GetOrCreateRoleAsync(this IGuild guild, string name, Color color)
         {
             var role = guild.Roles.FirstOrDefault(x => x.Name == name);
 

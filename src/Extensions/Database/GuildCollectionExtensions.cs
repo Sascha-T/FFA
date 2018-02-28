@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Extensions.Database
 {
-    internal static class GuildCollectionExtensions
+    public static class GuildCollectionExtensions
     {
         public static Task<Guild> GetGuildAsync(this IMongoCollection<Guild> collection, ulong guildId)
             => collection.GetAsync(x => x.GuildId == guildId, x => x.GuildId = guildId);

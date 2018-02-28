@@ -2,9 +2,9 @@ using System;
 
 namespace FFA.Extensions.System
 {
-    internal static class ExceptionExtensions
+    public static class ExceptionExtensions
     {
-        internal static Exception Last(this Exception err)
+        public static Exception Last(this Exception err)
         {
             var next = err;
 
@@ -14,7 +14,7 @@ namespace FFA.Extensions.System
             return next;
         }
 
-        internal static string LastMessage(this Exception err)
+        public static string LastMessage(this Exception err)
             => err.Last().Message;
     }
 }

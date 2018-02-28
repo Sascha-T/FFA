@@ -8,28 +8,28 @@ using System.Threading.Tasks;
 
 namespace FFA.Extensions.Database
 {
-    internal static class IMongoCollectionExtensions
+    public static class IMongoCollectionExtensions
     {
-        internal static async Task<bool> AnyAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
+        public static async Task<bool> AnyAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
             => await collection.CountAsync(filter) == 0;
 
-        internal static async Task<IList<T>> WhereAsync<T>(this IMongoCollection<T> collection)
+        public static async Task<IList<T>> WhereAsync<T>(this IMongoCollection<T> collection)
         {
             var result = await collection.FindAsync(FilterDefinition<T>.Empty);
             return await result.ToListAsync();
         }
 
-        internal static async Task DeleteOneAsync<T>(this IMongoCollection<T> collection, T entity) where T : Entity, new()
+        public static async Task DeleteOneAsync<T>(this IMongoCollection<T> collection, T entity) where T : Entity, new()
             => await collection.DeleteOneAsync(x => x.Id == entity.Id);
 
-        internal static async Task<IEnumerable<T>> WhereAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
+        public static async Task<IEnumerable<T>> WhereAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
         {
             var result = await collection.FindAsync(filter);
             return result.ToEnumerable();
         }
 
         // TODO: FirstOrDefault > Single LOL!!
-        internal static async Task<T> GetAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter,
+        public static async Task<T> GetAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter,
             Action<T> factory) where T : Entity, new()
         {
             var search = await collection.FindAsync(filter);
@@ -49,7 +49,7 @@ namespace FFA.Extensions.Database
             return result;
         }
 
-        internal static async Task<T> UpdateAsync<T>(this IMongoCollection<T> collection, T entity,
+        public static async Task<T> UpdateAsync<T>(this IMongoCollection<T> collection, T entity,
             Action<T> update) where T : Entity, new()
         {
             update(entity);
@@ -59,7 +59,7 @@ namespace FFA.Extensions.Database
             return entity;
         }
 
-        internal static async Task<T> UpsertAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter,
+        public static async Task<T> UpsertAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter,
             Action<T> update, Action<T> factory) where T : Entity, new()
             => await collection.UpdateAsync(await collection.GetAsync(filter, factory), update);
     }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Events
 {
-    internal sealed class MessageReceived
+    public sealed class MessageReceived
     {
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commandService;
@@ -19,7 +19,7 @@ namespace FFA.Events
         private readonly LoggingService _logger;
         private readonly IServiceProvider _provider;
 
-        internal MessageReceived(IServiceProvider provider)
+        public MessageReceived(IServiceProvider provider)
         {
             _provider = provider;
             _client = _provider.GetRequiredService<DiscordSocketClient>();

@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace FFA.Utility
 {
-    internal static class ColoredConsole
+    public static class ColoredConsole
     {
-        internal static async Task WriteAsync(string message, ConsoleColor color)
+        public static async Task WriteAsync(string message, ConsoleColor color)
         {
             var previous = Console.BackgroundColor;
 
@@ -16,7 +16,7 @@ namespace FFA.Utility
             Console.BackgroundColor = previous;
         }
 
-        internal static Task WriteLineAsync(string message, ConsoleColor color)
+        public static Task WriteLineAsync(string message, ConsoleColor color)
             => WriteAsync($"{message}\n", color);
     }
 }

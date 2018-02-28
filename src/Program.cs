@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 // TODO: move all command checks to preconditions!
 namespace FFA
 {
-    internal sealed class Program
+    public sealed class Program
     {
         private static void Main(string[] args)
             => new Program().StartAsync(args).GetAwaiter().GetResult();

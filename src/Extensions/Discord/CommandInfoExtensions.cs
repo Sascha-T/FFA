@@ -3,9 +3,9 @@ using Discord.Commands;
 
 namespace FFA.Extensions.Discord
 {
-    internal static class CommandInfoExtensions
+    public static class CommandInfoExtensions
     {
-        internal static string GetUsage(this CommandInfo command)
+        public static string GetUsage(this CommandInfo command)
         {
             var usage = command.Name;
 
@@ -15,7 +15,7 @@ namespace FFA.Extensions.Discord
             return usage;
         }
 
-        internal static string GetExample(this CommandInfo command)
+        public static string GetExample(this CommandInfo command)
         {
             var example = command.Name;
 

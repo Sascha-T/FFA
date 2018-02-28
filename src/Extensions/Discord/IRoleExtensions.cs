@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace FFA.Extensions.Discord
 {
-    internal static class IRoleExtensions
+    public static class IRoleExtensions
     {
-        internal static async Task<bool> CanUseAsync(this IRole role)
+        public static async Task<bool> CanUseAsync(this IRole role)
         {
             var currentUser = await role.Guild.GetCurrentUserAsync();
             var highestPosition = currentUser.GetRoles().OrderByDescending(x => x.Position).First().Position;

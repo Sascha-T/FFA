@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace FFA.Events
 {
-    internal sealed class Ready
+    public sealed class Ready
     {
         private readonly IServiceProvider _provider;
         private readonly DiscordSocketClient _client;
         private readonly LoggingService _logger;
 
-        internal Ready(IServiceProvider provider)
+        public Ready(IServiceProvider provider)
         {
             _provider = provider;
             _client = provider.GetRequiredService<DiscordSocketClient>();

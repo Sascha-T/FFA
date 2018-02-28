@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Events
 {
-    internal sealed class UserJoined
+    public sealed class UserJoined
     {
         private readonly IServiceProvider _provider;
         private readonly DiscordSocketClient _client;
@@ -20,7 +20,7 @@ namespace FFA.Events
         private readonly IMongoCollection<Guild> _guildCollection;
         private readonly IMongoCollection<Mute> _muteCollection;
 
-        internal UserJoined(IServiceProvider provider)
+        public UserJoined(IServiceProvider provider)
         {
             _provider = provider;
             _client = _provider.GetRequiredService<DiscordSocketClient>();
