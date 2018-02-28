@@ -49,10 +49,6 @@ namespace FFA
             var mongoClient = new MongoClient(credentials.DbConnectionString);
             var database = mongoClient.GetDatabase(credentials.DbName);
 
-            // TODO: remove after in production
-            database.GetCollection<BsonDocument>("rules").UpdateMany(FilterDefinition<BsonDocument>.Empty, new UpdateDefinitionBuilder<BsonDocument>()
-                .Unset("MaxMuteHours"));
-
             // TODO: reorganize ordering of additions to service collection
             // TODO: reflexion to add all services/events/timers
             var services = new ServiceCollection()
