@@ -34,7 +34,8 @@ namespace FFA
             {
                 LogLevel = LogSeverity.Info,
                 MessageCacheSize = 10,
-                AlwaysDownloadUsers = true
+                AlwaysDownloadUsers = true,
+                HandlerTimeout = null
             });
 
             var commandService = new CommandService(new CommandServiceConfig

@@ -16,7 +16,7 @@ namespace FFA.Timers
     public sealed class AutoUnmute
     {
         private readonly IServiceProvider _provider;
-        private readonly IDiscordClient _client;
+        private readonly DiscordSocketClient _client;
         private readonly LoggingService _logger;
         private readonly ModerationService _moderationService;
         private readonly Timer _timer;
@@ -37,10 +37,13 @@ namespace FFA.Timers
             {
                 try
                 {
+                    if (_client.ConnectionState != ConnectionState.Connected)
+                        return;
+
                     var guildCollection = _provider.GetRequiredService<IMongoCollection<Guild>>();
                     var muteCollection = _provider.GetRequiredService<IMongoCollection<Mute>>();
 
-                    foreach (var guild in await _client.GetGuildsAsync())
+                    foreach (var guild in _client.Guilds)
                     {
                         var dbGuild = await guildCollection.GetGuildAsync(guild.Id);
 
@@ -61,7 +64,7 @@ namespace FFA.Timers
 
                             await muteCollection.DeleteOneAsync(x => x.Id == mute.Id);
 
-                            var guildUser = await guild.GetUserAsync(mute.UserId);
+                            var guildUser = guild.GetUser(mute.UserId);
 
                             if (guildUser == null)
                                 continue;
