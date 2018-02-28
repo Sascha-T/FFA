@@ -68,7 +68,7 @@ namespace FFA.Common
         public static readonly IReadOnlyDictionary<HttpStatusCode, string> HTTP_CODE_RESPONSES = new Dictionary<HttpStatusCode, string>()
         {
             { HttpStatusCode.Forbidden, "I do not have permission to do that." },
-            { HttpStatusCode.publicServerError, "An unexpected error has occurred, please try again later." },
+            { HttpStatusCode.InternalServerError, "An unexpected error has occurred, please try again later." },
             { HttpStatusCode.RequestTimeout, "The request has timed out, please try again later." }
         }.ToImmutableDictionary();
 
