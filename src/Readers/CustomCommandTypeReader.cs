@@ -6,6 +6,7 @@ using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
 
+// TODO: check guild id when checking for command existance
 namespace FFA.Readers
 {
     public sealed class CustomCommandTypeReader : TypeReader
