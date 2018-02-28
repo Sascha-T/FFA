@@ -32,8 +32,7 @@ namespace FFA
 
             var client = new DiscordSocketClient(new DiscordSocketConfig
             {
-                LogLevel = LogSeverity.Info,
-                MessageCacheSize = 10,
+                LogLevel = LogSeverity.Verbose,
                 AlwaysDownloadUsers = true,
                 HandlerTimeout = null
             });
@@ -41,7 +40,7 @@ namespace FFA
             var commandService = new CommandService(new CommandServiceConfig
             {
                 DefaultRunMode = RunMode.Sync,
-                LogLevel = LogSeverity.Info,
+                LogLevel = LogSeverity.Verbose,
                 IgnoreExtraArgs = true
             });
 
