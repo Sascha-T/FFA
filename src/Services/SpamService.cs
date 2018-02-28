@@ -9,6 +9,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 
+// TODO: allow certain channels to be ignored
 namespace FFA.Services
 {
     // TODO: ensure all async methods are suffixed with Async
