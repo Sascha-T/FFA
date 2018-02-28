@@ -2,7 +2,8 @@ using Discord;
 using Discord.Commands;
 using FFA.Common;
 using FFA.Extensions.Discord;
-using FFA.Preconditions;
+using FFA.Preconditions.Command;
+using FFA.Preconditions.Parameter;
 using System.Linq;
 using System.Threading.Tasks;
 

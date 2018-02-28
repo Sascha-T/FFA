@@ -2,9 +2,9 @@ using Discord.Commands;
 using System;
 using System.Threading.Tasks;
 
-namespace FFA.Preconditions
+namespace FFA.Preconditions.Command
 {
-    public sealed class GuildOwner : PreconditionAttribute
+    public sealed class GuildOwnerAttribute : PreconditionAttribute
     {
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {

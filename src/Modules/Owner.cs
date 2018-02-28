@@ -3,7 +3,7 @@ using Discord.Commands;
 using FFA.Common;
 using FFA.Database.Models;
 using FFA.Extensions.Database;
-using FFA.Preconditions;
+using FFA.Preconditions.Command;
 using FFA.Services;
 using MongoDB.Driver;
 using System.Threading.Tasks;

@@ -5,9 +5,9 @@ using Discord.Commands;
 using FFA.Common;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FFA.Preconditions
+namespace FFA.Preconditions.Command
 {
-    public sealed class BotOwner : PreconditionAttribute
+    public sealed class BotOwnerAttribute : PreconditionAttribute
     {
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {

@@ -3,7 +3,8 @@ using Discord.Commands;
 using FFA.Common;
 using FFA.Database.Models;
 using FFA.Extensions.Discord;
-using FFA.Preconditions;
+using FFA.Preconditions.Command;
+using FFA.Preconditions.Parameter;
 using FFA.Services;
 using MongoDB.Driver;
 using System.Linq;
@@ -11,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace FFA.Modules
 {
-    // TODO: add a NotMuted precondition, only allow mod cmd use while not muted.
     [Name("Moderation")]
     [GuildOnly]
+    [NotMuted]
     [Top(Configuration.TOP_MOD)]
     public sealed class Moderation : ModuleBase<Context>
     {

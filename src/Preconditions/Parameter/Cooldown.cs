@@ -3,7 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace FFA.Preconditions
+namespace FFA.Preconditions.Parameter
 {
     // TODO: no paramter cheap hack
     public sealed class CooldownAttribute : ParameterPreconditionAttribute

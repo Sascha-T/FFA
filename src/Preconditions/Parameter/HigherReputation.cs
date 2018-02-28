@@ -8,9 +8,9 @@ using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
 
-namespace FFA.Preconditions
+namespace FFA.Preconditions.Parameter
 {
-    public sealed class HigherReputation : ParameterPreconditionAttribute
+    public sealed class HigherReputationAttribute : ParameterPreconditionAttribute
     {
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext ctx, ParameterInfo parameter, object value, IServiceProvider services)
         {

@@ -2,22 +2,20 @@ using System;
 using System.Threading.Tasks;
 using Discord.Commands;
 
-namespace FFA.Preconditions
+namespace FFA.Preconditions.Parameter
 {
-    public sealed class MaximumLength : ParameterPreconditionAttribute
+    public sealed class MaximumLengthAttribute : ParameterPreconditionAttribute
     {
         private readonly int _length;
 
-        public MaximumLength(int length)
+        public MaximumLengthAttribute(int length)
         {
             _length = length;
         }
 
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value, IServiceProvider services)
         {
-            var strValue = (string)value;
-
-            if (strValue != null && strValue.Length > _length)
+            if (value is string strValue && strValue.Length > _length)
                 return Task.FromResult(PreconditionResult.FromError($"The maximum {parameter.Name} length is {_length} characters."));
 
             return Task.FromResult(PreconditionResult.FromSuccess());

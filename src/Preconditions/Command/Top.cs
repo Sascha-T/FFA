@@ -4,13 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
-namespace FFA.Preconditions
+namespace FFA.Preconditions.Command
 {
-    public sealed class Top : PreconditionAttribute
+    public sealed class TopAttribute : PreconditionAttribute
     {
         private readonly int _count;
 
-        public Top(int count)
+        public TopAttribute(int count)
         {
             _count = count;
         }
