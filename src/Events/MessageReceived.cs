@@ -45,6 +45,8 @@ namespace FFA.Events
 
                     var context = new Context(_client, msg, _provider);
 
+                    await context.InitializeAsync();
+
                     if (_rateLimitService.IsIgnored(context.User.Id))
                         return;
                     // TODO: guild property to make auto spam detection optional
@@ -55,8 +57,6 @@ namespace FFA.Events
 
                     if (!msg.HasStringPrefix(Configuration.PREFIX, ref argPos))
                         return;
-
-                    await context.InitializeAsync();
 
                     var result = await _commandService.ExecuteAsync(context, argPos, _provider);
 
