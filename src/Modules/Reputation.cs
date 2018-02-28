@@ -64,15 +64,18 @@ namespace FFA.Modules
         public async Task RepLeaderboardsAsync()
         {
             var guildDbUsers = await _userCollection.WhereAsync(x => x.GuildId == Context.Guild.Id);
-            var orderedDbUsers = guildDbUsers.OrderByDescending(x => x.Reputation).Take(Configuration.LB_COUNT_DEFAULT).ToArray();
+            var orderedDbUsers = guildDbUsers.OrderByDescending(x => x.Reputation).ToArray();
             var description = string.Empty;
 
-            for (int i = 0; i < orderedDbUsers.Length; i++)
+            for (int i = 0; i < orderedDbUsers.Length;)
             {
+                if (i == Configuration.LB_COUNT_DEFAULT)
+                    break;
+
                 var user = await Context.Guild.GetUserAsync(orderedDbUsers[i].UserId);
 
                 if (user != null)
-                    description += $"{(i + 1)}. **{user}:** {orderedDbUsers[i].Reputation}\n";
+                    description += $"{(i + 1)}. **{user}:** {orderedDbUsers[i++].Reputation}\n";
             }
 
             await Context.SendAsync(description, "The Most Reputable Users");
@@ -85,15 +88,18 @@ namespace FFA.Modules
         {
             // TODO: helper method for leaderboard commands
             var guildDbUsers = await _userCollection.WhereAsync(x => x.GuildId == Context.Guild.Id);
-            var orderedDbUsers = guildDbUsers.OrderBy(x => x.Reputation).Take(Configuration.LB_COUNT_DEFAULT).ToArray();
+            var orderedDbUsers = guildDbUsers.OrderBy(x => x.Reputation).ToArray();
             var description = string.Empty;
 
-            for (int i = 0; i < orderedDbUsers.Length; i++)
+            for (int i = 0; i < orderedDbUsers.Length;)
             {
+                if (i == Configuration.LB_COUNT_DEFAULT)
+                    break;
+
                 var user = await Context.Guild.GetUserAsync(orderedDbUsers[i].UserId);
 
                 if (user != null)
-                    description += $"{(i + 1)}. **{user}:** {orderedDbUsers[i].Reputation}\n";
+                    description += $"{(i + 1)}. **{user}:** {orderedDbUsers[i++].Reputation}\n";
             }
 
             await Context.SendAsync(description, "The Least Reputable Users");
