@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using FFA.Common;
 using FFA.Database.Models;
+using FFA.Extensions.Database;
 using FFA.Events;
 using FFA.Readers;
 using FFA.Services;
@@ -32,7 +33,7 @@ namespace FFA
 
             var client = new DiscordSocketClient(new DiscordSocketConfig
             {
-                LogLevel = LogSeverity.Verbose,
+                LogLevel = LogSeverity.Info,
                 AlwaysDownloadUsers = true,
                 HandlerTimeout = null
             });
@@ -40,12 +41,22 @@ namespace FFA
             var commandService = new CommandService(new CommandServiceConfig
             {
                 DefaultRunMode = RunMode.Sync,
-                LogLevel = LogSeverity.Verbose,
+                LogLevel = LogSeverity.Info,
                 IgnoreExtraArgs = true
             });
 
             var mongoClient = new MongoClient(credentials.DbConnectionString);
             var database = mongoClient.GetDatabase(credentials.DbName);
+
+            // TODO: remove after in production
+            await database.GetCollection<Mute>("mutes").DeleteManyAsync(FilterDefinition<Mute>.Empty);
+            var rules = database.GetCollection<Rule>("rules").Find(FilterDefinition<Rule>.Empty);
+
+            foreach (var rule in rules.ToEnumerable())
+            {
+                await database.GetCollection<Rule>("rules").UpdateAsync(rule, x =>
+                    x.MaxMuteLength = rule.MaxMuteHours.HasValue ? (TimeSpan?)TimeSpan.FromHours(rule.MaxMuteHours.Value) : null);
+            }
 
             // TODO: reorganize ordering of additions to service collection
             // TODO: reflexion to add all services/events/timers
@@ -83,9 +94,9 @@ namespace FFA
             new Ready(provider);
             new UserJoined(provider);
 
-            commandService.AddTypeReader<Rule>(new RuleTypeReader());
-            commandService.AddTypeReader<Color>(new ColorTypeReader());
-            commandService.AddTypeReader<CustomCommand>(new CustomCommandTypeReader());
+            commandService.AddTypeReader<Rule>(new RuleReader());
+            commandService.AddTypeReader<Color>(new ColorReader());
+            commandService.AddTypeReader<CustomCommand>(new CustomCommandReader());
 
             await commandService.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
             await client.LoginAsync(TokenType.Bot, credentials.Token);

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 // TODO: check guild id when checking for command existance
 namespace FFA.Readers
 {
-    public sealed class CustomCommandTypeReader : TypeReader
+    public sealed class CustomCommandReader : TypeReader
     {
         public override async Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {

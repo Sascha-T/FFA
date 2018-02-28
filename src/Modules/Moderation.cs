@@ -7,6 +7,7 @@ using FFA.Preconditions.Command;
 using FFA.Preconditions.Parameter;
 using FFA.Services;
 using MongoDB.Driver;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,17 +33,18 @@ namespace FFA.Modules
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task MuteAsync([Summary("Jimbo#5555")] [NoSelf] [HigherReputation] IGuildUser guildUser,
             [Summary("2c")] Rule rule,
-            [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] uint length,
+            [Summary("8h")] [MinimumHours(Configuration.MIN_MUTE_LENGTH)] TimeSpan length,
             [Summary("stop with all that ruckus!")] [Remainder]
             [MaximumLength(Configuration.MAX_REASON_LENGTH)] string reason = null)
         {
+            // TODO: add inform user!
             if (!Context.DbGuild.MutedRoleId.HasValue)
             {
                 await Context.ReplyErrorAsync("The muted role has not been set.");
             }
-            else if (rule.MaxMuteHours.HasValue && length > rule.MaxMuteHours)
+            else if (rule.MaxMuteLength.HasValue && length > rule.MaxMuteLength)
             {
-                await Context.ReplyErrorAsync($"The maximum mute length of this rule is {rule.MaxMuteHours.Value}h.");
+                await Context.ReplyErrorAsync($"The maximum mute length of this rule is {rule.MaxMuteLength.Value.TotalHours}h.");
             }
             else if (guildUser.RoleIds.Contains(Context.DbGuild.MutedRoleId.Value))
             {

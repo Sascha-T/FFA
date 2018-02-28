@@ -6,6 +6,7 @@ using FFA.Extensions.Database;
 using FFA.Preconditions.Command;
 using FFA.Services;
 using MongoDB.Driver;
+using System;
 using System.Threading.Tasks;
 
 namespace FFA.Modules
@@ -56,9 +57,9 @@ namespace FFA.Modules
         [Summary("Adds a rule.")]
         public async Task AddRuleAsync([Summary("\"Cracking your willy in broad daylight\"")] string content,
                                        [Summary("Harassment")] string category,
-                                       [Summary("72h")] uint? maxMuteHours = null)
+                                       [Summary("72h")] TimeSpan? maxMuteLength = null)
         {
-            await _ruleCollection.InsertOneAsync(new Rule(Context.Guild.Id, content, category, maxMuteHours));
+            await _ruleCollection.InsertOneAsync(new Rule(Context.Guild.Id, content, category, maxMuteLength));
             await Context.ReplyAsync($"You have successfully added a new rule.");
             await _rulesService.UpdateAsync(Context.Guild);
         }
@@ -68,12 +69,12 @@ namespace FFA.Modules
         [Summary("Modifies any rule.")]
         public async Task ModifyRuleAsync([Summary("3b")] Rule rule,
                                           [Summary("\"Nutting faster than Willy Wonka\"")] string content,
-                                          [Summary("420h")] uint? maxMuteHours = null)
+                                          [Summary("420h")] TimeSpan? maxMuteLength = null)
         {
             await _ruleCollection.UpdateAsync(rule, x =>
             {
                 x.Content = content;
-                x.MaxMuteHours = maxMuteHours;
+                x.MaxMuteLength = maxMuteLength;
             });
             await Context.ReplyAsync($"You have successfully modified this rule.");
             await _rulesService.UpdateAsync(Context.Guild);

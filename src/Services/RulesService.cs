@@ -52,7 +52,7 @@ namespace FFA.Services
 
                     foreach (var item in groups[i].OrderBy(x => x.Content).Select((Value, Index) => new { Value, Index }))
                         description += $"**{(char)('a' + item.Index)}.** {item.Value.Content} " +
-                                       $"({(item.Value.MaxMuteHours.HasValue ? item.Value.MaxMuteHours.Value + "h" : "Bannable")})\n";
+                                       $"({(item.Value.MaxMuteLength.HasValue ? item.Value.MaxMuteLength.Value.TotalHours + "h" : "Bannable")})\n";
 
                     await _sender.SendAsync(rulesChannel, description, $"{i + 1}. {groups[i].First().Category}:");
                     await Task.Delay(1000);

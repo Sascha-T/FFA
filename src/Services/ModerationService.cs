@@ -20,14 +20,14 @@ namespace FFA.Services
             _guildCollection = guildCollection;
         }
 
-        public Task LogMuteAsync(Context context, IUser subject, Rule rule, uint hours, string reason = null)
+        public Task LogMuteAsync(Context context, IUser subject, Rule rule, TimeSpan length, string reason = null)
         {
             var elements = new List<(string, string)>
             {
                 ("Action", "Mute"),
                 ("User", $"{subject} ({subject.Id})"),
                 ("Rule", rule.Content),
-                ("Length", $"{hours}h")
+                ("Length", $"{length.TotalHours}h")
             };
 
             if (!string.IsNullOrWhiteSpace(reason))
@@ -50,12 +50,12 @@ namespace FFA.Services
             return LogAsync(context.Guild, elements, Configuration.UNMUTE_COLOR, context.User);
         }
 
-        public Task LogAutoMuteAsync(Context context, int hours)
+        public Task LogAutoMuteAsync(Context context, TimeSpan length)
             => LogAsync(context.Guild, new(string, string)[]
             {
                 ("Action", "Automatic Mute"),
                 ("User", $"{context.User} ({context.User.Id})"),
-                ("Length", $"{hours}h")
+                ("Length", $"{length.TotalHours}h")
             }, Configuration.MUTE_COLOR);
 
         public Task LogAutoUnmuteAsync(IGuild guild, IUser subject)
@@ -96,9 +96,7 @@ namespace FFA.Services
             var description = string.Empty;
 
             foreach (var element in elements)
-            {
                 description += $"**{element.Item1}:** {element.Item2}\n";
-            }
 
             var builder = new EmbedBuilder()
             {

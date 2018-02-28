@@ -59,7 +59,7 @@ namespace FFA.Timers
 
                         foreach (var mute in mutes.ToEnumerable())
                         {
-                            if (mute.EndsAt - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() > 0)
+                            if (mute.EndsAt.Subtract(DateTime.UtcNow).Ticks > 0)
                                 continue;
 
                             await muteCollection.DeleteOneAsync(x => x.Id == mute.Id);

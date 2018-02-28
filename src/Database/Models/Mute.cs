@@ -1,4 +1,3 @@
-using FFA.Common;
 using System;
 
 // TODO: proper bson date type
@@ -9,15 +8,15 @@ namespace FFA.Database.Models
     {
         public Mute() { }
 
-        public Mute(ulong guildId, ulong userId, uint hours)
+        public Mute(ulong guildId, ulong userId, TimeSpan length)
         {
             GuildId = guildId;
             UserId = userId;
-            EndsAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (hours * Configuration.MS_PER_HOUR);
+            EndsAt = DateTime.UtcNow.Add(length);
         }
 
         public ulong UserId { get; set; }
-        public long EndsAt { get; set; }
+        public DateTime EndsAt { get; set; }
         public ulong GuildId { get; set; }
     }
 }

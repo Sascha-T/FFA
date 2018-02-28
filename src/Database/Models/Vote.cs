@@ -1,3 +1,5 @@
+using System;
+
 namespace FFA.Database.Models
 {
     public sealed class Vote : Entity
@@ -8,5 +10,6 @@ namespace FFA.Database.Models
         public int PollId { get; set; }
         public ulong VoterId { get; set; }
         public ulong GuildId { get; set; }
+        public DateTime VotedAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Readers
 {
-    public class ColorTypeReader : TypeReader
+    public class ColorReader : TypeReader
     {
         private readonly NumberFormatInfo _numberFormat = new NumberFormatInfo();
 

@@ -53,8 +53,8 @@ namespace FFA.Services
                 return false;
 
             await context.GuildUser.AddRoleAsync(mutedRole);
-            await _muteCollection.InsertOneAsync(new Mute(context.Guild.Id, context.User.Id, Configuration.SPAM_MUTE_HOURS));
-            await _moderationService.LogAutoMuteAsync(context, Configuration.SPAM_MUTE_HOURS);
+            await _muteCollection.InsertOneAsync(new Mute(context.Guild.Id, context.User.Id, Configuration.SPAM_MUTE_LENGTH));
+            await _moderationService.LogAutoMuteAsync(context, Configuration.SPAM_MUTE_LENGTH);
             await _userCollection.UpdateAsync(context.DbUser, x => x.Reputation -= Configuration.SPAM_REP_PENALTY);
 
             return false;

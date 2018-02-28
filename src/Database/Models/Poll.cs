@@ -13,6 +13,6 @@ namespace FFA.Database.Models
         public ulong GuildId { get; set; }
         public bool Approved { get; set; } = false;
         public bool CanDeny { get; set; } = true;
-        public long CreatedAt { get; set; } = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
