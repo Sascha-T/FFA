@@ -90,17 +90,15 @@ namespace FFA.Modules
             var guildDbUsers = await _userCollection.WhereAsync(x => x.GuildId == Context.Guild.Id);
             var orderedDbUsers = guildDbUsers.OrderBy(x => x.Reputation).ToArray();
             var description = string.Empty;
+            var i = 0;
 
-            for (int i = 0; i < orderedDbUsers.Length;)
+            do
             {
-                if (i == Configuration.LB_COUNT_DEFAULT)
-                    break;
-
                 var user = await Context.Guild.GetUserAsync(orderedDbUsers[i].UserId);
 
                 if (user != null)
                     description += $"{(i + 1)}. **{user}:** {orderedDbUsers[i++].Reputation}\n";
-            }
+            } while (i != Configuration.LB_COUNT_DEFAULT);
 
             await Context.SendAsync(description, "The Least Reputable Users");
         }
