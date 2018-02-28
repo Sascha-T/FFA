@@ -23,7 +23,9 @@ namespace FFA.Services
 
             if (customCmd != default(CustomCommand))
             {
-                await context.SendAsync(customCmd.Response);
+                // TODO: check for perms or try catch?
+                // TODO: let sender throw BUT add a perms check in messge recieved
+                await context.Channel.SendMessageAsync(customCmd.Response);
             }
         }
     }
