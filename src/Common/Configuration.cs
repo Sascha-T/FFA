@@ -103,6 +103,9 @@ namespace FFA.Common
             "Discord.Commands",
             "Discord.WebSocket",
             "FFA.Database.Models",
+            "FFA.Extensions.Database",
+            "FFA.Extensions.Discord",
+            "FFA.Extensions.System",
             "MongoDB.Driver"
         }.ToImmutableArray();
 
