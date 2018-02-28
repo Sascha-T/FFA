@@ -1,6 +1,7 @@
 using FFA.Common;
 using System;
 
+// TODO: proper bson date type
 namespace FFA.Database.Models
 {
     // TODO: make unmuting remove ALL the mutes under that person's id and guild id.
