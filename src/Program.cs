@@ -15,6 +15,7 @@ using System;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 // TODO: custom commands added by users!
 // TODO: README, contributing, all other github things.
@@ -49,14 +50,8 @@ namespace FFA
             var database = mongoClient.GetDatabase(credentials.DbName);
 
             // TODO: remove after in production
-            await database.GetCollection<Mute>("mutes").DeleteManyAsync(FilterDefinition<Mute>.Empty);
-            var rules = database.GetCollection<Rule>("rules").Find(FilterDefinition<Rule>.Empty);
-
-            foreach (var rule in rules.ToEnumerable())
-            {
-                await database.GetCollection<Rule>("rules").UpdateAsync(rule, x =>
-                    x.MaxMuteLength = rule.MaxMuteHours.HasValue ? (TimeSpan?)TimeSpan.FromHours(rule.MaxMuteHours.Value) : null);
-            }
+            database.GetCollection<BsonDocument>("rules").UpdateMany(FilterDefinition<BsonDocument>.Empty, new UpdateDefinitionBuilder<BsonDocument>()
+                .Unset("MaxMuteHours"));
 
             // TODO: reorganize ordering of additions to service collection
             // TODO: reflexion to add all services/events/timers
