@@ -9,15 +9,16 @@ using System.Threading.Tasks;
 // TODO: check guild id when checking for command existance
 namespace FFA.Readers
 {
-    public sealed class CustomCommandReader : TypeReader
+    public sealed class CustomCmdReader : TypeReader
     {
         public override async Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
-            var customCommandCollection = services.GetRequiredService<IMongoCollection<CustomCommand>>();
+            var db = services.GetRequiredService<IMongoDatabase>();
+            var customCommandCollection = db.GetCollection<CustomCmd>("commands");
             var lowerInput = input.ToLower();
             var customCmd = await customCommandCollection.FindOneAsync(x => x.Name == lowerInput);
 
-            if (customCmd == default(CustomCommand))
+            if (customCmd == null)
             {
                 return TypeReaderResult.FromError(CommandError.ParseFailed, "This command does not exist.");
             }

@@ -31,8 +31,9 @@ namespace FFA.Common
         {
             _provider = provider;
             _sender = _provider.GetRequiredService<SendingService>();
-            _userCollection = _provider.GetRequiredService<IMongoCollection<User>>();
-            _guildCollection = _provider.GetRequiredService<IMongoCollection<Guild>>();
+            var db = _provider.GetRequiredService<IMongoDatabase>();
+            _userCollection = db.GetCollection<User>("users");
+            _guildCollection = db.GetCollection<Guild>("guilds");
 
             Client = client;
             Message = msg;

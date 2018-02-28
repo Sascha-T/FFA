@@ -10,9 +10,9 @@ namespace FFA.Services
     {
         private readonly IMongoCollection<User> _userCollection;
 
-        public ReputationService(IMongoCollection<User> userCollection)
+        public ReputationService(IMongoDatabase db)
         {
-            _userCollection = userCollection;
+            _userCollection = db.GetCollection<User>("users");
         }
 
         public async Task<bool> IsInTopAsync(int count, ulong userId, ulong guildId)

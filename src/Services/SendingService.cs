@@ -21,7 +21,7 @@ namespace FFA.Services
         {
             var builder = new EmbedBuilder
             {
-                Color = color ?? _random.Value.ArrayElement(Configuration.DEFAULT_COLORS)
+                Color = color ?? _random.Value.ArrayElement(Config.DEFAULT_COLORS)
             };
 
             for (var i = 0; i < fieldOrValue.Length; i += 2)
@@ -31,13 +31,13 @@ namespace FFA.Services
         }
 
         public Task<IUserMessage> SendFieldsErrorAsync(IMessageChannel channel, params string[] fieldOrValue)
-            => SendFieldsAsync(channel, Configuration.ERROR_COLOR, fieldOrValue);
+            => SendFieldsAsync(channel, Config.ERROR_COLOR, fieldOrValue);
 
         public Task<IUserMessage> SendAsync(IMessageChannel channel, string description, string title = null, Color? color = null, IGuild guild = null)
         {
             var builder = new EmbedBuilder
             {
-                Color = color ?? _random.Value.ArrayElement(Configuration.DEFAULT_COLORS),
+                Color = color ?? _random.Value.ArrayElement(Config.DEFAULT_COLORS),
                 Description = description,
                 Title = title
             };
@@ -53,13 +53,13 @@ namespace FFA.Services
             if (channel is ITextChannel textChannel && !await textChannel.CanSendAsync())
                 return null;
 
-            return await channel.SendMessageAsync("", false, builder.Build());
+            return await channel.SendMessageAsync(string.Empty, false, builder.Build());
         }
 
         public Task<IUserMessage> ReplyAsync(IUser user, IMessageChannel channel, string description, string title = null, Color? color = null)
             => SendAsync(channel, $"{user.Bold()}, {description}", title, color);
 
         public Task<IUserMessage> ReplyErrorAsync(IUser user, IMessageChannel channel, string description)
-            => ReplyAsync(user, channel, description, null, Configuration.ERROR_COLOR);
+            => ReplyAsync(user, channel, description, null, Config.ERROR_COLOR);
     }
 }

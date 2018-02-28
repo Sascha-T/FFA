@@ -14,10 +14,10 @@ namespace FFA.Services
         private readonly LoggingService _logger;
         private readonly CommandService _commandService;
         private readonly RateLimitService _rateLimitService;
-        private readonly CustomCommandService _customCommandService;
+        private readonly CustomCmdService _customCommandService;
 
         public ResultService(LoggingService logger, CommandService commandService, RateLimitService rateLimitService,
-            CustomCommandService customCommandService)
+            CustomCmdService customCommandService)
         {
             _logger = logger;
             _commandService = commandService;
@@ -39,8 +39,8 @@ namespace FFA.Services
                     var cmd = _commandService.GetCommand(context, argPos);
 
                     message = $"You are incorrectly using this command.\n" +
-                              $"**Usage:** `{Configuration.PREFIX}{cmd.GetUsage()}`\n" +
-                              $"**Example:** `{Configuration.PREFIX}{cmd.GetExample()}`";
+                              $"**Usage:** `{Config.PREFIX}{cmd.GetUsage()}`\n" +
+                              $"**Example:** `{Config.PREFIX}{cmd.GetExample()}`";
                     break;
             }
 
@@ -54,16 +54,16 @@ namespace FFA.Services
 
             if (last is HttpException httpEx)
             {
-                if ((int)httpEx.HttpCode == Configuration.TOO_MANY_REQUESTS)
+                if ((int)httpEx.HttpCode == Config.TOO_MANY_REQUESTS)
                 {
-                    _rateLimitService.IgnoreUser(context.User.Id, Configuration.IGNORE_DURATION);
-                    await context.DmAsync($"You will not be able to use commands for the next {Configuration.IGNORE_DURATION.TotalHours} hours." +
+                    _rateLimitService.IgnoreUser(context.User.Id, Config.IGNORE_DURATION);
+                    await context.DmAsync($"You will not be able to use commands for the next {Config.IGNORE_DURATION.TotalHours} hours." +
                         $"Please do not rate limit me.");
                     return;
                 }
-                else if (!Configuration.DISCORD_CODE_RESPONSES.TryGetValue(httpEx.DiscordCode.GetValueOrDefault(), out message))
+                else if (!Config.DISCORD_CODES.TryGetValue(httpEx.DiscordCode.GetValueOrDefault(), out message))
                 {
-                    Configuration.HTTP_CODE_RESPONSES.TryGetValue(httpEx.HttpCode, out message);
+                    Config.HTTP_CODES.TryGetValue(httpEx.HttpCode, out message);
                 }
             }
             else

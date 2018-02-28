@@ -55,7 +55,7 @@ namespace FFA.Events
 
                     int argPos = 0;
 
-                    if (!msg.HasStringPrefix(Configuration.PREFIX, ref argPos))
+                    if (!msg.HasStringPrefix(Config.PREFIX, ref argPos))
                         return;
 
                     var result = await _commandService.ExecuteAsync(context, argPos, _provider);

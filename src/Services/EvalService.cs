@@ -54,6 +54,7 @@ namespace FFA.Services
         }
     }
 
+    // TODO: split into multiple files
     public struct EvalResult
     {
         private EvalResult(bool success, string result = null, Exception exception = null)

@@ -16,7 +16,7 @@ namespace FFA.Services
         {
             _semaphore = new SemaphoreSlim(1);
 
-            Directory.CreateDirectory(Configuration.LOGS_DIRECTORY);
+            Directory.CreateDirectory(Config.LOGS_DIRECTORY);
         }
 
         public async Task LogAsync(LogSeverity severity, string message)
@@ -40,8 +40,8 @@ namespace FFA.Services
         }
 
         public string LogFileName(LogSeverity severity)
-            => Configuration.LOGS_DIRECTORY + DateTimeOffset.UtcNow.ToString("dd'.'MM'.'yyyy") +
-               (severity == LogSeverity.Error ? " Errors" : "") + ".txt";
+            => Config.LOGS_DIRECTORY + DateTimeOffset.UtcNow.ToString("dd'.'MM'.'yyyy") +
+               (severity == LogSeverity.Error ? " Errors" : string.Empty) + ".txt";
 
         private ConsoleColor GetSeverityColor(LogSeverity severity)
         {

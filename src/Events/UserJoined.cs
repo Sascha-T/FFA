@@ -25,8 +25,11 @@ namespace FFA.Events
             _provider = provider;
             _client = _provider.GetRequiredService<DiscordSocketClient>();
             _logger = _provider.GetRequiredService<LoggingService>();
-            _guildCollection = _provider.GetRequiredService<IMongoCollection<Guild>>();
-            _muteCollection = _provider.GetRequiredService<IMongoCollection<Mute>>();
+
+            var db = _provider.GetRequiredService<IMongoDatabase>();
+
+            _guildCollection = db.GetCollection<Guild>("guilds");
+            _muteCollection = db.GetCollection<Mute>("mutes");
 
             _client.UserJoined += OnUserJoinedAsync;
         }

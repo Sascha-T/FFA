@@ -14,9 +14,9 @@ namespace FFA.Utility
             for (var i = 0; i < args.Length; i++)
             {
                 if (args[i] == "-C" || args[i] == "--creds")
-                    credentialsFile = args[i++ + 1];
+                    credentialsFile = args[1 + i++];
                 else
-                    await TerminateAsync($"Unknown argument: {args[i]}");
+                    await TerminateAsync($"Unknown argument: {args[i]}.");
             }
 
             if (!File.Exists(credentialsFile))

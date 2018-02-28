@@ -2,6 +2,7 @@ using System;
 
 namespace FFA.Database.Models
 {
+    // TODO: consistency: DateTime vs DateTimeOffset
     public sealed class Vote : Entity
     {
         public Vote() { }

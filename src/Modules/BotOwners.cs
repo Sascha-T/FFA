@@ -71,7 +71,7 @@ namespace FFA.Modules
         [Summary("Evaluate C# code in a command context.")]
         public async Task EvalAsync([Summary("Client.Token")] [Remainder] string code)
         {
-            var script = CSharpScript.Create(code, Configuration.SCRIPT_OPTIONS, typeof(Globals));
+            var script = CSharpScript.Create(code, Config.SCRIPT_OPTIONS, typeof(Globals));
 
             if (!_evalService.TryCompile(script, out string errorMessage))
             {

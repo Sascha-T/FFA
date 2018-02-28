@@ -7,24 +7,25 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public sealed class CustomCommandService
+    // TODO: organize services into sub folders
+    public sealed class CustomCmdService
     {
-        private readonly IMongoCollection<CustomCommand> _customCommandCollection;
+        private readonly IMongoCollection<CustomCmd> _customCmdCollection;
 
-        public CustomCommandService(IMongoCollection<CustomCommand> customCommandCollection)
+        public CustomCmdService(IMongoDatabase db)
         {
-            _customCommandCollection = customCommandCollection;
+            _customCmdCollection = db.GetCollection<CustomCmd>("commands");
         }
 
         public async Task ExecuteAsync(Context context, int argPos)
         {
             var cmdName = context.Message.Content.Substring(argPos).Split(' ').FirstOrDefault().ToLower();
-            var customCmd = await _customCommandCollection.FindOneAsync(x => x.GuildId == context.Guild.Id && x.Name == cmdName);
+            var customCmd = await _customCmdCollection.FindOneAsync(x => x.GuildId == context.Guild.Id && x.Name == cmdName);
 
-            if (customCmd != default(CustomCommand))
+            if (customCmd != null)
             {
                 // TODO: check for perms or try catch?
-                // TODO: let sender throw BUT add a perms check in messge recieved
+                // TODO: let SendingService throw BUT add a perms check in messge recieved
                 await context.Channel.SendMessageAsync(customCmd.Response);
             }
         }

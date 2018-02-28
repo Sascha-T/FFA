@@ -19,11 +19,11 @@ namespace FFA.Modules
         private readonly IMongoCollection<Guild> _guildCollection;
         private readonly IMongoCollection<Rule> _ruleCollection;
 
-        public Owner(RulesService rulesService, IMongoCollection<Guild> guildCollection, IMongoCollection<Rule> ruleCollection)
+        public Owner(RulesService rulesService, IMongoDatabase db)
         {
             _rulesService = rulesService;
-            _guildCollection = guildCollection;
-            _ruleCollection = ruleCollection;
+            _guildCollection = db.GetCollection<Guild>("guilds");
+            _ruleCollection = db.GetCollection<Rule>("rules");
         }
 
         [Command("SetLogChannel")]

@@ -1,10 +1,10 @@
 namespace FFA.Database.Models
 {
-    public sealed class CustomCommand : Entity
+    public sealed class CustomCmd : Entity
     {
-        public CustomCommand() { }
+        public CustomCmd() { }
 
-        public CustomCommand(ulong ownerId, ulong guildId, string name, string response)
+        public CustomCmd(ulong ownerId, ulong guildId, string name, string response)
         {
             OwnerId = ownerId;
             GuildId = guildId;

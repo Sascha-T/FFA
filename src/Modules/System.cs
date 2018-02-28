@@ -32,8 +32,8 @@ namespace FFA.Modules
                     await Context.ReplyErrorAsync("This command does not exist.");
                 else
                     await Context.SendAsync($"**Description:** {cmd.Summary}\n" +
-                                            $"**Usage:** `{Configuration.PREFIX}{cmd.GetUsage()}`\n" +
-                                            $"**Example:** `{Configuration.PREFIX}{cmd.GetExample()}`");
+                                            $"**Usage:** `{Config.PREFIX}{cmd.GetUsage()}`\n" +
+                                            $"**Example:** `{Config.PREFIX}{cmd.GetExample()}`");
             }
             else
             {
@@ -41,7 +41,7 @@ namespace FFA.Modules
                 var padding = _commandService.Commands.OrderByDescending(x => x.Name.Length).First().Name.Length + 2;
 
                 foreach (var command in _commandService.Commands.OrderBy(x => x.Name))
-                    description += $"{Configuration.PREFIX}{command.Name.PadRight(padding)}{command.Summary}\n";
+                    description += $"{Config.PREFIX}{command.Name.PadRight(padding)}{command.Summary}\n";
 
                 await Context.DmAsync($"{description}```", "Commands");
 

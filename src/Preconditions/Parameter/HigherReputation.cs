@@ -16,7 +16,8 @@ namespace FFA.Preconditions.Parameter
             IServiceProvider services)
         {
             var context = ctx as Context;
-            var userCollection = services.GetRequiredService<IMongoCollection<User>>();
+            var db = services.GetRequiredService<IMongoDatabase>();
+            var userCollection = db.GetCollection<User>("users");
             var dbUser = await userCollection.GetUserAsync(value as IGuildUser);
 
             if (context.DbUser.Reputation < dbUser.Reputation)

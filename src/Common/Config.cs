@@ -1,4 +1,5 @@
 using Discord;
+using FFA.Database.Models;
 using Microsoft.CodeAnalysis.Scripting;
 using Newtonsoft.Json;
 using System;
@@ -6,10 +7,11 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace FFA.Common
 {
-    public static class Configuration
+    public static class Config
     {
         // Command handler
         public const string PREFIX = ";";
@@ -43,11 +45,14 @@ namespace FFA.Common
         public const long MS_PER_HOUR = TimeSpan.TicksPerHour / 1000;
         public const ushort TOO_MANY_REQUESTS = 429;
 
+        // Regexes, TODO: move all regexes here
+        public static readonly Regex MENTION_REGEX = new Regex("@", RegexOptions.ECMAScript);
+
         // Defaults
-        public const int CLEAR_DEFAULT = 20, LB_COUNT_DEFAULT = 10;
+        public const int CLEAR_DEFAULT = 20, LB_COUNT = 10;
 
         // Cooldowns in hours
-        public const int REP_COOLDOWN = 6, UNREP_COOLDOWN = 6, COLOR_COOLDOWN = 1, UNMUTE_COOLDOWN = 12, MOD_COMMAND_COOLDOWN = 1;
+        public const int REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1;
 
         // Timers in milliseconds
         public const int AUTO_UNMUTE_TIMER = 60000;
@@ -56,7 +61,7 @@ namespace FFA.Common
         public const string LOGS_DIRECTORY = "logs/";
 
         // Discord code responses
-        public static readonly IReadOnlyDictionary<int, string> DISCORD_CODE_RESPONSES = new Dictionary<int, string>()
+        public static readonly IReadOnlyDictionary<int, string> DISCORD_CODES = new Dictionary<int, string>()
         {
             { 20001, "Only a user account may perform this action." },
             { 50007, "I cannot DM you. Please allow direct messages from guild users." },
@@ -65,7 +70,7 @@ namespace FFA.Common
         }.ToImmutableDictionary();
 
         // HTTP code responses
-        public static readonly IReadOnlyDictionary<HttpStatusCode, string> HTTP_CODE_RESPONSES = new Dictionary<HttpStatusCode, string>()
+        public static readonly IReadOnlyDictionary<HttpStatusCode, string> HTTP_CODES = new Dictionary<HttpStatusCode, string>()
         {
             { HttpStatusCode.Forbidden, "I do not have permission to do that." },
             { HttpStatusCode.InternalServerError, "An unexpected error has occurred, please try again later." },

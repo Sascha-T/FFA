@@ -16,11 +16,11 @@ namespace FFA.Services
         private readonly IMongoCollection<Guild> _guildCollection;
         private readonly IMongoCollection<Rule> _ruleCollection;
 
-        public RulesService(SendingService sender, IMongoCollection<Guild> guildCollection, IMongoCollection<Rule> ruleCollection)
+        public RulesService(SendingService sender, IMongoDatabase db)
         {
             _sender = sender;
-            _guildCollection = guildCollection;
-            _ruleCollection = ruleCollection;
+            _guildCollection = db.GetCollection<Guild>("guilds");
+            _ruleCollection = db.GetCollection<Rule>("rules");
             _semaphore = new SemaphoreSlim(1);
         }
 

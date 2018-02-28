@@ -20,11 +20,11 @@ namespace FFA.Services
         private readonly IMongoCollection<Mute> _muteCollection;
         private readonly ConcurrentDictionary<ulong, SpamEntry> _spamEntries = new ConcurrentDictionary<ulong, SpamEntry>();
 
-        public SpamService(ModerationService moderationService, IMongoCollection<User> userCollection, IMongoCollection<Mute> muteCollection)
+        public SpamService(ModerationService moderationService, IMongoDatabase db)
         {
             _moderationService = moderationService;
-            _userCollection = userCollection;
-            _muteCollection = muteCollection;
+            _userCollection = db.GetCollection<User>("users");
+            _muteCollection = db.GetCollection<Mute>("mutes");
         }
 
         public async Task<bool> AuthenticateAsync(Context context)
@@ -34,7 +34,7 @@ namespace FFA.Services
                 _spamEntries.TryAdd(context.User.Id, new SpamEntry(context.Message));
                 return true;
             }
-            else if (DateTimeOffset.UtcNow.Subtract(entry.FirstTimestamp) > Configuration.SPAM_DURATION)
+            else if (DateTimeOffset.UtcNow.Subtract(entry.FirstTimestamp) > Config.SPAM_DURATION)
             {
                 _spamEntries.TryUpdate(context.User.Id, new SpamEntry(context.Message), entry);
                 return true;
@@ -42,7 +42,7 @@ namespace FFA.Services
 
             entry.Count++;
 
-            if (entry.Count < Configuration.SPAM_LIMIT)
+            if (entry.Count < Config.SPAM_LIMIT)
                 return true;
             else if (!context.DbGuild.MutedRoleId.HasValue)
                 return false;
@@ -53,9 +53,9 @@ namespace FFA.Services
                 return false;
 
             await context.GuildUser.AddRoleAsync(mutedRole);
-            await _muteCollection.InsertOneAsync(new Mute(context.Guild.Id, context.User.Id, Configuration.SPAM_MUTE_LENGTH));
-            await _moderationService.LogAutoMuteAsync(context, Configuration.SPAM_MUTE_LENGTH);
-            await _userCollection.UpdateAsync(context.DbUser, x => x.Reputation -= Configuration.SPAM_REP_PENALTY);
+            await _muteCollection.InsertOneAsync(new Mute(context.Guild.Id, context.User.Id, Config.SPAM_MUTE_LENGTH));
+            await _moderationService.LogAutoMuteAsync(context, Config.SPAM_MUTE_LENGTH);
+            await _userCollection.UpdateAsync(context.DbUser, x => x.Reputation -= Config.SPAM_REP_PENALTY);
 
             return false;
         }

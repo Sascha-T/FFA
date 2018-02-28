@@ -15,9 +15,9 @@ namespace FFA.Services
     {
         private readonly IMongoCollection<Guild> _guildCollection;
 
-        public ModerationService(IMongoCollection<Guild> guildCollection)
+        public ModerationService(IMongoDatabase db)
         {
-            _guildCollection = guildCollection;
+            _guildCollection = db.GetCollection<Guild>("guilds");
         }
 
         public Task LogMuteAsync(Context context, IUser subject, Rule rule, TimeSpan length, string reason = null)
@@ -33,7 +33,7 @@ namespace FFA.Services
             if (!string.IsNullOrWhiteSpace(reason))
                 elements.Add(("Reason", reason));
 
-            return LogAsync(context.Guild, elements, Configuration.MUTE_COLOR, context.User);
+            return LogAsync(context.Guild, elements, Config.MUTE_COLOR, context.User);
         }
 
         public Task LogUnmuteAsync(Context context, IUser subject, string reason = null)
@@ -47,7 +47,7 @@ namespace FFA.Services
             if (!string.IsNullOrWhiteSpace(reason))
                 elements.Add(("Reason", reason));
 
-            return LogAsync(context.Guild, elements, Configuration.UNMUTE_COLOR, context.User);
+            return LogAsync(context.Guild, elements, Config.UNMUTE_COLOR, context.User);
         }
 
         public Task LogAutoMuteAsync(Context context, TimeSpan length)
@@ -56,14 +56,14 @@ namespace FFA.Services
                 ("Action", "Automatic Mute"),
                 ("User", $"{context.User} ({context.User.Id})"),
                 ("Length", $"{length.TotalHours}h")
-            }, Configuration.MUTE_COLOR);
+            }, Config.MUTE_COLOR);
 
         public Task LogAutoUnmuteAsync(IGuild guild, IUser subject)
             => LogAsync(guild, new(string, string)[]
             {
                 ("Action", "Automatic Unmute"),
                 ("User", $"{subject} ({subject.Id})")
-            }, Configuration.UNMUTE_COLOR);
+            }, Config.UNMUTE_COLOR);
 
         public Task LogClearAsync(Context context, IUser subject, Rule rule, int quantity, string reason = null)
         {
@@ -78,7 +78,7 @@ namespace FFA.Services
             if (!string.IsNullOrWhiteSpace(reason))
                 elements.Add(("Reason", reason));
 
-            return LogAsync(context.Guild, elements, Configuration.CLEAR_COLOR, context.User);
+            return LogAsync(context.Guild, elements, Config.CLEAR_COLOR, context.User);
         }
 
         public async Task LogAsync(IGuild guild, IReadOnlyCollection<(string, string)> elements, Color color, IUser moderator = null)
@@ -115,7 +115,7 @@ namespace FFA.Services
                 });
             }
 
-            await logChannel.SendMessageAsync("", false, builder.Build());
+            await logChannel.SendMessageAsync(string.Empty, false, builder.Build());
             await _guildCollection.UpdateAsync(dbGuild, x => x.LogCase++);
         }
     }

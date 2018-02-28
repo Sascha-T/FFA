@@ -29,10 +29,12 @@ namespace FFA.Extensions.Database
             return result.ToEnumerable();
         }
 
-        public static async Task<T> FindOneAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
+        public static async Task<T> FindOneAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter) where T : Entity
         {
             var result = await collection.FindAsync(filter);
-            return await result.FirstOrDefaultAsync();
+            var entity = await result.FirstOrDefaultAsync();
+
+            return entity == default(T) ? null : entity;
         }
 
         public static async Task<T> GetAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter,

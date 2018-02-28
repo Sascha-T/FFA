@@ -32,7 +32,7 @@ namespace FFA.Events
                 {
                     new AutoUnmute(_provider);
 
-                    await _client.SetGameAsync(Configuration.GAME);
+                    await _client.SetGameAsync(Config.GAME);
                 }
                 catch (Exception ex)
                 {

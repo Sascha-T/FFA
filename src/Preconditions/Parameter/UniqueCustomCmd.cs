@@ -8,12 +8,13 @@ using MongoDB.Driver;
 
 namespace FFA.Preconditions.Parameter
 {
-    public sealed class UniqueCustomCommandAttribute : ParameterPreconditionAttribute
+    public sealed class UniqueCustomCmdAttributeAttribute : ParameterPreconditionAttribute
     {
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value,
             IServiceProvider services)
         {
-            var customCommandCollection = services.GetRequiredService<IMongoCollection<CustomCommand>>();
+            var db = services.GetRequiredService<IMongoDatabase>();
+            var customCommandCollection = db.GetCollection<CustomCmd>("commands");
             var strValue = (value as string)?.ToLower();
 
             if (strValue != null && await customCommandCollection.AnyAsync(x => x.Name == strValue))

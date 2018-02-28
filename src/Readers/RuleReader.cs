@@ -17,7 +17,8 @@ namespace FFA.Readers
             if (input.Length != 2 || !int.TryParse(input[0].ToString(), out int categoryNumber))
                 return TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid rule format.");
 
-            var ruleCollection = services.GetRequiredService<IMongoCollection<Rule>>();
+            var db = services.GetRequiredService<IMongoDatabase>();
+            var ruleCollection = db.GetCollection<Rule>("rules");
             var result = await ruleCollection.WhereAsync(x => x.GuildId == context.Guild.Id);
             var groups = result.OrderBy(x => x.Category).GroupBy(x => x.Category).ToArray();
 

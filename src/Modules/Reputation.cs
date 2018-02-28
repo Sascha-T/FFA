@@ -18,28 +18,32 @@ namespace FFA.Modules
     [GuildOnly]
     public sealed class Reputation : ModuleBase<Context>
     {
+        // TODO: shorter names for like everything, especially services
         private readonly ReputationService _repService;
+        private readonly LeaderboardService _lbService;
         private readonly IMongoCollection<User> _userCollection;
 
-        public Reputation(ReputationService repService, IMongoCollection<User> userCollection)
+        public Reputation(ReputationService repService, LeaderboardService lbService, IMongoDatabase db)
         {
             _repService = repService;
-            _userCollection = userCollection;
+            _lbService = lbService;
+            // TODO: add all collections to service provider instead of just the db
+            _userCollection = db.GetCollection<User>("users");
         }
 
         [Command("Rep")]
         [Summary("Give reputation to any user.")]
-        public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(Configuration.REP_COOLDOWN)] [NoSelf] IGuildUser user)
+        public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(Config.REP_CD)] [NoSelf] IGuildUser user)
         {
-            await _userCollection.UpsertUserAsync(user, x => x.Reputation += Configuration.REP_INCREASE);
+            await _userCollection.UpsertUserAsync(user, x => x.Reputation += Config.REP_INCREASE);
             await Context.ReplyAsync($"You have successfully repped {user.Bold()}.");
         }
 
         [Command("UnRep")]
         [Summary("Remove reputation from any user.")]
-        public async Task UnRepAsync([Summary("PapaFag#6666")] [Cooldown(Configuration.UNREP_COOLDOWN)] [NoSelf] IGuildUser user)
+        public async Task UnRepAsync([Summary("PapaFag#6666")] [Cooldown(Config.UNREP_CD)] [NoSelf] IGuildUser user)
         {
-            await _userCollection.UpsertUserAsync(user, x => x.Reputation -= Configuration.UNREP_DECREASE);
+            await _userCollection.UpsertUserAsync(user, x => x.Reputation -= Config.UNREP_DECREASE);
             await Context.ReplyAsync($"You have successfully unrepped {user.Bold()}.");
         }
 
@@ -63,22 +67,7 @@ namespace FFA.Modules
         [Summary("The most reputable users.")]
         public async Task RepLeaderboardsAsync()
         {
-            var guildDbUsers = await _userCollection.WhereAsync(x => x.GuildId == Context.Guild.Id);
-            var orderedDbUsers = guildDbUsers.OrderByDescending(x => x.Reputation).ToArray();
-            var description = string.Empty;
-
-            for (int i = 0; i < orderedDbUsers.Length;)
-            {
-                if (i == Configuration.LB_COUNT_DEFAULT)
-                    break;
-
-                var user = await Context.Guild.GetUserAsync(orderedDbUsers[i].UserId);
-
-                if (user != null)
-                    description += $"{(i + 1)}. **{user}:** {orderedDbUsers[i++].Reputation}\n";
-            }
-
-            await Context.SendAsync(description, "The Most Reputable Users");
+            await Context.SendAsync(await _lbService.GetUserLbAsync(Context.Guild, x => x.Reputation), "The Most Reputable Users");
         }
 
         [Command("UnRepLeaderboards")]
@@ -86,21 +75,7 @@ namespace FFA.Modules
         [Summary("The least reputable users.")]
         public async Task UnRepLeaderboardsAsync()
         {
-            // TODO: helper method for leaderboard commands
-            var guildDbUsers = await _userCollection.WhereAsync(x => x.GuildId == Context.Guild.Id);
-            var orderedDbUsers = guildDbUsers.OrderBy(x => x.Reputation).ToArray();
-            var description = string.Empty;
-            var i = 0;
-
-            do
-            {
-                var user = await Context.Guild.GetUserAsync(orderedDbUsers[i].UserId);
-
-                if (user != null)
-                    description += $"{(i + 1)}. **{user}:** {orderedDbUsers[i++].Reputation}\n";
-            } while (i != Configuration.LB_COUNT_DEFAULT);
-
-            await Context.SendAsync(description, "The Least Reputable Users");
+            await Context.SendAsync(await _lbService.GetUserLbAsync(Context.Guild, x => x.Reputation, true), "The Least Reputable Users");
         }
     }
 }

@@ -29,7 +29,7 @@ namespace FFA.Timers
             _client = _provider.GetRequiredService<DiscordSocketClient>();
             _moderationService = _provider.GetRequiredService<ModerationService>();
             _autoEvent = new AutoResetEvent(false);
-            _timer = new Timer(Execute, _autoEvent, 0, Configuration.AUTO_UNMUTE_TIMER);
+            _timer = new Timer(Execute, _autoEvent, 0, Config.AUTO_UNMUTE_TIMER);
         }
 
         private void Execute(object state)
@@ -40,8 +40,9 @@ namespace FFA.Timers
                     if (_client.ConnectionState != ConnectionState.Connected)
                         return;
 
-                    var guildCollection = _provider.GetRequiredService<IMongoCollection<Guild>>();
-                    var muteCollection = _provider.GetRequiredService<IMongoCollection<Mute>>();
+                    var db = _provider.GetRequiredService<IMongoDatabase>();
+                    var guildCollection = db.GetCollection<Guild>("guilds");
+                    var muteCollection = db.GetCollection<Mute>("mutes");
 
                     foreach (var guild in _client.Guilds)
                     {
