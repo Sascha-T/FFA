@@ -2,12 +2,11 @@ using Discord;
 using Discord.WebSocket;
 using FFA.Common;
 using FFA.Services;
-using FFA.Timers;
+using FFA.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
-// TODO: load timers aswell
 namespace FFA.Events
 {
     public sealed class Ready
@@ -31,7 +30,7 @@ namespace FFA.Events
             {
                 try
                 {
-                    new AutoUnmute(_provider);
+                    Loader.LoadTimers(_provider);
 
                     await _client.SetGameAsync(Config.GAME);
                 }

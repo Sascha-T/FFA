@@ -65,11 +65,11 @@ namespace FFA.Modules
 
         [Command("ModifyCommand")]
         [Top(Config.TOP_MOD_COMMAND)]
-        [Alias("modcommand", "modcmd")]
+        [Alias("modcommand", "modcmd", "modifycmd")]
         [Summary("Modify an existing custom command.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task ModifyCommandAsync([Summary("retarded")] CustomCmd command,
-            [Summary("vim2meta LMAO, dude is thick as balls")] [Remainder] [Cooldown(Config.MOD_CMD_CD)]
+        public async Task ModifyCommandAsync([Summary("vim2meta")] CustomCmd command,
+            [Summary("RETARD THAT IS THICKER THAN A KITE")] [Remainder] [Cooldown(Config.MOD_CMD_CD)]
             [MaximumLength(Config.MAX_CMD_LENGTH)]  string response)
         {
             var sterilized = _customCmdService.SterilizeResponse(response);

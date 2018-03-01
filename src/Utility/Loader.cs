@@ -34,16 +34,10 @@ namespace FFA.Utility
         }
 
         public static void LoadEvents(IServiceProvider provider)
-        {
-            var serviceTypes = Config.ASSEMBLY_CLASSES.Where(x => x.Namespace == "FFA.Events");
+            => ProviderLoad(provider, "FFA.Events");
 
-            foreach (var service in serviceTypes)
-            {
-                var ctor = service.GetConstructor(new[] { typeof(IServiceProvider) });
-
-                ctor.Invoke(new[] { provider });
-            }
-        }
+        public static void LoadTimers(IServiceProvider provider)
+            => ProviderLoad(provider, "FFA.Timers");
 
         public static void LoadReaders(CommandService commands)
         {
@@ -57,6 +51,18 @@ namespace FFA.Utility
                 var type = reader.GetType().GetProperty("Type").GetValue(reader);
 
                 method.Invoke(commands, new object[] { type, ctor.Invoke(null) });
+            }
+        }
+
+        public static void ProviderLoad(IServiceProvider provider, string ns)
+        {
+            var serviceTypes = Config.ASSEMBLY_CLASSES.Where(x => x.Namespace == ns);
+
+            foreach (var service in serviceTypes)
+            {
+                var ctor = service.GetConstructor(new[] { typeof(IServiceProvider) });
+
+                ctor.Invoke(new[] { provider });
             }
         }
     }

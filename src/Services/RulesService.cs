@@ -35,7 +35,7 @@ namespace FFA.Services
                 if (!dbGuild.RulesChannelId.HasValue)
                     return;
 
-                var rulesChannel = await guild.GetChannelAsync(dbGuild.RulesChannelId.Value) as ITextChannel;
+                var rulesChannel = await guild.GetTextChannelAsync(dbGuild.RulesChannelId.Value);
 
                 if (rulesChannel == null || !await rulesChannel.CanSendAsync())
                     return;

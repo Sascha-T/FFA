@@ -88,7 +88,7 @@ namespace FFA.Services
             if (!dbGuild.LogChannelId.HasValue)
                 return;
 
-            var logChannel = await guild.GetChannelAsync(dbGuild.LogChannelId.Value) as ITextChannel;
+            var logChannel = await guild.GetTextChannelAsync(dbGuild.LogChannelId.Value);
 
             if (logChannel == null || !await logChannel.CanSendAsync())
                 return;

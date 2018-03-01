@@ -6,7 +6,7 @@ bin/
 obj/
 
 # Authentication
-Credentials.json
+credentials.json
 
 # Logs
 logs/

@@ -58,7 +58,7 @@ namespace FFA.Common
         public const int REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1;
 
         // Timers in milliseconds
-        public const int AUTO_UNMUTE_TIMER = 60000;
+        public const int AUTO_UNMUTE_TIMER = 60000, DLM_BUMP_TIMER = 11000000;
 
         // Logs
         public const string LOGS_DIRECTORY = "logs/";
