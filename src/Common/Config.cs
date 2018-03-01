@@ -99,6 +99,7 @@ namespace FFA.Common
         public static readonly IReadOnlyList<string> EVAL_IMPORTS = new string[]
         {
             "System",
+            "System.Net",
             "System.Linq",
             "System.Threading.Tasks",
             "Discord",
