@@ -2,6 +2,7 @@ using Discord;
 using Discord.Commands;
 using FFA.Common;
 using FFA.Database.Models;
+using FFA.Entities.CustomCmd;
 using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using FFA.Preconditions.Command;
@@ -40,27 +41,17 @@ namespace FFA.Modules
             await Context.ReplyAsync("You have successfully set your role color.");
         }
 
+        // TODO: return custom runtime result instead of using loads of if/else + ReplyErrorAsync!!!
         [Command("AddCommand")]
         [Alias("addcmd")]
         [Summary("Add any custom command you please.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task AddCommandAsync([Summary("retarded")] [UniqueCustomCmdAttribute] string name,
-            [Summary("vim2meta LMAO, dude is thick as balls")] [Remainder] [MaximumLength(Config.MAX_CMD_LENGTH)] string response)
+            [Summary("VIM2META LOL DUDE IS THICC AS BALLS")] [Remainder] [MaximumLength(Config.MAX_CMD_LENGTH)] CmdResponse response = null)
         {
-            var sterilized = _customCmdService.SterilizeResponse(response);
-
-            // TODO: move to type reader to avoid repeating code!!!
-            if (sterilized.Length == 0)
-            {
-                await Context.ReplyErrorAsync("You have provided an invalid command response.");
-            }
-            else
-            {
-                var newCommand = new CustomCmd(Context.User.Id, Context.Guild.Id, name.ToLower(), sterilized);
-
-                await _dbCustomCmds.InsertOneAsync(newCommand);
-                await Context.ReplyAsync("You have successfully created a new custom command.");
-            }
+            var newCmd = new CustomCmd(Context.User.Id, Context.Guild.Id, name.ToLower(), response.Value);
+            await _dbCustomCmds.InsertOneAsync(newCmd);
+            await Context.ReplyAsync("You have successfully created a new custom command.");
         }
 
         [Command("ModifyCommand")]
@@ -69,20 +60,11 @@ namespace FFA.Modules
         [Summary("Modify an existing custom command.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task ModifyCommandAsync([Summary("vim2meta")] CustomCmd command,
-            [Summary("RETARD THAT IS THICKER THAN A KITE")] [Remainder] [Cooldown(Config.MOD_CMD_CD)]
-            [MaximumLength(Config.MAX_CMD_LENGTH)]  string response)
+            [Summary("RETARD THAT'S AS BLIND AS ME GRAN")] [Remainder] [Cooldown(Config.MOD_CMD_CD)]
+            [MaximumLength(Config.MAX_CMD_LENGTH)] CmdResponse response = null)
         {
-            var sterilized = _customCmdService.SterilizeResponse(response);
-
-            if (sterilized.Length == 0)
-            {
-                await Context.ReplyErrorAsync("You have provided an invalid command response.");
-            }
-            else
-            {
-                await _dbCustomCmds.UpdateAsync(command, x => x.Response = sterilized);
-                await Context.ReplyAsync("You have successfully updated this command.");
-            }
+            await _dbCustomCmds.UpdateAsync(command, x => x.Response = response.Value);
+            await Context.ReplyAsync("You have successfully updated this command.");
         }
     }
 }
