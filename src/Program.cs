@@ -42,18 +42,17 @@ namespace FFA
                 IgnoreExtraArgs = true
             });
 
+            var rand = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
             var mongoClient = new MongoClient(credentials.DbConnectionString);
             var database = mongoClient.GetDatabase(credentials.DbName);
-
-            // TODO: reorganize ordering of additions to service collection
-            // TODO: reflexion to add all services/events/timers
+            
             var services = new ServiceCollection() 
                 .AddSingleton(credentials)
                 .AddSingleton(mongoClient)
                 .AddSingleton(database)
                 .AddSingleton(client)
                 .AddSingleton(commandService)
-                .AddSingleton(new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode())));
+                .AddSingleton(rand);
 
             ServiceLoader.Load(services);
 

@@ -6,6 +6,7 @@ using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using FFA.Preconditions.Command;
 using FFA.Preconditions.Parameter;
+using FFA.Services;
 using MongoDB.Driver;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,10 +17,12 @@ namespace FFA.Modules
     public sealed class General : ModuleBase<Context>
     {
         private readonly IMongoCollection<CustomCmd> _customCmdCollection;
+        private readonly CustomCmdService _customCmdService;
 
-        public General(IMongoDatabase db)
+        public General(IMongoDatabase db, CustomCmdService customCmdService)
         {
             _customCmdCollection = db.GetCollection<CustomCmd>("commands");
+            _customCmdService = customCmdService;
         }
 
         [Command("Color")]
@@ -42,13 +45,22 @@ namespace FFA.Modules
         [Summary("Add any custom command you please.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task AddCommandAsync([Summary("retarded")] [UniqueCustomCmdAttribute] string name,
-            [Summary("vim2meta LMAO, dude is thick as balls")] [Remainder] string response)
+            [Summary("vim2meta LMAO, dude is thick as balls")] [Remainder] [MaximumLength(Config.MAX_CMD_LENGTH)] string response)
         {
-            var sterilizedResponse = Config.MENTION_REGEX.Replace(response, string.Empty);
-            var newCommand = new CustomCmd(Context.User.Id, Context.Guild.Id, name.ToLower(), sterilizedResponse);
+            var sterilized = _customCmdService.SterilizeResponse(response);
 
-            await _customCmdCollection.InsertOneAsync(newCommand);
-            await Context.ReplyAsync("You have successfully created a new custom command.");
+            // TODO: move to type reader to avoid repeating code!!!
+            if (sterilized.Length == 0)
+            {
+                await Context.ReplyErrorAsync("You have provided an invalid command response.");
+            }
+            else
+            {
+                var newCommand = new CustomCmd(Context.User.Id, Context.Guild.Id, name.ToLower(), sterilized);
+
+                await _customCmdCollection.InsertOneAsync(newCommand);
+                await Context.ReplyAsync("You have successfully created a new custom command.");
+            }
         }
 
         [Command("ModifyCommand")]
@@ -57,10 +69,20 @@ namespace FFA.Modules
         [Summary("Modify an existing custom command.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task ModifyCommandAsync([Summary("retarded")] CustomCmd command,
-            [Summary("vim2meta LMAO, dude is thick as balls")] [Remainder] [Cooldown(Config.MOD_CMD_CD)] string response)
+            [Summary("vim2meta LMAO, dude is thick as balls")] [Remainder] [Cooldown(Config.MOD_CMD_CD)]
+            [MaximumLength(Config.MAX_CMD_LENGTH)]  string response)
         {
-            await _customCmdCollection.UpdateAsync(command, x => x.Response = response);
-            await Context.ReplyAsync("You have successfully updated this command.");
+            var sterilized = _customCmdService.SterilizeResponse(response);
+
+            if (sterilized.Length == 0)
+            {
+                await Context.ReplyErrorAsync("You have provided an invalid command response.");
+            }
+            else
+            {
+                await _customCmdCollection.UpdateAsync(command, x => x.Response = response);
+                await Context.ReplyAsync("You have successfully updated this command.");
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 using Discord;
-using FFA.Database.Models;
 using Microsoft.CodeAnalysis.Scripting;
 using Newtonsoft.Json;
 using System;
@@ -36,7 +35,8 @@ namespace FFA.Common
         public const int TOP_MOD_COMMAND = 20, TOP_MOD = 30, TOP_COLOR = 40;
 
         // Maximums
-        public const int MAX_CLEAR = 100, MAX_ROLES = 500, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 1000;
+        public const int MAX_CLEAR = 100, MAX_ROLES = 500, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 1000, MAX_CMD_LENGTH = 200,
+            MAX_CMD_NEW_LINES = 10;
 
         // Minimums
         public const int MIN_CLEAR = 3;
@@ -46,7 +46,7 @@ namespace FFA.Common
         public const ushort TOO_MANY_REQUESTS = 429;
 
         // Regexes, TODO: move all regexes here
-        public static readonly Regex MENTION_REGEX = new Regex("@", RegexOptions.ECMAScript);
+        public static readonly Regex MENTION_REGEX = new Regex("<@!?[0-9]+>|@everyone|@here"), NEW_LINE_REGEX = new Regex(@"\r\n?|\n");
 
         // Defaults
         public const int CLEAR_DEFAULT = 20, LB_COUNT = 10;

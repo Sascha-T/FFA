@@ -29,5 +29,15 @@ namespace FFA.Services
                 await context.Channel.SendMessageAsync(customCmd.Response);
             }
         }
+
+        public string SterilizeResponse(string input)
+        {
+            input = Config.MENTION_REGEX.Replace(input, string.Empty);
+
+            if (input.Count(x => x == '\n') > Config.MAX_CMD_NEW_LINES)
+                input = Config.NEW_LINE_REGEX.Replace(input, string.Empty);
+
+            return input.Trim();
+        }
     }
 }
