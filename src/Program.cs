@@ -45,21 +45,6 @@ namespace FFA
             var mongo = new MongoClient(creds.DbConnectionString);
             var db = mongo.GetDatabase(creds.DbName);
 
-            db.GetCollection<Mute>("mutes").DeleteMany(FilterDefinition<Mute>.Empty);
-            db.GetCollection<CustomCmd>("customcmds").DeleteMany(FilterDefinition<CustomCmd>.Empty);
-            foreach (var coll in db.ListCollections().ToEnumerable())
-            {
-                coll.TryGetElement("name", out BsonElement name);
-                var collection = db.GetCollection<BsonDocument>(name.Value.AsString);
-
-                if (name.Value.AsString == "system.indexes") continue;
-
-                collection.UpdateMany(FilterDefinition<BsonDocument>.Empty,
-                    new UpdateDefinitionBuilder<BsonDocument>().Set("Timestamp", DateTimeOffset.UtcNow));
-                collection.UpdateMany(FilterDefinition<BsonDocument>.Empty,
-                    new UpdateDefinitionBuilder<BsonDocument>().Set("LastModified", default(DateTimeOffset)));
-            }
-
             var services = new ServiceCollection() 
                 .AddSingleton(creds)
                 .AddSingleton(mongo)
