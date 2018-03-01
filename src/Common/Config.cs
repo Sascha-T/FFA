@@ -6,10 +6,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
-// TODO: split into constants & config
 namespace FFA.Common
 {
     public static class Config
@@ -42,10 +40,6 @@ namespace FFA.Common
 
         // Minimums
         public const int MIN_CLEAR = 3;
-
-        // Constants
-        public const long MS_PER_HOUR = TimeSpan.TicksPerHour / 1000;
-        public const ushort TOO_MANY_REQUESTS = 429;
 
         // Regexes
         public static readonly Regex MENTION_REGEX = new Regex("<@!?[0-9]+>|@everyone|@here"), NEW_LINE_REGEX = new Regex(@"\r\n?|\n"),
@@ -100,10 +94,6 @@ namespace FFA.Common
             new Color(0x9624ED),
             new Color(0xA8ED00)
         }.ToImmutableArray();
-
-        // Assembly classes
-        public static readonly IReadOnlyList<Type> ASSEMBLY_CLASSES =
-            Assembly.GetEntryAssembly().GetTypes().Where(x => x.IsClass && !x.IsNested).ToImmutableArray();
 
         // Eval imports
         public static readonly IReadOnlyList<string> EVAL_IMPORTS = new string[]

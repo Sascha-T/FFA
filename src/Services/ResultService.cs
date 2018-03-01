@@ -54,7 +54,7 @@ namespace FFA.Services
 
             if (last is HttpException httpEx)
             {
-                if ((int)httpEx.HttpCode == Config.TOO_MANY_REQUESTS)
+                if ((int)httpEx.HttpCode == Constants.TOO_MANY_REQUESTS)
                 {
                     _rateLimitService.IgnoreUser(context.User.Id, Config.IGNORE_DURATION);
                     await context.DmAsync($"You will not be able to use commands for the next {Config.IGNORE_DURATION.TotalHours} hours." +

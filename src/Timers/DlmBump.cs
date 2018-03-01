@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// TODO: common class for all timers, lots of code repetition...
 namespace FFA.Timers
 {
     public sealed class DlmBump

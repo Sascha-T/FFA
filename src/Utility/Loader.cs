@@ -5,14 +5,13 @@ using MongoDB.Driver;
 using System;
 using System.Linq;
 
-// TODO: don't hardcode base namespace, more
 namespace FFA.Utility
 {
     public static class Loader
     {
         public static void LoadServices(IServiceCollection services)
         {
-            var serviceTypes = Config.ASSEMBLY_CLASSES.Where(x => x.Namespace == "FFA.Services");
+            var serviceTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.Namespace == "FFA.Services");
 
             foreach (var type in serviceTypes)
                 services.AddSingleton(type);
@@ -20,7 +19,7 @@ namespace FFA.Utility
 
         public static void LoadCollections(IServiceCollection services, IMongoDatabase db)
         {
-            var dbModelTypes = Config.ASSEMBLY_CLASSES.Where(x => x.Namespace == "FFA.Database.Models");
+            var dbModelTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.Namespace == "FFA.Database.Models");
             var method = db.GetType().GetMethod("GetCollection");
 
             foreach (var model in dbModelTypes)
@@ -41,7 +40,7 @@ namespace FFA.Utility
 
         public static void LoadReaders(CommandService commands)
         {
-            var readerTypes = Config.ASSEMBLY_CLASSES.Where(x => x.Namespace == "FFA.Readers");
+            var readerTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.Namespace == "FFA.Readers");
             var method = commands.GetType().GetMethod("AddTypeReader", new Type[] { typeof(Type), typeof(TypeReader) });
 
             foreach (var readerType in readerTypes)
@@ -56,7 +55,7 @@ namespace FFA.Utility
 
         public static void ProviderLoad(IServiceProvider provider, string ns)
         {
-            var serviceTypes = Config.ASSEMBLY_CLASSES.Where(x => x.Namespace == ns);
+            var serviceTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.Namespace == ns);
 
             foreach (var service in serviceTypes)
             {
