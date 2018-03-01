@@ -43,9 +43,6 @@ namespace FFA
             var mongo = new MongoClient(creds.DbConnectionString);
             var db = mongo.GetDatabase(creds.DbName);
 
-            // TODO: remove after applied to production
-            db.RenameCollection("commands", "customcmds");
-
             var services = new ServiceCollection() 
                 .AddSingleton(creds)
                 .AddSingleton(mongo)
