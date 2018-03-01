@@ -11,17 +11,17 @@ namespace FFA.Services
 {
     public sealed class LeaderboardService
     {
-        private readonly IMongoCollection<User> _userCollection;
+        private readonly IMongoCollection<User> _dbUsers;
 
-        public LeaderboardService(IMongoDatabase db)
+        public LeaderboardService(IMongoCollection<User> dbUsers)
         {
-            _userCollection = db.GetCollection<User>("users");
+            _dbUsers = dbUsers;
         }
 
         // TODO: variable amount of users in the leaderboards provided in command!
         public async Task<string> GetUserLbAsync<TKey>(IGuild guild, Func<User, TKey> keySelector, bool ascending = false)
         {
-            var dbUsers = await _userCollection.WhereAsync(x => x.GuildId == guild.Id);
+            var dbUsers = await _dbUsers.WhereAsync(x => x.GuildId == guild.Id);
             var ordered = ascending ? dbUsers.OrderBy(keySelector) : dbUsers.OrderByDescending(keySelector);
             var orderedArr = ordered.ToArray();
             var desc = string.Empty;

@@ -1,14 +1,15 @@
 using Discord.Commands;
+using FFA.Common;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FFA.Readers
 {
     public class TimeSpanReader : TypeReader
     {
-        private readonly Regex numberRegex = new Regex(@"^\d+(\.\d+)?", RegexOptions.ECMAScript);
+        public Type Type { get; } = typeof(TimeSpan);
+
         private readonly Dictionary<string, double> timeMultipliers = new Dictionary<string, double>()
         {
             { "ms", TimeSpan.TicksPerMillisecond },
@@ -19,7 +20,7 @@ namespace FFA.Readers
 
         public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
-            var numberMatch = numberRegex.Match(input);
+            var numberMatch = Config.NUMBER_REGEX.Match(input);
 
             if (!numberMatch.Success || !ushort.TryParse(numberMatch.Value, out ushort result))
                 return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid time."));

@@ -2,8 +2,6 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using FFA.Common;
-using FFA.Database.Models;
-using FFA.Readers;
 using FFA.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
@@ -13,7 +11,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-// TODO: custom commands added by users!
 // TODO: README, contributing, all other github things.
 // TODO: move all command checks to preconditions!
 namespace FFA
@@ -26,7 +23,7 @@ namespace FFA
         private async Task StartAsync(string[] args)
         {
             var parsedArgs = await Arguments.ParseAsync(args);
-            var credentials = JsonConvert.DeserializeObject<Credentials>(parsedArgs[0], Config.JSON_SETTINGS);
+            var creds = JsonConvert.DeserializeObject<Credentials>(parsedArgs[0], Config.JSON_SETTINGS);
 
             var client = new DiscordSocketClient(new DiscordSocketConfig
             {
@@ -35,7 +32,7 @@ namespace FFA
                 HandlerTimeout = null
             });
 
-            var commandService = new CommandService(new CommandServiceConfig
+            var commands = new CommandService(new CommandServiceConfig
             {
                 DefaultRunMode = RunMode.Sync,
                 LogLevel = LogSeverity.Info,
@@ -43,31 +40,30 @@ namespace FFA
             });
 
             var rand = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
-            var mongoClient = new MongoClient(credentials.DbConnectionString);
-            var database = mongoClient.GetDatabase(credentials.DbName);
-            
+            var mongo = new MongoClient(creds.DbConnectionString);
+            var db = mongo.GetDatabase(creds.DbName);
+
+            // TODO: remove after applied to production
+            db.RenameCollection("commands", "customcmds");
+
             var services = new ServiceCollection() 
-                .AddSingleton(credentials)
-                .AddSingleton(mongoClient)
-                .AddSingleton(database)
+                .AddSingleton(creds)
+                .AddSingleton(mongo)
+                .AddSingleton(db)
                 .AddSingleton(client)
-                .AddSingleton(commandService)
+                .AddSingleton(commands)
                 .AddSingleton(rand);
 
-            ServiceLoader.Load(services);
+            Loader.LoadServices(services);
+            Loader.LoadCollections(services, db);
 
             var provider = services.BuildServiceProvider();
 
-            EventLoader.Load(provider);
+            Loader.LoadEvents(provider);
+            Loader.LoadReaders(commands);
 
-            // TODO: reflexion to add all readers!
-            commandService.AddTypeReader<Rule>(new RuleReader());
-            commandService.AddTypeReader<Color>(new ColorReader());
-            commandService.AddTypeReader<CustomCmd>(new CustomCmdReader());
-            commandService.AddTypeReader<TimeSpan>(new TimeSpanReader());
-
-            await commandService.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
-            await client.LoginAsync(TokenType.Bot, credentials.Token);
+            await commands.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
+            await client.LoginAsync(TokenType.Bot, creds.Token);
             await client.StartAsync();
 
             await Task.Delay(-1);

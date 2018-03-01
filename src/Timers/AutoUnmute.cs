@@ -40,13 +40,12 @@ namespace FFA.Timers
                     if (_client.ConnectionState != ConnectionState.Connected)
                         return;
 
-                    var db = _provider.GetRequiredService<IMongoDatabase>();
-                    var guildCollection = db.GetCollection<Guild>("guilds");
-                    var muteCollection = db.GetCollection<Mute>("mutes");
+                    var dbGuilds = _provider.GetRequiredService<IMongoCollection<Guild>>();
+                    var dbMutes = _provider.GetRequiredService<IMongoCollection<Mute>>();
 
                     foreach (var guild in _client.Guilds)
                     {
-                        var dbGuild = await guildCollection.GetGuildAsync(guild.Id);
+                        var dbGuild = await dbGuilds.GetGuildAsync(guild.Id);
 
                         if (!dbGuild.MutedRoleId.HasValue)
                             continue;
@@ -56,14 +55,14 @@ namespace FFA.Timers
                         if (mutedRole == null || !await mutedRole.CanUseAsync())
                             continue;
 
-                        var mutes = await muteCollection.FindAsync(FilterDefinition<Mute>.Empty);
+                        var mutes = await dbMutes.FindAsync(FilterDefinition<Mute>.Empty);
 
                         foreach (var mute in mutes.ToEnumerable())
                         {
                             if (mute.EndsAt.Subtract(DateTime.UtcNow).Ticks > 0)
                                 continue;
 
-                            await muteCollection.DeleteOneAsync(x => x.Id == mute.Id);
+                            await dbMutes.DeleteOneAsync(x => x.Id == mute.Id);
 
                             var guildUser = guild.GetUser(mute.UserId);
 

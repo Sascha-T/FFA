@@ -1,6 +1,7 @@
 using Discord;
 using Discord.Commands;
 using FFA.Common;
+using FFA.Entities.Eval;
 using FFA.Preconditions.Command;
 using FFA.Services;
 using Microsoft.CodeAnalysis.CSharp.Scripting;

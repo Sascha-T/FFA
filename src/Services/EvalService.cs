@@ -1,5 +1,6 @@
 using Discord;
 using Discord.WebSocket;
+using FFA.Entities.Eval;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Scripting;
 using MongoDB.Driver;
@@ -15,14 +16,14 @@ namespace FFA.Services
         private readonly RulesService _rulesService;
         private readonly ReputationService _repService;
         private readonly IDiscordClient _client;
-        private readonly IMongoDatabase _database;
+        private readonly IMongoDatabase _db;
 
         public EvalService(SendingService sender, RulesService rulesService, ReputationService repService, DiscordSocketClient client,
-            IMongoDatabase database)
+            IMongoDatabase db)
         {
             _sender = sender;
             _client = client;
-            _database = database;
+            _db = db;
             _rulesService = rulesService;
             _repService = repService;
         }
@@ -44,7 +45,7 @@ namespace FFA.Services
         {
             try
             {
-                var scriptResult = await script.RunAsync(new Globals(_client, guild, _database, _sender, _rulesService, _repService));
+                var scriptResult = await script.RunAsync(new Globals(_client, guild, _db, _sender, _rulesService, _repService));
                 return EvalResult.FromSuccess(scriptResult.ReturnValue?.ToString() ?? "Success.");
             }
             catch (Exception ex)
@@ -52,47 +53,5 @@ namespace FFA.Services
                 return EvalResult.FromError(ex);
             }
         }
-    }
-
-    // TODO: split into multiple files
-    public struct EvalResult
-    {
-        private EvalResult(bool success, string result = null, Exception exception = null)
-        {
-            Success = success;
-            Result = result;
-            Exception = exception;
-        }
-
-        public static EvalResult FromSuccess(string result)
-            => new EvalResult(true, result);
-
-        public static EvalResult FromError(Exception exception)
-            => new EvalResult(true, exception: exception);
-
-        public bool Success { get; }
-        public string Result { get; }
-        public Exception Exception { get; }
-    }
-
-    public class Globals
-    {
-        public Globals(IDiscordClient client, IGuild guild, IMongoDatabase database, SendingService sender, RulesService rulesService,
-                       ReputationService reputationService)
-        {
-            Client = client;
-            Guild = guild;
-            Database = database;
-            Sender = sender;
-            RulesService = rulesService;
-            ReputationService = reputationService;
-        }
-
-        public IDiscordClient Client { get; }
-        public IGuild Guild { get; }
-        public IMongoDatabase Database { get; }
-        public SendingService Sender { get; }
-        public RulesService RulesService { get; }
-        public ReputationService ReputationService { get; }
     }
 }

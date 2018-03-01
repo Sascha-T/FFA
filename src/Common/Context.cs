@@ -12,10 +12,9 @@ namespace FFA.Common
 {
     public sealed class Context : ICommandContext
     {
-        private readonly IServiceProvider _provider;
         private readonly SendingService _sender;
-        private readonly IMongoCollection<User> _userCollection;
-        private readonly IMongoCollection<Guild> _guildCollection;
+        private readonly IMongoCollection<User> _dbUsers;
+        private readonly IMongoCollection<Guild> _dbGuilds;
 
         public User DbUser { get; private set; }
         public Guild DbGuild { get; private set; }
@@ -29,11 +28,9 @@ namespace FFA.Common
 
         public Context(IDiscordClient client, IUserMessage msg, IServiceProvider provider)
         {
-            _provider = provider;
-            _sender = _provider.GetRequiredService<SendingService>();
-            var db = _provider.GetRequiredService<IMongoDatabase>();
-            _userCollection = db.GetCollection<User>("users");
-            _guildCollection = db.GetCollection<Guild>("guilds");
+            _sender = provider.GetRequiredService<SendingService>();
+            _dbUsers = provider.GetRequiredService<IMongoCollection<User>>();
+            _dbGuilds = provider.GetRequiredService<IMongoCollection<Guild>>();
 
             Client = client;
             Message = msg;
@@ -48,8 +45,8 @@ namespace FFA.Common
         {
             if (Guild != null)
             {
-                DbUser = await _userCollection.GetUserAsync(GuildUser);
-                DbGuild = await _guildCollection.GetGuildAsync(Guild.Id);
+                DbUser = await _dbUsers.GetUserAsync(GuildUser);
+                DbGuild = await _dbGuilds.GetGuildAsync(Guild.Id);
             }
         }
 

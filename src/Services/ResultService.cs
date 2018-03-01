@@ -12,17 +12,16 @@ namespace FFA.Services
     public sealed class ResultService
     {
         private readonly LoggingService _logger;
-        private readonly CommandService _commandService;
+        private readonly CommandService _commands;
         private readonly RateLimitService _rateLimitService;
-        private readonly CustomCmdService _customCommandService;
+        private readonly CustomCmdService _customCmdService;
 
-        public ResultService(LoggingService logger, CommandService commandService, RateLimitService rateLimitService,
-            CustomCmdService customCommandService)
+        public ResultService(LoggingService logger, CommandService commands, RateLimitService rateLimitService, CustomCmdService customCmdService)
         {
             _logger = logger;
-            _commandService = commandService;
+            _commands = commands;
             _rateLimitService = rateLimitService;
-            _customCommandService = customCommandService;
+            _customCmdService = customCmdService;
         }
 
         public Task HandleResultAsync(Context context, IResult result, int argPos)
@@ -31,12 +30,13 @@ namespace FFA.Services
 
             switch (result.Error)
             {
+                // TODO: handle proper response for parse failed errors?
                 case CommandError.UnknownCommand:
-                    return _customCommandService.ExecuteAsync(context, argPos);
+                    return _customCmdService.ExecuteAsync(context, argPos);
                 case CommandError.Exception:
                     return HandleExceptionAsync(context, ((ExecuteResult)result).Exception);
                 case CommandError.BadArgCount:
-                    var cmd = _commandService.GetCommand(context, argPos);
+                    var cmd = _commands.GetCommand(context, argPos);
 
                     message = $"You are incorrectly using this command.\n" +
                               $"**Usage:** `{Config.PREFIX}{cmd.GetUsage()}`\n" +

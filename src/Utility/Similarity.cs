@@ -21,9 +21,9 @@ namespace FFA.Utility
             else if (m == 0)
                 return n;
 
-            for (int i = 0; i <= n; d[i, 0] = i++) ;
+            for (int i = 0; i <= n; d[i, 0] = i++);
 
-            for (int j = 0; j <= m; d[0, j] = j++) ;
+            for (int j = 0; j <= m; d[0, j] = j++);
 
             for (int i = 1; i <= n; i++)
             {

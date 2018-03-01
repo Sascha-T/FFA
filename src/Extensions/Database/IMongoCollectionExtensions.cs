@@ -1,4 +1,4 @@
-using FFA.Database.Models;
+using FFA.Database;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;

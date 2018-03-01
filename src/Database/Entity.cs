@@ -1,6 +1,6 @@
 using MongoDB.Bson;
 
-namespace FFA.Database.Models
+namespace FFA.Database
 {
     public class Entity
     {

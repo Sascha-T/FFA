@@ -11,15 +11,16 @@ namespace FFA.Readers
 {
     public sealed class RuleReader : TypeReader
     {
+        public Type Type { get; } = typeof(Rule);
+
         public override async Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
             // TODO: move to rules service
             if (input.Length != 2 || !int.TryParse(input[0].ToString(), out int categoryNumber))
                 return TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid rule format.");
 
-            var db = services.GetRequiredService<IMongoDatabase>();
-            var ruleCollection = db.GetCollection<Rule>("rules");
-            var result = await ruleCollection.WhereAsync(x => x.GuildId == context.Guild.Id);
+            var dbRules = services.GetRequiredService<IMongoCollection<Rule>>();
+            var result = await dbRules.WhereAsync(x => x.GuildId == context.Guild.Id);
             var groups = result.OrderBy(x => x.Category).GroupBy(x => x.Category).ToArray();
 
             if (groups.Length < categoryNumber || categoryNumber <= 0)

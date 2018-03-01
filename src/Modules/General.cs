@@ -16,12 +16,12 @@ namespace FFA.Modules
     [NotMuted]
     public sealed class General : ModuleBase<Context>
     {
-        private readonly IMongoCollection<CustomCmd> _customCmdCollection;
+        private readonly IMongoCollection<CustomCmd> _dbCustomCmds;
         private readonly CustomCmdService _customCmdService;
 
-        public General(IMongoDatabase db, CustomCmdService customCmdService)
+        public General(IMongoCollection<CustomCmd> dbCustomCmds, CustomCmdService customCmdService)
         {
-            _customCmdCollection = db.GetCollection<CustomCmd>("commands");
+            _dbCustomCmds = dbCustomCmds;
             _customCmdService = customCmdService;
         }
 
@@ -58,7 +58,7 @@ namespace FFA.Modules
             {
                 var newCommand = new CustomCmd(Context.User.Id, Context.Guild.Id, name.ToLower(), sterilized);
 
-                await _customCmdCollection.InsertOneAsync(newCommand);
+                await _dbCustomCmds.InsertOneAsync(newCommand);
                 await Context.ReplyAsync("You have successfully created a new custom command.");
             }
         }
@@ -80,7 +80,7 @@ namespace FFA.Modules
             }
             else
             {
-                await _customCmdCollection.UpdateAsync(command, x => x.Response = response);
+                await _dbCustomCmds.UpdateAsync(command, x => x.Response = response);
                 await Context.ReplyAsync("You have successfully updated this command.");
             }
         }

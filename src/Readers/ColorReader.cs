@@ -1,3 +1,4 @@
+using Discord;
 using Discord.Commands;
 using System;
 using System.Globalization;
@@ -8,6 +9,8 @@ namespace FFA.Readers
     public class ColorReader : TypeReader
     {
         private readonly NumberFormatInfo _numberFormat = new NumberFormatInfo();
+
+        public Type Type { get; } = typeof(Color);
 
         public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {

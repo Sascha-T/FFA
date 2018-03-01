@@ -19,13 +19,13 @@ namespace FFA.Modules
     [Top(Config.TOP_MOD)]
     public sealed class Moderation : ModuleBase<Context>
     {
-        private readonly ModerationService _moderationService;
-        private readonly IMongoCollection<Mute> _muteCollection;
+        private readonly ModerationService _modService;
+        private readonly IMongoCollection<Mute> _dbMutes;
 
-        public Moderation(ModerationService moderationService, IMongoDatabase db)
+        public Moderation(ModerationService moderationService, IMongoCollection<Mute> dbMutes)
         {
-            _moderationService = moderationService;
-            _muteCollection = db.GetCollection<Mute>("mutes");
+            _modService = moderationService;
+            _dbMutes = dbMutes;
         }
 
         [Command("Mute")]
@@ -53,9 +53,9 @@ namespace FFA.Modules
             else
             {
                 await guildUser.AddRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
-                await _muteCollection.InsertOneAsync(new Mute(Context.Guild.Id, guildUser.Id, length));
+                await _dbMutes.InsertOneAsync(new Mute(Context.Guild.Id, guildUser.Id, length));
                 await Context.ReplyAsync($"You have successfully muted {guildUser.Bold()}.");
-                await _moderationService.LogMuteAsync(Context, guildUser, rule, length, reason);
+                await _modService.LogMuteAsync(Context, guildUser, rule, length, reason);
             }
         }
         
@@ -76,10 +76,10 @@ namespace FFA.Modules
             }
             else
             {
-                await _muteCollection.DeleteManyAsync(x => x.UserId == guildUser.Id && x.GuildId == Context.Guild.Id);
+                await _dbMutes.DeleteManyAsync(x => x.UserId == guildUser.Id && x.GuildId == Context.Guild.Id);
                 await guildUser.RemoveRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
                 await Context.ReplyAsync($"You have successfully unmuted {guildUser.Bold()}.");
-                await _moderationService.LogUnmuteAsync(Context, guildUser, reason);
+                await _modService.LogUnmuteAsync(Context, guildUser, reason);
             }
         }
 
@@ -102,7 +102,7 @@ namespace FFA.Modules
 
             await Task.Delay(Config.CLEAR_DELETE_DELAY);
             await msg.DeleteAsync();
-            await _moderationService.LogClearAsync(Context, user, rule, quantity, reason);
+            await _modService.LogClearAsync(Context, user, rule, quantity, reason);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace FFA.Common
@@ -46,7 +47,8 @@ namespace FFA.Common
         public const ushort TOO_MANY_REQUESTS = 429;
 
         // Regexes, TODO: move all regexes here
-        public static readonly Regex MENTION_REGEX = new Regex("<@!?[0-9]+>|@everyone|@here"), NEW_LINE_REGEX = new Regex(@"\r\n?|\n");
+        public static readonly Regex MENTION_REGEX = new Regex("<@!?[0-9]+>|@everyone|@here"), NEW_LINE_REGEX = new Regex(@"\r\n?|\n"),
+            NUMBER_REGEX = new Regex(@"^\d+(\.\d+)?");
 
         // Defaults
         public const int CLEAR_DEFAULT = 20, LB_COUNT = 10;
@@ -79,7 +81,7 @@ namespace FFA.Common
 
         // Custom colors
         public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65),
-                                       CLEAR_COLOR = new Color(0x4D3DFF);
+            CLEAR_COLOR = new Color(0x4D3DFF);
 
         // Default colors
         // TODO: more colors!!!
@@ -97,6 +99,10 @@ namespace FFA.Common
             new Color(0x9624ED),
             new Color(0xA8ED00)
         }.ToImmutableArray();
+
+        // Assembly classes
+        public static readonly IReadOnlyList<Type> ASSEMBLY_CLASSES =
+            Assembly.GetEntryAssembly().GetTypes().Where(x => x.IsClass && !x.IsNested).ToImmutableArray();
 
         // Eval imports
         public static readonly IReadOnlyList<string> EVAL_IMPORTS = new string[]

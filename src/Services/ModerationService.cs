@@ -13,11 +13,11 @@ namespace FFA.Services
     // TODO: proper types, int vs uint, etc
     public sealed class ModerationService
     {
-        private readonly IMongoCollection<Guild> _guildCollection;
+        private readonly IMongoCollection<Guild> _dbGuilds;
 
-        public ModerationService(IMongoDatabase db)
+        public ModerationService(IMongoCollection<Guild> dbGuilds)
         {
-            _guildCollection = db.GetCollection<Guild>("guilds");
+            _dbGuilds = dbGuilds;
         }
 
         public Task LogMuteAsync(Context context, IUser subject, Rule rule, TimeSpan length, string reason = null)
@@ -83,7 +83,7 @@ namespace FFA.Services
 
         public async Task LogAsync(IGuild guild, IReadOnlyCollection<(string, string)> elements, Color color, IUser moderator = null)
         {
-            var dbGuild = await _guildCollection.GetGuildAsync(guild.Id);
+            var dbGuild = await _dbGuilds.GetGuildAsync(guild.Id);
 
             if (!dbGuild.LogChannelId.HasValue)
                 return;
@@ -116,7 +116,7 @@ namespace FFA.Services
             }
 
             await logChannel.SendMessageAsync(string.Empty, false, builder.Build());
-            await _guildCollection.UpdateAsync(dbGuild, x => x.LogCase++);
+            await _dbGuilds.UpdateAsync(dbGuild, x => x.LogCase++);
         }
     }
 }

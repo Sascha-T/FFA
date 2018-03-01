@@ -11,12 +11,13 @@ namespace FFA.Readers
 {
     public sealed class CustomCmdReader : TypeReader
     {
+        public Type Type { get; } = typeof(CustomCmd);
+
         public override async Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
-            var db = services.GetRequiredService<IMongoDatabase>();
-            var customCommandCollection = db.GetCollection<CustomCmd>("commands");
+            var dbCustomCmds = services.GetRequiredService<IMongoCollection<CustomCmd>>();
             var lowerInput = input.ToLower();
-            var customCmd = await customCommandCollection.FindOneAsync(x => x.Name == lowerInput);
+            var customCmd = await dbCustomCmds.FindOneAsync(x => x.Name == lowerInput);
 
             if (customCmd == null)
             {

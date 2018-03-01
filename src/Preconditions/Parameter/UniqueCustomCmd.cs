@@ -13,11 +13,10 @@ namespace FFA.Preconditions.Parameter
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value,
             IServiceProvider services)
         {
-            var db = services.GetRequiredService<IMongoDatabase>();
-            var customCommandCollection = db.GetCollection<CustomCmd>("commands");
+            var dbCustomCmds = services.GetRequiredService<IMongoCollection<CustomCmd>>();
             var strValue = (value as string)?.ToLower();
 
-            if (strValue != null && await customCommandCollection.AnyAsync(x => x.Name == strValue))
+            if (strValue != null && await dbCustomCmds.AnyAsync(x => x.Name == strValue))
             {
                 return PreconditionResult.FromError("This command already exists.");
             }

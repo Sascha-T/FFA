@@ -16,14 +16,14 @@ namespace FFA.Modules
     public sealed class Owner : ModuleBase<Context>
     {
         private readonly RulesService _rulesService;
-        private readonly IMongoCollection<Guild> _guildCollection;
-        private readonly IMongoCollection<Rule> _ruleCollection;
+        private readonly IMongoCollection<Guild> _dbGuilds;
+        private readonly IMongoCollection<Rule> _dbRules;
 
-        public Owner(RulesService rulesService, IMongoDatabase db)
+        public Owner(RulesService rulesService, IMongoCollection<Guild> dbGuilds, IMongoCollection<Rule> dbRules)
         {
             _rulesService = rulesService;
-            _guildCollection = db.GetCollection<Guild>("guilds");
-            _ruleCollection = db.GetCollection<Rule>("rules");
+            _dbGuilds = dbGuilds;
+            _dbRules = dbRules;
         }
 
         [Command("SetLogChannel")]
@@ -31,7 +31,7 @@ namespace FFA.Modules
         [Summary("Sets the log channel.")]
         public async Task SetLogChannelAsync([Summary("OldManJenkins")] [Remainder] ITextChannel logChannel)
         {
-            await _guildCollection.UpsertGuildAsync(Context.Guild.Id, x => x.LogChannelId = logChannel.Id);
+            await _dbGuilds.UpsertGuildAsync(Context.Guild.Id, x => x.LogChannelId = logChannel.Id);
             await Context.ReplyAsync($"You have successfully set to log channel to {logChannel.Mention}.");
         }
 
@@ -40,7 +40,7 @@ namespace FFA.Modules
         [Summary("Sets the rules channel.")]
         public async Task SetRulesChannelAsync([Summary("MrsPuff")] [Remainder] ITextChannel rulesChannel)
         {
-            await _guildCollection.UpsertGuildAsync(Context.Guild.Id, x => x.RulesChannelId = rulesChannel.Id);
+            await _dbGuilds.UpsertGuildAsync(Context.Guild.Id, x => x.RulesChannelId = rulesChannel.Id);
             await Context.ReplyAsync($"You have successfully set to rules channel to {rulesChannel.Mention}.");
         }
 
@@ -49,7 +49,7 @@ namespace FFA.Modules
         [Summary("Sets the muted role.")]
         public async Task SetMutedRoleAsync([Summary("BarnacleBoy")] [Remainder] IRole mutedRole)
         {
-            await _guildCollection.UpsertGuildAsync(Context.Guild.Id, x => x.MutedRoleId = mutedRole.Id);
+            await _dbGuilds.UpsertGuildAsync(Context.Guild.Id, x => x.MutedRoleId = mutedRole.Id);
             await Context.ReplyAsync($"You have successfully set to muted role to {mutedRole.Mention}.");
         }
 
@@ -59,7 +59,7 @@ namespace FFA.Modules
                                        [Summary("Harassment")] string category,
                                        [Summary("72h")] TimeSpan? maxMuteLength = null)
         {
-            await _ruleCollection.InsertOneAsync(new Rule(Context.Guild.Id, content, category, maxMuteLength));
+            await _dbRules.InsertOneAsync(new Rule(Context.Guild.Id, content, category, maxMuteLength));
             await Context.ReplyAsync($"You have successfully added a new rule.");
             await _rulesService.UpdateAsync(Context.Guild);
         }
@@ -71,7 +71,7 @@ namespace FFA.Modules
                                           [Summary("\"Nutting faster than Willy Wonka\"")] string content,
                                           [Summary("420h")] TimeSpan? maxMuteLength = null)
         {
-            await _ruleCollection.UpdateAsync(rule, x =>
+            await _dbRules.UpdateAsync(rule, x =>
             {
                 x.Content = content;
                 x.MaxMuteLength = maxMuteLength;
@@ -85,7 +85,7 @@ namespace FFA.Modules
         [Summary("Removes any rule.")]
         public async Task RemoveRuleAsync([Summary("2d")] Rule rule)
         {
-            await _ruleCollection.DeleteOneAsync(rule);
+            await _dbRules.DeleteOneAsync(rule);
             await Context.ReplyAsync($"You have successfully removed this rule.");
             await _rulesService.UpdateAsync(Context.Guild);
         }

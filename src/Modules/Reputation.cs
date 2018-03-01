@@ -21,21 +21,20 @@ namespace FFA.Modules
         // TODO: shorter names for like everything, especially services
         private readonly ReputationService _repService;
         private readonly LeaderboardService _lbService;
-        private readonly IMongoCollection<User> _userCollection;
+        private readonly IMongoCollection<User> _dbUsers;
 
-        public Reputation(ReputationService repService, LeaderboardService lbService, IMongoDatabase db)
+        public Reputation(ReputationService repService, LeaderboardService lbService, IMongoCollection<User> dbUsers)
         {
             _repService = repService;
             _lbService = lbService;
-            // TODO: add all collections to service provider instead of just the db
-            _userCollection = db.GetCollection<User>("users");
+            _dbUsers = dbUsers;
         }
 
         [Command("Rep")]
         [Summary("Give reputation to any user.")]
         public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(Config.REP_CD)] [NoSelf] IGuildUser user)
         {
-            await _userCollection.UpsertUserAsync(user, x => x.Reputation += Config.REP_INCREASE);
+            await _dbUsers.UpsertUserAsync(user, x => x.Reputation += Config.REP_INCREASE);
             await Context.ReplyAsync($"You have successfully repped {user.Bold()}.");
         }
 
@@ -43,7 +42,7 @@ namespace FFA.Modules
         [Summary("Remove reputation from any user.")]
         public async Task UnRepAsync([Summary("PapaFag#6666")] [Cooldown(Config.UNREP_CD)] [NoSelf] IGuildUser user)
         {
-            await _userCollection.UpsertUserAsync(user, x => x.Reputation -= Config.UNREP_DECREASE);
+            await _dbUsers.UpsertUserAsync(user, x => x.Reputation -= Config.UNREP_DECREASE);
             await Context.ReplyAsync($"You have successfully unrepped {user.Bold()}.");
         }
 
@@ -54,8 +53,8 @@ namespace FFA.Modules
         {
             user = user ?? Context.GuildUser;
 
-            var dbUser = user.Id == Context.User.Id ? Context.DbUser : await _userCollection.GetUserAsync(user.Id, user.GuildId);
-            var guildDbUsers = await _userCollection.WhereAsync(x => x.GuildId == Context.Guild.Id);
+            var dbUser = user.Id == Context.User.Id ? Context.DbUser : await _dbUsers.GetUserAsync(user.Id, user.GuildId);
+            var guildDbUsers = await _dbUsers.WhereAsync(x => x.GuildId == Context.Guild.Id);
             var orderedDbUsers = guildDbUsers.OrderByDescending(x => x.Reputation).ToArray();
             var position = Array.FindIndex(orderedDbUsers, x => x.UserId == user.Id) + 1;
 

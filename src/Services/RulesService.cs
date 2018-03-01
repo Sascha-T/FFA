@@ -13,14 +13,14 @@ namespace FFA.Services
     {
         private readonly SendingService _sender;
         private readonly SemaphoreSlim _semaphore;
-        private readonly IMongoCollection<Guild> _guildCollection;
-        private readonly IMongoCollection<Rule> _ruleCollection;
+        private readonly IMongoCollection<Guild> _dbGuilds;
+        private readonly IMongoCollection<Rule> _dbRules;
 
-        public RulesService(SendingService sender, IMongoDatabase db)
+        public RulesService(SendingService sender, IMongoCollection<Guild> dbGuilds, IMongoCollection<Rule> dbRules)
         {
             _sender = sender;
-            _guildCollection = db.GetCollection<Guild>("guilds");
-            _ruleCollection = db.GetCollection<Rule>("rules");
+            _dbGuilds = dbGuilds;
+            _dbRules = dbRules;
             _semaphore = new SemaphoreSlim(1);
         }
 
@@ -30,7 +30,7 @@ namespace FFA.Services
 
             try
             {
-                var dbGuild = await _guildCollection.GetGuildAsync(guild.Id);
+                var dbGuild = await _dbGuilds.GetGuildAsync(guild.Id);
 
                 if (!dbGuild.RulesChannelId.HasValue)
                     return;
@@ -43,7 +43,7 @@ namespace FFA.Services
                 var messages = await rulesChannel.GetMessagesAsync().FlattenAsync();
                 await rulesChannel.DeleteMessagesAsync(messages);
 
-                var result = await _ruleCollection.WhereAsync(x => x.GuildId == guild.Id);
+                var result = await _dbRules.WhereAsync(x => x.GuildId == guild.Id);
                 var groups = result.OrderBy(x => x.Category).GroupBy(x => x.Category).ToArray();
 
                 for (var i = 0; i < groups.Length; i++)

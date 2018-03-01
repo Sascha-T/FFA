@@ -1,6 +1,6 @@
-using Discord;
 using FFA.Common;
 using FFA.Database.Models;
+using FFA.Entities.Spam;
 using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using MongoDB.Driver;
@@ -15,16 +15,16 @@ namespace FFA.Services
     // TODO: ensure all async methods are suffixed with Async
     public sealed class SpamService
     {
-        private readonly ModerationService _moderationService;
-        private readonly IMongoCollection<User> _userCollection;
-        private readonly IMongoCollection<Mute> _muteCollection;
+        private readonly ModerationService _modService;
+        private readonly IMongoCollection<User> _dbUsers;
+        private readonly IMongoCollection<Mute> _dbMutes;
         private readonly ConcurrentDictionary<ulong, SpamEntry> _spamEntries = new ConcurrentDictionary<ulong, SpamEntry>();
 
-        public SpamService(ModerationService moderationService, IMongoDatabase db)
+        public SpamService(ModerationService modService, IMongoCollection<User> dbUsers, IMongoCollection<Mute> dbMutes)
         {
-            _moderationService = moderationService;
-            _userCollection = db.GetCollection<User>("users");
-            _muteCollection = db.GetCollection<Mute>("mutes");
+            _modService = modService;
+            _dbUsers = dbUsers;
+            _dbMutes = dbMutes;
         }
 
         public async Task<bool> AuthenticateAsync(Context context)
@@ -53,22 +53,11 @@ namespace FFA.Services
                 return false;
 
             await context.GuildUser.AddRoleAsync(mutedRole);
-            await _muteCollection.InsertOneAsync(new Mute(context.Guild.Id, context.User.Id, Config.SPAM_MUTE_LENGTH));
-            await _moderationService.LogAutoMuteAsync(context, Config.SPAM_MUTE_LENGTH);
-            await _userCollection.UpdateAsync(context.DbUser, x => x.Reputation -= Config.SPAM_REP_PENALTY);
+            await _dbMutes.InsertOneAsync(new Mute(context.Guild.Id, context.User.Id, Config.SPAM_MUTE_LENGTH));
+            await _modService.LogAutoMuteAsync(context, Config.SPAM_MUTE_LENGTH);
+            await _dbUsers.UpdateAsync(context.DbUser, x => x.Reputation -= Config.SPAM_REP_PENALTY);
 
             return false;
         }
-    }
-
-    public sealed class SpamEntry
-    {
-        public SpamEntry(IUserMessage message)
-        {
-            FirstTimestamp = message.Timestamp;
-        }
-
-        public int Count { get; set; } = 1;
-        public DateTimeOffset FirstTimestamp { get; }
     }
 }

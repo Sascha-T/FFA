@@ -10,17 +10,17 @@ namespace FFA.Services
     // TODO: organize services into sub folders
     public sealed class CustomCmdService
     {
-        private readonly IMongoCollection<CustomCmd> _customCmdCollection;
+        private readonly IMongoCollection<CustomCmd> _dbCustomCmds;
 
-        public CustomCmdService(IMongoDatabase db)
+        public CustomCmdService(IMongoCollection<CustomCmd> dbCustomCmds)
         {
-            _customCmdCollection = db.GetCollection<CustomCmd>("commands");
+            _dbCustomCmds = dbCustomCmds;
         }
 
         public async Task ExecuteAsync(Context context, int argPos)
         {
             var cmdName = context.Message.Content.Substring(argPos).Split(' ').FirstOrDefault().ToLower();
-            var customCmd = await _customCmdCollection.FindOneAsync(x => x.GuildId == context.Guild.Id && x.Name == cmdName);
+            var customCmd = await _dbCustomCmds.FindOneAsync(x => x.GuildId == context.Guild.Id && x.Name == cmdName);
 
             if (customCmd != null)
             {
