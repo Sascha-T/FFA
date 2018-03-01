@@ -42,7 +42,7 @@ namespace FFA.Common
         public const int MIN_CLEAR = 3;
 
         // Regexes
-        public static readonly Regex MENTION_REGEX = new Regex("<@!?[0-9]+>|@everyone|@here"), NEW_LINE_REGEX = new Regex(@"\r\n?|\n"),
+        public static readonly Regex MENTION_REGEX = new Regex("@"), NEW_LINE_REGEX = new Regex(@"\r\n?|\n"),
             NUMBER_REGEX = new Regex(@"^\d+(\.\d+)?");
 
         // Defaults
