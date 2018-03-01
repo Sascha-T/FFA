@@ -80,7 +80,7 @@ namespace FFA.Modules
             }
             else
             {
-                await _dbCustomCmds.UpdateAsync(command, x => x.Response = response);
+                await _dbCustomCmds.UpdateAsync(command, x => x.Response = sterilized);
                 await Context.ReplyAsync("You have successfully updated this command.");
             }
         }

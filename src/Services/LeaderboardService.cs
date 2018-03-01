@@ -21,18 +21,18 @@ namespace FFA.Services
         // TODO: variable amount of users in the leaderboards provided in command!
         public async Task<string> GetUserLbAsync<TKey>(IGuild guild, Func<User, TKey> keySelector, bool ascending = false)
         {
-            var dbUsers = await _dbUsers.WhereAsync(x => x.GuildId == guild.Id);
-            var ordered = ascending ? dbUsers.OrderBy(keySelector) : dbUsers.OrderByDescending(keySelector);
+            var dbGuildUsers = await _dbUsers.WhereAsync(x => x.GuildId == guild.Id);
+            var ordered = ascending ? dbGuildUsers.OrderBy(keySelector) : dbGuildUsers.OrderByDescending(keySelector);
             var orderedArr = ordered.ToArray();
             var desc = string.Empty;
-            var pos = 1;
+            var pos = 0;
 
             for (int i = 0; i < orderedArr.Length; i++)
             {
                 var user = await guild.GetUserAsync(orderedArr[i].UserId);
 
                 if (user != null)
-                    desc += $"{(pos++)}. **{user}:** {orderedArr[i].Reputation}\n";
+                    desc += $"{(++pos)}. **{user}:** {orderedArr[i].Reputation}\n";
 
                 if (pos == Config.LB_COUNT)
                     break;

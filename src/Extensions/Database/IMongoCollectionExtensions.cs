@@ -20,7 +20,7 @@ namespace FFA.Extensions.Database
             return await result.ToListAsync();
         }
 
-        public static async Task DeleteOneAsync<T>(this IMongoCollection<T> collection, T entity) where T : Entity, new()
+        public static async Task DeleteOneAsync<T>(this IMongoCollection<T> collection, T entity) where T : Entity
             => await collection.DeleteOneAsync(x => x.Id == entity.Id);
 
         public static async Task<IEnumerable<T>> WhereAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
@@ -58,9 +58,10 @@ namespace FFA.Extensions.Database
         }
 
         public static async Task<T> UpdateAsync<T>(this IMongoCollection<T> collection, T entity,
-            Action<T> update) where T : Entity, new()
+            Action<T> update) where T : Entity
         {
             update(entity);
+            entity.LastModified = DateTimeOffset.UtcNow;
 
             await collection.ReplaceOneAsync(x => x.Id == entity.Id, entity);
 

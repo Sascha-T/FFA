@@ -4,8 +4,6 @@ namespace FFA.Database.Models
 {
     public sealed class Rule : Entity
     {
-        public Rule() { }
-
         public Rule(ulong guildId, string content, string category, TimeSpan? maxMuteLength = null)
         {
             GuildId = guildId;
