@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
+// TODO: load timers aswell
 namespace FFA.Events
 {
     public sealed class Ready

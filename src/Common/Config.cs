@@ -9,6 +9,7 @@ using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
+// TODO: split into constants & config
 namespace FFA.Common
 {
     public static class Config
