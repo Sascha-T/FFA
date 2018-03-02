@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -6,23 +7,27 @@ namespace FFA.Utility
 {
     public static class Arguments
     {
-        // TODO: proper parsing instead of reading files inside parser LOL
-        public static async Task<string[]> ParseAsync(string[] args)
+        public static async Task<IReadOnlyDictionary<string, string>> ParseAsync(string[] args)
         {
-            var credentialsFile = "credentials.json";
+            var parsedArgs = new Dictionary<string, string>
+            {
+                { "credentials",  "credentials.json" }
+            };
 
             for (var i = 0; i < args.Length; i++)
             {
                 if (args[i] == "-C" || args[i] == "--creds")
-                    credentialsFile = args[1 + i++];
+                {
+                    parsedArgs["credentials"] = args[i + 1];
+                    i++;
+                }
                 else
+                {
                     await TerminateAsync($"Unknown argument: {args[i]}.");
+                }
             }
 
-            if (!File.Exists(credentialsFile))
-                await TerminateAsync($"The {credentialsFile} file does not exist.");
-
-            return new string[] { await File.ReadAllTextAsync(credentialsFile) };
+            return parsedArgs;
         }
 
         public static async Task TerminateAsync(string message)

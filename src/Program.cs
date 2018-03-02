@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +25,12 @@ namespace FFA
         private async Task StartAsync(string[] args)
         {
             var parsedArgs = await Arguments.ParseAsync(args);
-            var creds = JsonConvert.DeserializeObject<Credentials>(parsedArgs[0], Config.JSON_SETTINGS);
+            var credsFileName = parsedArgs["credentials"];
+
+            if (!File.Exists(credsFileName))
+                await Arguments.TerminateAsync($"The {credsFileName} file does not exist.");
+
+            var creds = JsonConvert.DeserializeObject<Credentials>(await File.ReadAllTextAsync(credsFileName), Config.JSON_SETTINGS);
 
             var client = new DiscordSocketClient(new DiscordSocketConfig
             {
@@ -45,7 +51,7 @@ namespace FFA
             var db = mongo.GetDatabase(creds.DbName);
 
             // Set new prop, TODO: remove
-            db.GetCollection<User>("users").UpdateMany(FilterDefinition<User>.Empty, new UpdateDefinitionBuilder<User>().Set("AutoMute", true));
+            db.GetCollection<Guild>("guilds").UpdateMany(FilterDefinition<Guild>.Empty, new UpdateDefinitionBuilder<Guild>().Set("AutoMute", true));
 
             var services = new ServiceCollection() 
                 .AddSingleton(creds)

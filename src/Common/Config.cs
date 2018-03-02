@@ -50,7 +50,7 @@ namespace FFA.Common
         public const int REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1;
 
         // Timers in milliseconds
-        public const int AUTO_UNMUTE_TIMER = 60000, DLM_BUMP_TIMER = 11000000;
+        public const int AUTO_UNMUTE_TIMER = 60000;
 
         // Logs
         public const string LOGS_DIRECTORY = "logs/";
@@ -79,10 +79,10 @@ namespace FFA.Common
         // Default colors
         public static readonly IReadOnlyList<Color> DEFAULT_COLORS = new Color[]
         {
-            new Color(0xFF269A), new Color(0xDA004E),
+            new Color(0xFF269A), new Color(0x66FFCC),
             new Color(0x00FF00), new Color(0xB10DC9),
             new Color(0x00E828), new Color(0xFFFF00),
-            new Color(0x08F8FF), new Color(0xFF4200),
+            new Color(0x08F8FF), new Color(0x03FFAB),
             new Color(0xF226FF), new Color(0xFF00BB),
             new Color(0xFF1C8E), new Color(0x00FFFF),
             new Color(0x68FF22), new Color(0x14DEA0),
