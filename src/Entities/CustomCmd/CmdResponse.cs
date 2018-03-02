@@ -8,7 +8,7 @@ namespace FFA.Entities.CustomCmd
     {
         public string Value { get; }
 
-        public CmdResponse(IServiceProvider provider,string response = "")
+        public CmdResponse(IServiceProvider provider, string response)
         {
             var customCmdService = provider.GetRequiredService<CustomCmdService>();
 
