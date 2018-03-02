@@ -27,6 +27,8 @@ namespace FFA.Services
         {
             reason = string.IsNullOrWhiteSpace(reason) ? "" : $"\n{ctx.User.Bold()} has provided the following reason:```\n{reason}```";
 
+            // TODO: prettier solution for this long message (SAME FOR HELP ASWELL)
+            // TODO: sterilize reason to remove discord markdown chars
             return _sender.TryDMAsync(subject,
                 $"{ctx.User.Bold()} has muted you for **{length.TotalHours}h** for breaking the following rule:" +
                 $"```\n{rule.Content}```{reason}\n**If this mute was unjustified or invalid, there are several steps you must take to " +
@@ -40,7 +42,7 @@ namespace FFA.Services
                 $"other users to vote in favor of said poll.", guild: ctx.Guild);
         }
 
-            public Task LogMuteAsync(Context ctx, IUser subject, Rule rule, TimeSpan length, string reason = null)
+        public Task LogMuteAsync(Context ctx, IUser subject, Rule rule, TimeSpan length, string reason = null)
         {
             var elements = new List<(string, string)>
             {
