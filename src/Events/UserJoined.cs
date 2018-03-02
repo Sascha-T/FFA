@@ -1,4 +1,5 @@
 using Discord;
+using FFA.Common;
 using FFA.Database.Models;
 using FFA.Entities.Event;
 using FFA.Extensions.Database;
@@ -14,17 +15,17 @@ namespace FFA.Events
 {
     public sealed class UserJoined : Event
     {
-        private readonly IServiceProvider _provider;
         private readonly LoggingService _logger;
+        private readonly SendingService _sender;
         private readonly IMongoCollection<Guild> _dbGuilds;
         private readonly IMongoCollection<Mute> _dbMutes;
 
         public UserJoined(IServiceProvider provider) : base(provider)
         {
-            _provider = provider;
-            _logger = _provider.GetRequiredService<LoggingService>();
-            _dbGuilds = _provider.GetRequiredService<IMongoCollection<Guild>>();
-            _dbMutes = _provider.GetRequiredService<IMongoCollection<Mute>>();
+            _logger = provider.GetRequiredService<LoggingService>();
+            _sender = provider.GetRequiredService<SendingService>();
+            _dbGuilds = provider.GetRequiredService<IMongoCollection<Guild>>();
+            _dbMutes = provider.GetRequiredService<IMongoCollection<Mute>>();
 
             _client.UserJoined += OnUserJoinedAsync;
         }
@@ -32,6 +33,8 @@ namespace FFA.Events
         private Task OnUserJoinedAsync(IGuildUser guildUser)
             => _taskService.TryRun(async () =>
             {
+                await _sender.TryDMAsync(guildUser, Config.HELP_MESSAGE, "Welcome to FFA", guild: guildUser.Guild);
+
                 var dbGuild = await _dbGuilds.GetGuildAsync(guildUser.Guild.Id);
 
                 if (!dbGuild.MutedRoleId.HasValue || !await _dbMutes.AnyAsync(x => x.GuildId == guildUser.Guild.Id && x.UserId == guildUser.Id))

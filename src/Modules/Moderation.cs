@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 namespace FFA.Modules
 {
     [Name("Moderation")]
+    [Summary("Commands reserved for the most reputable users to moderate the guild.")]
     [GuildOnly]
     [NotMuted]
     [Top(Config.TOP_MOD)]

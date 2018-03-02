@@ -34,6 +34,19 @@ namespace FFA.Services
         public Task<IUserMessage> SendFieldsErrorAsync(IMessageChannel channel, params string[] fieldOrValue)
             => SendFieldsAsync(channel, Config.ERROR_COLOR, fieldOrValue);
 
+        public async Task<bool> TryDMAsync(IUser user, string description, string title = null, Color? color = null, IGuild guild = null)
+        {
+            try
+            {
+                await SendAsync(await user.GetOrCreateDMChannelAsync(), description, title, color, guild);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public Task<IUserMessage> SendAsync(IMessageChannel channel, string description, string title = null, Color? color = null, IGuild guild = null)
         {
             var builder = new EmbedBuilder

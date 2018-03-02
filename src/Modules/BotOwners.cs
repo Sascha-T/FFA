@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace FFA.Modules
 {
     [BotOwner]
+    [Summary("Commands reserved for the developers of the bot.")]
     public sealed class BotOwners : ModuleBase<Context>
     {
         private readonly EvalService _evalService;
@@ -70,7 +71,7 @@ namespace FFA.Modules
         }
 
         [Command("Eval")]
-        [Summary("Evaluate C# code in a command context.")]
+        [Summary("Evaluate C# code.")]
         public async Task EvalAsync([Summary("Client.Token")] [Remainder] string code)
         {
             var script = CSharpScript.Create(code, Config.SCRIPT_OPTIONS, typeof(Globals));

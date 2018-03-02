@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace FFA.Modules
 {
     [Name("Owner")]
+    [Summary("Commands reserved for the guild owner.")]
     [GuildOwner]
     public sealed class Owner : ModuleBase<Context>
     {

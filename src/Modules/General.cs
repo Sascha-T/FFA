@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 
 namespace FFA.Modules
 {
+    [Name("General")]
+    [Summary("The best memes in town start with these commands.")]
     [NotMuted]
     public sealed class General : ModuleBase<Context>
     {

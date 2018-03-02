@@ -48,7 +48,7 @@ namespace FFA.Events
 
                 if (_rateLimitService.IsIgnored(context.User.Id))
                     return;
-                else if (context.DbGuild.AutoMute && !await _spamService.AuthenticateAsync(context))
+                else if (context.Guild != null && context.DbGuild.AutoMute && !await _spamService.AuthenticateAsync(context))
                     return;
 
                 int argPos = 0;

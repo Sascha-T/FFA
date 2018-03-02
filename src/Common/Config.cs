@@ -18,6 +18,19 @@ namespace FFA.Common
         // Current user
         public const string GAME = PREFIX + "help";
 
+        // Guild
+        public const string INVITE_LINK = "https://discord.gg/F7reg7e", HELP_MESSAGE =
+            "FFA's goal is to provide a fully decentralized discord server by allowing the community to control " +
+            "every aspect of the guild. The entire system is based around reputation. The most reputable users are the " +
+            "moderators. If believe a certain user is suitable to moderate, you may enter the following: `" + PREFIX +
+            "rep username#1234`. The opposite can be done with `" + PREFIX + "unrep`.\n\nIt is essential that reputation " +
+            "remains in the right hands, as everything revolves around it. It is your " +
+            "duty as a member of this community to ensure that if a user was unjustly punished, the culprit must pay " +
+            "the consequences while vindicating the victim.\n\nIf you wish to view the various command categories, you " +
+            "may use `" + PREFIX + "modules`. To view all the commands of a module, you may use `" + PREFIX + "module " +
+            "general`. You may also view all commands by using `" + PREFIX + "commands`. If you wish to view the progress " +
+            "of this bot, or simply support the creators, you may join the official FFA server here: " + INVITE_LINK + ".";
+
         // Moderation settings
         public const int MIN_MUTE_LENGTH = 1, CLEAR_DELETE_DELAY = 3000;
 
@@ -50,7 +63,7 @@ namespace FFA.Common
         public const int REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1;
 
         // Timers in milliseconds
-        public const int AUTO_UNMUTE_TIMER = 60000;
+        public const int AUTO_UNMUTE_TIMER = 60000, DLM_BUMP_TIMER = 11000000;
 
         // Logs
         public const string LOGS_DIRECTORY = "logs/";

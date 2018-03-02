@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 namespace FFA.Modules
 {
     [Name("Reputation")]
+    [Summary("Commands dedicated to managing the reputation system.")]
     [GuildOnly]
     public sealed class Reputation : ModuleBase<Context>
     {
