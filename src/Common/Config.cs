@@ -35,15 +35,13 @@ namespace FFA.Common
         public const int TOP_MOD_COMMAND = 20, TOP_MOD = 30, TOP_COLOR = 40;
 
         // Maximums
-        public const int MAX_CLEAR = 100, MAX_ROLES = 500, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 1000, MAX_CMD_LENGTH = 200,
-            MAX_CMD_NEW_LINES = 10;
+        public const int MAX_CLEAR = 100,  MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 1000, MAX_CMD_LENGTH = 200, MAX_CMD_NEW_LINES = 10;
 
         // Minimums
         public const int MIN_CLEAR = 3;
 
         // Regexes
-        public static readonly Regex MENTION_REGEX = new Regex("@"), NEW_LINE_REGEX = new Regex(@"\r\n?|\n"),
-            NUMBER_REGEX = new Regex(@"^\d+(\.\d+)?");
+        public static readonly Regex NEW_LINE_REGEX = new Regex(@"\r\n?|\n"), NUMBER_REGEX = new Regex(@"^\d+(\.\d+)?");
 
         // Defaults
         public const int CLEAR_DEFAULT = 20, LB_COUNT = 10;
@@ -79,20 +77,19 @@ namespace FFA.Common
             CLEAR_COLOR = new Color(0x4D3DFF);
 
         // Default colors
-        // TODO: more colors!!!
         public static readonly IReadOnlyList<Color> DEFAULT_COLORS = new Color[]
         {
-            new Color(0xFF269A),
-            new Color(0x00FF00),
-            new Color(0x00E828),
-            new Color(0x08F8FF),
-            new Color(0xF226FF),
-            new Color(0xFF1C8E),
-            new Color(0x68FF22),
-            new Color(0xFFBE11),
-            new Color(0x2954FF),
-            new Color(0x9624ED),
-            new Color(0xA8ED00)
+            new Color(0xFF269A), new Color(0xDA004E),
+            new Color(0x00FF00), new Color(0xB10DC9),
+            new Color(0x00E828), new Color(0xFFFF00),
+            new Color(0x08F8FF), new Color(0xFF4200),
+            new Color(0xF226FF), new Color(0xFF00BB),
+            new Color(0xFF1C8E), new Color(0x00FFFF),
+            new Color(0x68FF22), new Color(0x14DEA0),
+            new Color(0xFFBE11), new Color(0x0FFFFF),
+            new Color(0x2954FF), new Color(0x40E0D0),
+            new Color(0x9624ED), new Color(0x01ADB0),
+            new Color(0xA8ED00), new Color(0xBF255F)
         }.ToImmutableArray();
 
         // Eval imports

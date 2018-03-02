@@ -11,6 +11,9 @@ namespace FFA.Common
         // Discord response codes
         public const ushort TOO_MANY_REQUESTS = 429;
 
+        // Discord constants
+        public const ushort MAX_ROLES = 500;
+
         // Assembly classes
         public static readonly IReadOnlyList<Type> ASSEMBLY_CLASSES =
             Assembly.GetEntryAssembly().GetTypes().Where(x => x.IsClass && !x.IsNested).ToImmutableArray();

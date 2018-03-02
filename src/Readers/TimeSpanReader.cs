@@ -23,7 +23,7 @@ namespace FFA.Readers
             var numberMatch = Config.NUMBER_REGEX.Match(input);
 
             if (!numberMatch.Success || !ushort.TryParse(numberMatch.Value, out ushort result))
-                return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid time."));
+                return Task.FromResult(TypeReaderResult.FromError(CommandError.Unsuccessful, "You have provided an invalid time."));
 
             var span = TimeSpan.FromHours(result);
 

@@ -14,12 +14,9 @@ namespace FFA.Preconditions.Parameter
             IServiceProvider services)
         {
             var dbCustomCmds = services.GetRequiredService<IMongoCollection<CustomCmd>>();
-            var strValue = (value as string)?.ToLower();
 
-            if (strValue != null && await dbCustomCmds.AnyAsync(x => x.Name == strValue))
-            {
+            if (value is string strValue && await dbCustomCmds.AnyCustomCmdAsync(strValue, context.Guild.Id))
                 return PreconditionResult.FromError("This command already exists.");
-            }
 
             return PreconditionResult.FromSuccess();
         }

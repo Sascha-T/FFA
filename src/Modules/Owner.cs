@@ -35,6 +35,15 @@ namespace FFA.Modules
             await Context.ReplyAsync($"You have successfully set to log channel to {logChannel.Mention}.");
         }
 
+        [Command("ToggleAutoMute")]
+        [Alias("disableautomute", "enableautomute")]
+        [Summary("Toggles the automatic mute setting.")]
+        public async Task ToggleAutoMuteAsync()
+        {
+            await _dbGuilds.UpsertGuildAsync(Context.Guild.Id, x => x.AutoMute = !x.AutoMute);
+            await Context.ReplyAsync($"You have successfully toggled the automatic mute setting.");
+        }
+
         [Command("SetRulesChannel")]
         [Alias("setrules")]
         [Summary("Sets the rules channel.")]

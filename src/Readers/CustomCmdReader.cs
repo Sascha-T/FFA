@@ -6,7 +6,6 @@ using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
 
-// TODO: check guild id when checking for command existance
 namespace FFA.Readers
 {
     public sealed class CustomCmdReader : TypeReader
@@ -16,13 +15,10 @@ namespace FFA.Readers
         public override async Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
             var dbCustomCmds = services.GetRequiredService<IMongoCollection<CustomCmd>>();
-            var lowerInput = input.ToLower();
-            var customCmd = await dbCustomCmds.FindOneAsync(x => x.Name == lowerInput);
+            var customCmd = await dbCustomCmds.FindCustomCmdAsync(input, context.Guild.Id);
 
             if (customCmd == null)
-            {
-                return TypeReaderResult.FromError(CommandError.ParseFailed, "This command does not exist.");
-            }
+                return TypeReaderResult.FromError(CommandError.Unsuccessful, "This command does not exist.");
 
             return TypeReaderResult.FromSuccess(customCmd);
         }

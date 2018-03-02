@@ -1,6 +1,5 @@
 namespace FFA.Database.Models
 {
-    // TODO: role/channel deletion event to nullify the roles + channels
     public sealed class Guild : Entity
     {
         public Guild() { }
@@ -11,5 +10,6 @@ namespace FFA.Database.Models
         public ulong? RulesChannelId { get; set; }
         public ulong? ArchiveChannelId { get; set; }
         public uint LogCase { get; set; } = 1;
+        public bool AutoMute { get; set; } = true;
     }
 }

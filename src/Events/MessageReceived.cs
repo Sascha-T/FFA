@@ -2,6 +2,7 @@ using Discord;
 using Discord.Commands;
 using FFA.Common;
 using FFA.Entities.Event;
+using FFA.Extensions.Discord;
 using FFA.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -40,12 +41,14 @@ namespace FFA.Events
 
                 var context = new Context(_client, msg, _provider);
 
+                if (context.Channel is ITextChannel textChannel && !await textChannel.CanSendAsync())
+                    return;
+
                 await context.InitializeAsync();
 
                 if (_rateLimitService.IsIgnored(context.User.Id))
                     return;
-                // TODO: guild property to make auto spam detection optional
-                else if (!await _spamService.AuthenticateAsync(context))
+                else if (context.DbGuild.AutoMute && !await _spamService.AuthenticateAsync(context))
                     return;
 
                 int argPos = 0;

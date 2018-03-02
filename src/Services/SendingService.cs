@@ -49,13 +49,8 @@ namespace FFA.Services
             return SendEmbedAsync(channel, builder);
         }
 
-        public async Task<IUserMessage> SendEmbedAsync(IMessageChannel channel, EmbedBuilder builder)
-        {
-            if (channel is ITextChannel textChannel && !await textChannel.CanSendAsync())
-                return null;
-
-            return await channel.SendMessageAsync(string.Empty, false, builder.Build());
-        }
+        public Task<IUserMessage> SendEmbedAsync(IMessageChannel channel, EmbedBuilder builder)
+            => channel.SendMessageAsync(string.Empty, false, builder.Build());
 
         public Task<IUserMessage> ReplyAsync(IUser user, IMessageChannel channel, string description, string title = null, Color? color = null)
             => SendAsync(channel, $"{user.Bold()}, {description}", title, color);

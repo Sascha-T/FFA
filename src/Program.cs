@@ -2,6 +2,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using FFA.Common;
+using FFA.Database.Models;
 using FFA.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
@@ -42,6 +43,9 @@ namespace FFA
             var rand = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
             var mongo = new MongoClient(creds.DbConnectionString);
             var db = mongo.GetDatabase(creds.DbName);
+
+            // Set new prop, TODO: remove
+            db.GetCollection<User>("users").UpdateMany(FilterDefinition<User>.Empty, new UpdateDefinitionBuilder<User>().Set("AutoMute", true));
 
             var services = new ServiceCollection() 
                 .AddSingleton(creds)

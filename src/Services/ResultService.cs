@@ -31,7 +31,9 @@ namespace FFA.Services
 
             switch (result.Error)
             {
-                // TODO: handle proper response for parse failed errors?
+                case CommandError.ParseFailed:
+                    message = "You have provided an invalid number.";
+                    break;
                 case CommandError.UnknownCommand:
                     return _customCmdService.ExecuteAsync(context, argPos);
                 case CommandError.Exception:

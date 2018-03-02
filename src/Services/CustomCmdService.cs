@@ -20,20 +20,16 @@ namespace FFA.Services
 
         public async Task ExecuteAsync(Context context, int argPos)
         {
-            var cmdName = context.Message.Content.Substring(argPos).Split(' ').FirstOrDefault().ToLower();
-            var customCmd = await _dbCustomCmds.FindOneAsync(x => x.GuildId == context.Guild.Id && x.Name == cmdName);
+            var cmdName = context.Message.Content.Substring(argPos).Split(' ').FirstOrDefault();
+            var customCmd = await _dbCustomCmds.FindCustomCmdAsync(cmdName, context.Guild.Id);
 
             if (customCmd != null)
-            {
-                // TODO: check for perms or try catch?
-                // TODO: let SendingService throw BUT add a perms check in messge recieved
                 await context.Channel.SendMessageAsync(customCmd.Response);
-            }
         }
 
         public string SterilizeResponse(string input)
         {
-            input = Config.MENTION_REGEX.Replace(input, string.Empty);
+            input = input.Replace("#", string.Empty);
 
             if (input.Count(x => x == '\n') > Config.MAX_CMD_NEW_LINES)
                 input = Config.NEW_LINE_REGEX.Replace(input, string.Empty);

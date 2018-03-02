@@ -6,7 +6,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-// TODO: more extensions for other models, such as AnyCustomCommandAsync
 namespace FFA.Extensions.Database
 {
     public static class IMongoCollectionExtensions

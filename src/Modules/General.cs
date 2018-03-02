@@ -19,11 +19,13 @@ namespace FFA.Modules
     {
         private readonly IMongoCollection<CustomCmd> _dbCustomCmds;
         private readonly CustomCmdService _customCmdService;
+        private readonly ColorRoleService _colorRoleService;
 
-        public General(IMongoCollection<CustomCmd> dbCustomCmds, CustomCmdService customCmdService)
+        public General(IMongoCollection<CustomCmd> dbCustomCmds, CustomCmdService customCmdService, ColorRoleService colorRoleService)
         {
             _dbCustomCmds = dbCustomCmds;
             _customCmdService = customCmdService;
+            _colorRoleService = colorRoleService;
         }
 
         [Command("Color")]
@@ -33,7 +35,7 @@ namespace FFA.Modules
         [Top(Config.TOP_COLOR)]
         public async Task ColorAsync([Summary("#FF0000")] [Remainder] [Cooldown(Config.COLOR_CD)] Color color)
         {
-            var role = await Context.Guild.GetOrCreateRoleAsync(color.GetFormattedString(), color);
+            var role = await _colorRoleService.GetOrCreateAsync(Context.Guild, _colorRoleService.FormatColor(color), color);
             var existingColorRoles = Context.GuildUser.GetRoles().Where(x => x.Name.StartsWith('#'));
 
             await Context.GuildUser.RemoveRolesAsync(existingColorRoles);

@@ -14,7 +14,7 @@ namespace FFA.Readers
             var cmdResponse = new CmdResponse(services, input);
 
             if (cmdResponse.Value.Length == 0)
-                return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "You have provided an invalid command response."));
+                return Task.FromResult(TypeReaderResult.FromError(CommandError.Unsuccessful, "You have provided an invalid command response."));
 
             return Task.FromResult(TypeReaderResult.FromSuccess(cmdResponse));
         }
