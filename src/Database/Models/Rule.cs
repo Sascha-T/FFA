@@ -15,6 +15,5 @@ namespace FFA.Database.Models
         public string Content { get; set; }
         public string Category { get; set; }
         public TimeSpan? MaxMuteLength { get; set; }
-        public ulong GuildId { get; set; }
     }
 }

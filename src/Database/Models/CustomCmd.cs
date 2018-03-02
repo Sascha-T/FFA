@@ -11,7 +11,6 @@ namespace FFA.Database.Models
         }
 
         public ulong OwnerId { get; set; }
-        public ulong GuildId { get; set; }
         public string Name { get; set; }
         public string Response { get; set; }
     }

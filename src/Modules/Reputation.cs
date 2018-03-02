@@ -65,17 +65,17 @@ namespace FFA.Modules
         [Command("RepLeaderboards")]
         [Alias("replb", "top", "toprep")]
         [Summary("The most reputable users.")]
-        public async Task RepLeaderboardsAsync()
+        public async Task RepLeaderboardsAsync([Summary("15")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
         {
-            await Context.SendAsync(await _lbService.GetUserLbAsync(Context.Guild, x => x.Reputation), "The Most Reputable Users");
+            await Context.SendAsync(await _lbService.GetUserLbAsync(Context.Guild, x => x.Reputation, count), "The Most Reputable Users");
         }
 
         [Command("UnRepLeaderboards")]
         [Alias("unreplb", "bottomrep", "bottom")]
         [Summary("The least reputable users.")]
-        public async Task UnRepLeaderboardsAsync()
+        public async Task UnRepLeaderboardsAsync([Summary("20")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
         {
-            await Context.SendAsync(await _lbService.GetUserLbAsync(Context.Guild, x => x.Reputation, true), "The Least Reputable Users");
+            await Context.SendAsync(await _lbService.GetUserLbAsync(Context.Guild, x => x.Reputation, count, true), "The Least Reputable Users");
         }
     }
 }

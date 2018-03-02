@@ -48,10 +48,10 @@ namespace FFA.Common
         public const int TOP_MOD_COMMAND = 20, TOP_MOD = 30, TOP_COLOR = 40;
 
         // Maximums
-        public const int MAX_CLEAR = 100,  MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 1000, MAX_CMD_LENGTH = 200, MAX_CMD_NEW_LINES = 10;
+        public const int MAX_LB = 30, MAX_CLEAR = 100, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 1000, MAX_CMD_LENGTH = 200, MAX_CMD_NEW_LINES = 10;
 
         // Minimums
-        public const int MIN_CLEAR = 3;
+        public const int MIN_LB = 5, MIN_CLEAR = 3;
 
         // Regexes
         public static readonly Regex NEW_LINE_REGEX = new Regex(@"\r\n?|\n"), NUMBER_REGEX = new Regex(@"^\d+(\.\d+)?");

@@ -12,7 +12,6 @@ namespace FFA.Database.Models
         }
 
         public ulong UserId { get; set; }
-        public ulong GuildId { get; set; }
         public TimeSpan Length { get; set; }
     }
 }

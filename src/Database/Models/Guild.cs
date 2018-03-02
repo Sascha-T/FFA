@@ -3,8 +3,7 @@ namespace FFA.Database.Models
     public sealed class Guild : Entity
     {
         public Guild() { }
-
-        public ulong GuildId { get; set; }
+        
         public ulong? MutedRoleId { get; set; }
         public ulong? LogChannelId { get; set; }
         public ulong? RulesChannelId { get; set; }
