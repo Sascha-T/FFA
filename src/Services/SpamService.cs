@@ -1,5 +1,6 @@
 using FFA.Common;
 using FFA.Database.Models;
+using FFA.Entities.Service;
 using FFA.Entities.Spam;
 using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 namespace FFA.Services
 {
     // TODO: ensure all async methods are suffixed with Async
-    public sealed class SpamService
+    public sealed class SpamService : Service
     {
         private readonly ModerationService _modService;
         private readonly IMongoCollection<User> _dbUsers;

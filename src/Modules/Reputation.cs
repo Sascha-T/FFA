@@ -32,28 +32,28 @@ namespace FFA.Modules
 
         [Command("Rep")]
         [Summary("Give reputation to any user.")]
-        public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(Config.REP_CD)] [NoSelf] IGuildUser user)
+        public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(Config.REP_CD)] [NoSelf] IUser user)
         {
-            await _dbUsers.UpsertUserAsync(user, x => x.Reputation += Config.REP_INCREASE);
+            await _dbUsers.UpsertUserAsync(user.Id, Context.Guild.Id, x => x.Reputation += Config.REP_INCREASE);
             await Context.ReplyAsync($"You have successfully repped {user.Bold()}.");
         }
 
         [Command("UnRep")]
         [Summary("Remove reputation from any user.")]
-        public async Task UnRepAsync([Summary("PapaFag#6666")] [Cooldown(Config.UNREP_CD)] [NoSelf] IGuildUser user)
+        public async Task UnRepAsync([Summary("PapaFag#6666")] [Cooldown(Config.UNREP_CD)] [NoSelf] IUser user)
         {
-            await _dbUsers.UpsertUserAsync(user, x => x.Reputation -= Config.UNREP_DECREASE);
+            await _dbUsers.UpsertUserAsync(user.Id, Context.Guild.Id, x => x.Reputation -= Config.UNREP_DECREASE);
             await Context.ReplyAsync($"You have successfully unrepped {user.Bold()}.");
         }
 
         [Command("GetRep")]
         [Alias("GetRank")]
         [Summary("Get anyone's reputation.")]
-        public async Task GetRepAsync([Summary("Black Nugs#1234")] [Remainder] IGuildUser user = null)
+        public async Task GetRepAsync([Summary("Black Nugs#1234")] [Remainder] IUser user = null)
         {
             user = user ?? Context.GuildUser;
 
-            var dbUser = user.Id == Context.User.Id ? Context.DbUser : await _dbUsers.GetUserAsync(user.Id, user.GuildId);
+            var dbUser = user.Id == Context.User.Id ? Context.DbUser : await _dbUsers.GetUserAsync(user.Id, Context.Guild.Id);
             var guildDbUsers = await _dbUsers.WhereAsync(x => x.GuildId == Context.Guild.Id);
             var orderedDbUsers = guildDbUsers.OrderByDescending(x => x.Reputation).ToArray();
             var position = Array.FindIndex(orderedDbUsers, x => x.UserId == user.Id) + 1;

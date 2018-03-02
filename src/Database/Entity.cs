@@ -3,7 +3,7 @@ using System;
 
 namespace FFA.Database
 {
-    public class Entity
+    public abstract class Entity
     {
         public ObjectId Id { get; set; }
         public DateTimeOffset LastModified { get; set; }

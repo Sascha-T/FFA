@@ -1,5 +1,9 @@
 using Discord.Commands;
 using FFA.Common;
+using FFA.Database;
+using FFA.Entities.Event;
+using FFA.Entities.FFATimer;
+using FFA.Entities.Service;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System;
@@ -11,7 +15,7 @@ namespace FFA.Utility
     {
         public static void LoadServices(IServiceCollection services)
         {
-            var serviceTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.Namespace == "FFA.Services");
+            var serviceTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.BaseType == typeof(Service));
 
             foreach (var type in serviceTypes)
                 services.AddSingleton(type);
@@ -19,7 +23,7 @@ namespace FFA.Utility
 
         public static void LoadCollections(IServiceCollection services, IMongoDatabase db)
         {
-            var dbModelTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.Namespace == "FFA.Database.Models");
+            var dbModelTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.BaseType == typeof(Entity));
             var method = db.GetType().GetMethod("GetCollection");
 
             foreach (var model in dbModelTypes)
@@ -33,14 +37,14 @@ namespace FFA.Utility
         }
 
         public static void LoadEvents(IServiceProvider provider)
-            => ProviderLoad(provider, "FFA.Events");
+            => ProviderLoad(provider, typeof(Event));
 
         public static void LoadTimers(IServiceProvider provider)
-            => ProviderLoad(provider, "FFA.Timers");
+            => ProviderLoad(provider, typeof(FFATimer));
 
         public static void LoadReaders(CommandService commands)
         {
-            var readerTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.Namespace == "FFA.Readers");
+            var readerTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.BaseType == typeof(TypeReader));
             var method = commands.GetType().GetMethod("AddTypeReader", new Type[] { typeof(Type), typeof(TypeReader) });
 
             foreach (var readerType in readerTypes)
@@ -53,9 +57,9 @@ namespace FFA.Utility
             }
         }
 
-        public static void ProviderLoad(IServiceProvider provider, string ns)
+        public static void ProviderLoad(IServiceProvider provider, Type baseType)
         {
-            var serviceTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.Namespace == ns);
+            var serviceTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.BaseType == baseType);
 
             foreach (var service in serviceTypes)
             {

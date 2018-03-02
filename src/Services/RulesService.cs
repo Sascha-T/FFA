@@ -1,5 +1,6 @@
 using Discord;
 using FFA.Database.Models;
+using FFA.Entities.Service;
 using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using MongoDB.Driver;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public sealed class RulesService
+    public sealed class RulesService : Service
     {
         private readonly SendingService _sender;
         private readonly SemaphoreSlim _semaphore;

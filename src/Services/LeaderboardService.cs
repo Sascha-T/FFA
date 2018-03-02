@@ -1,6 +1,7 @@
 using Discord;
 using FFA.Common;
 using FFA.Database.Models;
+using FFA.Entities.Service;
 using FFA.Extensions.Database;
 using MongoDB.Driver;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public sealed class LeaderboardService
+    public sealed class LeaderboardService : Service
     {
         private readonly IMongoCollection<User> _dbUsers;
 

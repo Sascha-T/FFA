@@ -1,5 +1,6 @@
 using Discord;
 using FFA.Common;
+using FFA.Entities.Service;
 using FFA.Utility;
 using System;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public sealed class LoggingService
+    public sealed class LoggingService : Service
     {
         private readonly SemaphoreSlim _semaphore;
 
@@ -32,6 +33,9 @@ namespace FFA.Services
                 await Console.Out.WriteLineAsync($" {message}");
 
                 await File.AppendAllTextAsync(LogFileName(severity), $"{formattedTime} [{severity}] {message}\n");
+            }
+            catch
+            {
             }
             finally
             {

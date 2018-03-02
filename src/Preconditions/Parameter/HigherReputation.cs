@@ -17,7 +17,7 @@ namespace FFA.Preconditions.Parameter
         {
             var context = ctx as Context;
             var dbUsers = services.GetRequiredService<IMongoCollection<User>>();
-            var dbUser = await dbUsers.GetUserAsync(value as IGuildUser);
+            var dbUser = await dbUsers.GetUserAsync((value as IUser).Id, ctx.Guild.Id);
 
             if (context.DbUser.Reputation < dbUser.Reputation)
                 return PreconditionResult.FromError("You may not use this command on users with a higher reputation than yourself.");

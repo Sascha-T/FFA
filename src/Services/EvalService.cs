@@ -1,6 +1,7 @@
 using Discord;
 using Discord.WebSocket;
 using FFA.Entities.Eval;
+using FFA.Entities.Service;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Scripting;
 using MongoDB.Driver;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public sealed class EvalService
+    public sealed class EvalService : Service
     {
         private readonly SendingService _sender;
         private readonly RulesService _rulesService;

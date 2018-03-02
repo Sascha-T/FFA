@@ -1,5 +1,6 @@
 using FFA.Common;
 using FFA.Database.Models;
+using FFA.Entities.Service;
 using FFA.Extensions.Database;
 using MongoDB.Driver;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace FFA.Services
 {
     // TODO: organize services into sub folders
-    public sealed class CustomCmdService
+    public sealed class CustomCmdService : Service
     {
         private readonly IMongoCollection<CustomCmd> _dbCustomCmds;
 

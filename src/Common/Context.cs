@@ -45,7 +45,7 @@ namespace FFA.Common
         {
             if (Guild != null)
             {
-                DbUser = await _dbUsers.GetUserAsync(GuildUser);
+                DbUser = await _dbUsers.GetUserAsync(User.Id, Guild.Id);
                 DbGuild = await _dbGuilds.GetGuildAsync(Guild.Id);
             }
         }

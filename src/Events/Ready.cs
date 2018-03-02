@@ -1,6 +1,6 @@
 using Discord;
-using Discord.WebSocket;
 using FFA.Common;
+using FFA.Entities.Event;
 using FFA.Services;
 using FFA.Utility;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,38 +9,25 @@ using System.Threading.Tasks;
 
 namespace FFA.Events
 {
-    public sealed class Ready
+    public sealed class Ready : Event
     {
         private readonly IServiceProvider _provider;
-        private readonly DiscordSocketClient _client;
         private readonly LoggingService _logger;
 
-        public Ready(IServiceProvider provider)
+        public Ready(IServiceProvider provider) : base(provider)
         {
             _provider = provider;
-            _client = provider.GetRequiredService<DiscordSocketClient>();
             _logger = provider.GetRequiredService<LoggingService>();
 
             _client.Ready += OnReadyAsync;
         }
 
         private Task OnReadyAsync()
-        {
-            Task.Run(async () =>
+            => _taskService.TryRun(async () =>
             {
-                try
-                {
-                    Loader.LoadTimers(_provider);
+                Loader.LoadTimers(_provider);
 
-                    await _client.SetGameAsync(Config.GAME);
-                }
-                catch (Exception ex)
-                {
-                    await _logger.LogAsync(LogSeverity.Error, ex.ToString());
-                }
+                await _client.SetGameAsync(Config.GAME);
             });
-
-            return Task.CompletedTask;
-        }
     }
 }

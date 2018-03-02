@@ -1,9 +1,10 @@
+using FFA.Entities.Service;
 using System;
 using System.Collections.Concurrent;
 
 namespace FFA.Services
 {
-    public class RateLimitService
+    public class RateLimitService : Service
     {
         private readonly ConcurrentDictionary<ulong, DateTimeOffset> _ignoredUsers = new ConcurrentDictionary<ulong, DateTimeOffset>();
 

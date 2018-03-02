@@ -1,4 +1,5 @@
 using FFA.Database.Models;
+using FFA.Entities.Service;
 using FFA.Extensions.Database;
 using MongoDB.Driver;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public sealed class ReputationService
+    public sealed class ReputationService : Service
     {
         private readonly IMongoCollection<User> _dbUsers;
 

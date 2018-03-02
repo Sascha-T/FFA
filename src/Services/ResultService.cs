@@ -2,6 +2,7 @@ using Discord;
 using Discord.Commands;
 using Discord.Net;
 using FFA.Common;
+using FFA.Entities.Service;
 using FFA.Extensions.Discord;
 using FFA.Extensions.System;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public sealed class ResultService
+    public sealed class ResultService : Service
     {
         private readonly LoggingService _logger;
         private readonly CommandService _commands;

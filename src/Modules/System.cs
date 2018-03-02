@@ -23,6 +23,7 @@ namespace FFA.Modules
         [Summary("Information about all the commands.")]
         public async Task HelpAsync([Summary("rep")] string commandName = null)
         {
+            // TODO: move to service
             if (!string.IsNullOrWhiteSpace(commandName))
             {
                 var cmd = _commandService.Commands.FirstOrDefault(x => x.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase) ||

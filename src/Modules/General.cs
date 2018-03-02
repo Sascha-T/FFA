@@ -40,8 +40,7 @@ namespace FFA.Modules
             await Context.GuildUser.AddRoleAsync(role);
             await Context.ReplyAsync("You have successfully set your role color.");
         }
-
-        // TODO: return custom runtime result instead of using loads of if/else + ReplyErrorAsync!!!
+        
         [Command("AddCommand")]
         [Alias("addcmd")]
         [Summary("Add any custom command you please.")]

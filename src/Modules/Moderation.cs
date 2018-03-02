@@ -31,7 +31,7 @@ namespace FFA.Modules
         [Command("Mute")]
         [Summary("Mute any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task MuteAsync([Summary("Jimbo#5555")] [NoSelf] [HigherReputation] IGuildUser guildUser,
+        public async Task MuteAsync([Summary("Jimbo#5555")] [NoSelf] [HigherReputation] IUser user,
             [Summary("2c")] Rule rule,
             [Summary("8h")] [MinimumHours(Config.MIN_MUTE_LENGTH)] TimeSpan length,
             [Summary("stop with all that ruckus!")] [Remainder]
@@ -40,22 +40,21 @@ namespace FFA.Modules
             // TODO: add inform user!
             if (!Context.DbGuild.MutedRoleId.HasValue)
             {
+                // TODO: move to precondition
                 await Context.ReplyErrorAsync("The muted role has not been set.");
             }
             else if (rule.MaxMuteLength.HasValue && length > rule.MaxMuteLength)
             {
                 await Context.ReplyErrorAsync($"The maximum mute length of this rule is {rule.MaxMuteLength.Value.TotalHours}h.");
             }
-            else if (guildUser.RoleIds.Contains(Context.DbGuild.MutedRoleId.Value))
-            {
-                await Context.ReplyErrorAsync("This user is already muted.");
-            }
             else
             {
-                await guildUser.AddRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
-                await _dbMutes.InsertOneAsync(new Mute(Context.Guild.Id, guildUser.Id, length));
-                await Context.ReplyAsync($"You have successfully muted {guildUser.Bold()}.");
-                await _modService.LogMuteAsync(Context, guildUser, rule, length, reason);
+                var guildUser = await Context.Guild.GetUserAsync(user.Id);
+
+                await guildUser?.AddRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
+                await _dbMutes.InsertOneAsync(new Mute(Context.Guild.Id, user.Id, length));
+                await Context.ReplyAsync($"You have successfully muted {user.Bold()}.");
+                await _modService.LogMuteAsync(Context, user, rule, length, reason);
             }
         }
         
@@ -87,7 +86,7 @@ namespace FFA.Modules
         [Alias("prune", "purge")]
         [Summary("Delete a specified amount of messages sent by any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task Clear([Summary("SteveJr#3333")] [NoSelf] IUser user,
+        public async Task Clear([Summary("SteveJr#3333")] [NoSelf] [HigherReputation] IUser user,
             [Summary("3a")] Rule rule,
             [Summary("20")] [Between(Config.MIN_CLEAR, Config.MAX_CLEAR)] int quantity = Config.CLEAR_DEFAULT,
             [Summary("that's enough pornos for tonight Steve")] [Remainder]

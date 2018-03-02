@@ -1,4 +1,3 @@
-using Discord;
 using FFA.Database.Models;
 using MongoDB.Driver;
 using System;
@@ -14,18 +13,12 @@ namespace FFA.Extensions.Database
                 x.UserId = userId;
                 x.GuildId = guildId;
             });
-
-        public static Task<User> GetUserAsync(this IMongoCollection<User> collection, IGuildUser guildUser)
-            => collection.GetUserAsync(guildUser.Id, guildUser.GuildId);
-
+        
         public static Task UpsertUserAsync(this IMongoCollection<User> collection, ulong userId, ulong guildId, Action<User> update)
             => collection.UpsertAsync(x => x.UserId == userId && x.GuildId == guildId, update, x =>
             {
                 x.UserId = userId;
                 x.GuildId = guildId;
             });
-
-        public static Task UpsertUserAsync(this IMongoCollection<User> collection, IGuildUser guildUser, Action<User> update)
-            => collection.UpsertUserAsync(guildUser.Id, guildUser.GuildId, update);
     }
 }

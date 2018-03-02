@@ -1,6 +1,6 @@
 using Discord;
-using Discord.WebSocket;
 using FFA.Database.Models;
+using FFA.Entities.Event;
 using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using FFA.Services;
@@ -12,18 +12,16 @@ using System.Threading.Tasks;
 
 namespace FFA.Events
 {
-    public sealed class UserJoined
+    public sealed class UserJoined : Event
     {
         private readonly IServiceProvider _provider;
-        private readonly DiscordSocketClient _client;
         private readonly LoggingService _logger;
         private readonly IMongoCollection<Guild> _dbGuilds;
         private readonly IMongoCollection<Mute> _dbMutes;
 
-        public UserJoined(IServiceProvider provider)
+        public UserJoined(IServiceProvider provider) : base(provider)
         {
             _provider = provider;
-            _client = _provider.GetRequiredService<DiscordSocketClient>();
             _logger = _provider.GetRequiredService<LoggingService>();
             _dbGuilds = _provider.GetRequiredService<IMongoCollection<Guild>>();
             _dbMutes = _provider.GetRequiredService<IMongoCollection<Mute>>();
@@ -32,30 +30,19 @@ namespace FFA.Events
         }
 
         private Task OnUserJoinedAsync(IGuildUser guildUser)
-        {
-            Task.Run(async () =>
+            => _taskService.TryRun(async () =>
             {
-                try
-                {
-                    var dbGuild = await _dbGuilds.GetGuildAsync(guildUser.Guild.Id);
+                var dbGuild = await _dbGuilds.GetGuildAsync(guildUser.Guild.Id);
 
-                    if (!dbGuild.MutedRoleId.HasValue || !await _dbMutes.AnyAsync(x => x.GuildId == guildUser.Guild.Id && x.UserId == guildUser.Id))
-                        return;
+                if (!dbGuild.MutedRoleId.HasValue || !await _dbMutes.AnyAsync(x => x.GuildId == guildUser.Guild.Id && x.UserId == guildUser.Id))
+                    return;
 
-                    var mutedRole = guildUser.Guild.GetRole(dbGuild.MutedRoleId.Value);
+                var mutedRole = guildUser.Guild.GetRole(dbGuild.MutedRoleId.Value);
 
-                    if (mutedRole == null || !await mutedRole.CanUseAsync())
-                        return;
+                if (mutedRole == null || !await mutedRole.CanUseAsync())
+                    return;
 
-                    await guildUser.AddRoleAsync(mutedRole);
-                }
-                catch (Exception ex)
-                {
-                    await _logger.LogAsync(LogSeverity.Error, ex.ToString());
-                }
+                await guildUser.AddRoleAsync(mutedRole);
             });
-
-            return Task.CompletedTask;
-        }
     }
 }

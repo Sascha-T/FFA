@@ -39,6 +39,7 @@ namespace FFA.Modules
         {
             var fileName = _logger.LogFileName(LogSeverity.Error);
 
+            // TODO: make precondition
             if (!File.Exists(fileName))
                 await Context.ReplyErrorAsync("No error log file has been created.");
             else

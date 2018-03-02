@@ -1,6 +1,7 @@
 using Discord;
 using FFA.Common;
 using FFA.Database.Models;
+using FFA.Entities.Service;
 using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using MongoDB.Driver;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace FFA.Services
 {
     // TODO: proper types, int vs uint, etc
-    public sealed class ModerationService
+    public sealed class ModerationService : Service
     {
         private readonly IMongoCollection<Guild> _dbGuilds;
 

@@ -1,5 +1,6 @@
 using Discord;
 using FFA.Common;
+using FFA.Entities.Service;
 using FFA.Extensions.Discord;
 using FFA.Extensions.System;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Services
 {
-    public sealed class SendingService
+    public sealed class SendingService : Service
     {
         private readonly ThreadLocal<Random> _random;
 
