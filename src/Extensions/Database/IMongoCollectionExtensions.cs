@@ -36,28 +36,15 @@ namespace FFA.Extensions.Database
             return entity == default(T) ? null : entity;
         }
 
-        public static async Task<T> GetAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter,
-            Action<T> factory) where T : Entity, new()
-        {
-            var search = await collection.FindAsync(filter);
-            var result = await search.FirstOrDefaultAsync();
-
-            if (result == default(T))
+        public static Task<T> GetAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter, UpdateDefinition<T> factory)
+            where T : Entity
+            => collection.FindOneAndUpdateAsync(filter, factory, new FindOneAndUpdateOptions<T, T>
             {
-                var entity = new T();
+                IsUpsert = true,
+                ReturnDocument = ReturnDocument.After
+            });
 
-                factory(entity);
-
-                await collection.InsertOneAsync(entity);
-
-                return entity;
-            }
-
-            return result;
-        }
-
-        public static async Task<T> UpdateAsync<T>(this IMongoCollection<T> collection, T entity,
-            Action<T> update) where T : Entity
+        public static async Task<T> UpdateAsync<T>(this IMongoCollection<T> collection, T entity, Action<T> update) where T : Entity
         {
             update(entity);
             entity.LastModified = DateTimeOffset.UtcNow;
@@ -68,7 +55,7 @@ namespace FFA.Extensions.Database
         }
 
         public static async Task<T> UpsertAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter,
-            Action<T> update, Action<T> factory) where T : Entity, new()
+            Action<T> update, UpdateDefinition<T> factory) where T : Entity
             => await collection.UpdateAsync(await collection.GetAsync(filter, factory), update);
     }
 }

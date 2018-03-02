@@ -22,7 +22,7 @@ namespace FFA.Services
             _sender = sender;
             _dbGuilds = dbGuilds;
             _dbRules = dbRules;
-            _semaphore = new SemaphoreSlim(1);
+            _semaphore = new SemaphoreSlim(1, 1);
         }
 
         public async Task UpdateAsync(IGuild guild)

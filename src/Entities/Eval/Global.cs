@@ -4,6 +4,7 @@ using MongoDB.Driver;
 
 namespace FFA.Entities.Eval
 {
+    // TODO: find genius way to add every service and collection to globals
     public class Globals
     {
         public Globals(IDiscordClient client, IGuild guild, IMongoDatabase database, SendingService sender, RulesService rulesService,

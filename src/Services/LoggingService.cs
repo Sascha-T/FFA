@@ -15,7 +15,7 @@ namespace FFA.Services
 
         public LoggingService()
         {
-            _semaphore = new SemaphoreSlim(1);
+            _semaphore = new SemaphoreSlim(1, 1);
 
             Directory.CreateDirectory(Config.LOGS_DIRECTORY);
         }
@@ -33,9 +33,6 @@ namespace FFA.Services
                 await Console.Out.WriteLineAsync($" {message}");
 
                 await File.AppendAllTextAsync(LogFileName(severity), $"{formattedTime} [{severity}] {message}\n");
-            }
-            catch
-            {
             }
             finally
             {
