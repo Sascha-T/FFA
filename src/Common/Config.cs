@@ -36,7 +36,7 @@ namespace FFA.Common
 
         // Spam settings
         public const int SPAM_LIMIT = 5, SPAM_REP_PENALTY = 2;
-        public static readonly TimeSpan SPAM_MUTE_LENGTH = TimeSpan.FromHours(2), SPAM_DURATION = TimeSpan.FromSeconds(4);
+        public static readonly TimeSpan SPAM_MUTE_LENGTH = TimeSpan.FromHours(12), SPAM_DURATION = TimeSpan.FromSeconds(5);
 
         // Rate limit settings
         public static readonly TimeSpan IGNORE_DURATION = TimeSpan.FromHours(2);

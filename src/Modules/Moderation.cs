@@ -51,6 +51,7 @@ namespace FFA.Modules
                 await _dbMutes.InsertOneAsync(new Mute(Context.Guild.Id, user.Id, length));
                 await Context.ReplyAsync($"You have successfully muted {user.Bold()}.");
                 await _modService.LogMuteAsync(Context, user, rule, length, reason);
+                await _modService.InformUserAsync(Context, user, rule, length, reason);
             }
         }
         

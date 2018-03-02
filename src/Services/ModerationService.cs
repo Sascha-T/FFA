@@ -15,13 +15,32 @@ namespace FFA.Services
     public sealed class ModerationService : Service
     {
         private readonly IMongoCollection<Guild> _dbGuilds;
+        private readonly SendingService _sender;
 
-        public ModerationService(IMongoCollection<Guild> dbGuilds)
+        public ModerationService(IMongoCollection<Guild> dbGuilds, SendingService sender)
         {
             _dbGuilds = dbGuilds;
+            _sender = sender;
         }
 
-        public Task LogMuteAsync(Context context, IUser subject, Rule rule, TimeSpan length, string reason = null)
+        public Task InformUserAsync(Context ctx, IUser subject, Rule rule, TimeSpan length, string reason = null)
+        {
+            reason = string.IsNullOrWhiteSpace(reason) ? "" : $"\n{ctx.User.Bold()} has provided the following reason:```\n{reason}```";
+
+            return _sender.TryDMAsync(subject,
+                $"{ctx.User.Bold()} has muted you for **{length.TotalHours}h** for breaking the following rule:" +
+                $"```\n{rule.Content}```{reason}\n**If this mute was unjustified or invalid, there are several steps you must take to " +
+                $"vindicate yourself:**\n\n**1.** You must `{Config.PREFIX}unrep \"{ctx.User}\"`. This is essential as it will prevent " +
+                $"{ctx.User.Bold()} from unjustly muting others. This command must be used inside a guild channel. If there are no " +
+                $"channels dedicated to allow muted users to use commands, please contact the guild owner.\n\n**2.** You  must " +
+                $"use `{Config.PREFIX}replb 30` to DM these moderators with undeniable proof of your innocence. You must explain " +
+                $"in detail why {ctx.User.Bold()}'s mute was invalid, and why it should be reverted.\n\n**3.** You must ensure " +
+                $"{ctx.User.Bold()} get's muted for unlawful punishment. You may do this by lobbying other moderators, or by gaining " +
+                $"enough reputation to do it yourself. If there is no unlawful punishment rule, create a poll which adds it, and lobby " +
+                $"other users to vote in favor of said poll.", guild: ctx.Guild);
+        }
+
+            public Task LogMuteAsync(Context ctx, IUser subject, Rule rule, TimeSpan length, string reason = null)
         {
             var elements = new List<(string, string)>
             {
@@ -34,10 +53,10 @@ namespace FFA.Services
             if (!string.IsNullOrWhiteSpace(reason))
                 elements.Add(("Reason", reason));
 
-            return LogAsync(context.Guild, elements, Config.MUTE_COLOR, context.User);
+            return LogAsync(ctx.Guild, elements, Config.MUTE_COLOR, ctx.User);
         }
 
-        public Task LogUnmuteAsync(Context context, IUser subject, string reason = null)
+        public Task LogUnmuteAsync(Context ctx, IUser subject, string reason = null)
         {
             var elements = new List<(string, string)>
             {
@@ -48,14 +67,14 @@ namespace FFA.Services
             if (!string.IsNullOrWhiteSpace(reason))
                 elements.Add(("Reason", reason));
 
-            return LogAsync(context.Guild, elements, Config.UNMUTE_COLOR, context.User);
+            return LogAsync(ctx.Guild, elements, Config.UNMUTE_COLOR, ctx.User);
         }
 
-        public Task LogAutoMuteAsync(Context context, TimeSpan length)
-            => LogAsync(context.Guild, new(string, string)[]
+        public Task LogAutoMuteAsync(Context ctx, TimeSpan length)
+            => LogAsync(ctx.Guild, new(string, string)[]
             {
                 ("Action", "Automatic Mute"),
-                ("User", $"{context.User} ({context.User.Id})"),
+                ("User", $"{ctx.User} ({ctx.User.Id})"),
                 ("Length", $"{length.TotalHours}h")
             }, Config.MUTE_COLOR);
 
@@ -66,7 +85,7 @@ namespace FFA.Services
                 ("User", $"{subject} ({subject.Id})")
             }, Config.UNMUTE_COLOR);
 
-        public Task LogClearAsync(Context context, IUser subject, Rule rule, int quantity, string reason = null)
+        public Task LogClearAsync(Context ctx, IUser subject, Rule rule, int quantity, string reason = null)
         {
             var elements = new List<(string, string)>
             {
@@ -79,7 +98,7 @@ namespace FFA.Services
             if (!string.IsNullOrWhiteSpace(reason))
                 elements.Add(("Reason", reason));
 
-            return LogAsync(context.Guild, elements, Config.CLEAR_COLOR, context.User);
+            return LogAsync(ctx.Guild, elements, Config.CLEAR_COLOR, ctx.User);
         }
 
         public async Task LogAsync(IGuild guild, IReadOnlyCollection<(string, string)> elements, Color color, IUser moderator = null)
