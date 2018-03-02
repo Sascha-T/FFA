@@ -50,7 +50,7 @@ namespace FFA.Modules
         [Summary("Add any custom command you please.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task AddCommandAsync([Summary("retarded")] [UniqueCustomCmdAttribute] string name,
-            [Summary("VIM2META LOL DUDE IS THICC AS BALLS")] [Remainder] [MaximumLength(Config.MAX_CMD_LENGTH)] CmdResponse response = null)
+            [Summary("VIM2META LOL DUDE IS THICC AS BALLS")] [Remainder] [MaximumLength(Config.MAX_CMD_LENGTH)] CmdResponse response)
         {
             var newCmd = new CustomCmd(Context.User.Id, Context.Guild.Id, name.ToLower(), response.Value);
             await _dbCustomCmds.InsertOneAsync(newCmd);

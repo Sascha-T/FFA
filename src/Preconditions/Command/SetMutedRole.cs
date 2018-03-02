@@ -12,9 +12,7 @@ namespace FFA.Preconditions.Command
             var context = ctx as Context;
 
             if (!context.DbGuild.MutedRoleId.HasValue)
-            {
                 return Task.FromResult(PreconditionResult.FromError(("The muted role has not been set.")));
-            }
 
             return Task.FromResult(PreconditionResult.FromSuccess());
         }
