@@ -4,7 +4,6 @@ using Discord.Commands;
 
 namespace FFA.Preconditions.Parameter
 {
-    // TODO: no minimum hours? only generic minimum attribute?
     public sealed class MinimumHoursAttribute : ParameterPreconditionAttribute
     {
         private readonly uint _minimumHours;
