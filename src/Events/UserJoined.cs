@@ -37,7 +37,7 @@ namespace FFA.Events
 
                 var dbGuild = await _dbGuilds.GetGuildAsync(guildUser.Guild.Id);
 
-                if (!dbGuild.MutedRoleId.HasValue || !await _dbMutes.AnyAsync(x => x.GuildId == guildUser.Guild.Id && x.UserId == guildUser.Id))
+                if (!dbGuild.MutedRoleId.HasValue || !await _dbMutes.AnyMuteAsync(guildUser.Id, guildUser.GuildId))
                     return;
 
                 var mutedRole = guildUser.Guild.GetRole(dbGuild.MutedRoleId.Value);

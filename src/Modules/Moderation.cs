@@ -39,12 +39,7 @@ namespace FFA.Modules
             [MaximumLength(Config.MAX_REASON_LENGTH)] string reason = null)
         {
             // TODO: add inform user!
-            if (!Context.DbGuild.MutedRoleId.HasValue)
-            {
-                // TODO: move to precondition
-                await Context.ReplyErrorAsync("The muted role has not been set.");
-            }
-            else if (rule.MaxMuteLength.HasValue && length > rule.MaxMuteLength)
+            if (rule.MaxMuteLength.HasValue && length > rule.MaxMuteLength)
             {
                 await Context.ReplyErrorAsync($"The maximum mute length of this rule is {rule.MaxMuteLength.Value.TotalHours}h.");
             }
@@ -66,11 +61,7 @@ namespace FFA.Modules
             [Summary("you best stop flirting with Mrs Ruckus")] [Remainder]
             [MaximumLength(Config.MAX_REASON_LENGTH)] string reason)
         {
-            if (!Context.DbGuild.MutedRoleId.HasValue)
-            {
-                await Context.ReplyErrorAsync("The muted role has not been set.");
-            }
-            else if (!guildUser.RoleIds.Contains(Context.DbGuild.MutedRoleId.Value))
+            if (!guildUser.RoleIds.Contains(Context.DbGuild.MutedRoleId.Value))
             {
                 await Context.ReplyErrorAsync("This user is not muted.");
             }
