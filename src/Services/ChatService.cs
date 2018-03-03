@@ -5,6 +5,7 @@ using FFA.Extensions.Database;
 using MongoDB.Driver;
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FFA.Services
@@ -19,11 +20,16 @@ namespace FFA.Services
             _dbUsers = dbUsers;
         }
 
-        public Task ApplyAsync(ulong userId, ulong guildId)
+        public Task ApplyAsync(Context ctx)
         {
-            if (!_cooldowns.TryGetValue(userId, out DateTimeOffset endsAt))
+            if (ctx.Guild == null)
+                return Task.CompletedTask;
+            else if (ctx.GuildUser.RoleIds.Any(x => x == ctx.DbGuild.MutedRoleId))
+                return Task.CompletedTask;
+
+            if (!_cooldowns.TryGetValue(ctx.User.Id, out DateTimeOffset endsAt))
             {
-                _cooldowns.TryAdd(userId, GetEndsAt());
+                _cooldowns.TryAdd(ctx.User.Id, GetEndsAt());
             }
             else if (endsAt.CompareTo(DateTimeOffset.UtcNow) > 0)
             {
@@ -31,10 +37,10 @@ namespace FFA.Services
             }
             else
             {
-                _cooldowns.TryUpdate(userId, GetEndsAt(), endsAt);
+                _cooldowns.TryUpdate(ctx.User.Id, GetEndsAt(), endsAt);
             }
 
-            return _dbUsers.UpsertUserAsync(userId, guildId, x => x.Reputation += Config.CHAT_REWARD);
+            return _dbUsers.UpsertUserAsync(ctx.User.Id, ctx.Guild.Id, x => x.Reputation += Config.CHAT_REWARD);
         }
 
         private static DateTimeOffset GetEndsAt()

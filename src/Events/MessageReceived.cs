@@ -57,7 +57,7 @@ namespace FFA.Events
 
                 if (!msg.HasStringPrefix(Config.PREFIX, ref argPos))
                 {
-                    await _chatService.ApplyAsync(ctx.User.Id, ctx.Guild.Id);
+                    await _chatService.ApplyAsync(ctx);
                     return;
                 }
 
