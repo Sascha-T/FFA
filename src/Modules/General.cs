@@ -99,6 +99,5 @@ namespace FFA.Modules
                 await Context.SendAsync(description, $"{user}'s Cooldowns");
             }
         }
-        
     }
 }
