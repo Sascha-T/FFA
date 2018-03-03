@@ -1,5 +1,7 @@
 using Discord;
+using FFA.Database.Models;
 using Microsoft.CodeAnalysis.Scripting;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -31,18 +33,27 @@ namespace FFA.Common
             "general`. You may also view all commands by using `" + PREFIX + "commands`. If you wish to view the progress " +
             "of this bot, or simply support the creators, you may join the official FFA server here: " + INVITE_LINK + ".";
 
+        // Chat settings
+        public static readonly TimeSpan CHAT_SERVICE_DELAY = TimeSpan.FromSeconds(30);
+        public const double CHAT_REWARD = 0.1;
+
+        // Reputation decay settings
+        public const double DECAY_MUL = 0.998;
+        public static readonly UpdateDefinition<User> DECAY_UPDATE = new UpdateDefinitionBuilder<User>().Mul(x => x.Reputation, DECAY_MUL);
+
         // Moderation settings
         public const int MIN_MUTE_LENGTH = 1, CLEAR_DELETE_DELAY = 3000;
 
         // Spam settings
-        public const int SPAM_LIMIT = 5, SPAM_REP_PENALTY = 2;
+        public const double SPAM_REP_PENALTY = 2;
+        public const int SPAM_LIMIT = 5; 
         public static readonly TimeSpan SPAM_MUTE_LENGTH = TimeSpan.FromHours(6), SPAM_DURATION = TimeSpan.FromSeconds(4);
 
         // Rate limit settings
         public static readonly TimeSpan IGNORE_DURATION = TimeSpan.FromHours(2);
 
         // Reputation commands
-        public const int REP_INCREASE = 1, UNREP_DECREASE = 1;
+        public const double REP_INCREASE = 1, UNREP_DECREASE = 1;
 
         // Reputation requirements
         public const int TOP_MOD_COMMAND = 20, TOP_MOD = 30, TOP_COLOR = 40;
@@ -63,7 +74,7 @@ namespace FFA.Common
         public const int REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1;
 
         // Timers in milliseconds
-        public const int AUTO_UNMUTE_TIMER = 60000;
+        public const int AUTO_UNMUTE_TIMER = 60000, REP_DECAY_TIMER = 3600000;
 
         // Logs
         public const string LOGS_DIRECTORY = "logs/";

@@ -13,6 +13,7 @@ namespace FFA.Events
     public sealed class MessageReceived : Event
     {
         private readonly CommandService _commandService;
+        private readonly ChatService _chatService;
         private readonly ResultService _resultService;
         private readonly SpamService _spamService;
         private readonly RateLimitService _rateLimitService;
@@ -23,6 +24,7 @@ namespace FFA.Events
         {
             _provider = provider;
             _commandService = _provider.GetRequiredService<CommandService>();
+            _chatService = _provider.GetRequiredService<ChatService>();
             _resultService = _provider.GetRequiredService<ResultService>();
             _spamService = _provider.GetRequiredService<SpamService>();
             _rateLimitService = _provider.GetRequiredService<RateLimitService>();
@@ -39,26 +41,29 @@ namespace FFA.Events
                 if (msg == null || msg.Author.IsBot)
                     return;
 
-                var context = new Context(_client, msg, _provider);
+                var ctx = new Context(_client, msg, _provider);
 
-                if (context.Channel is ITextChannel textChannel && !await textChannel.CanSendAsync())
+                if (ctx.Channel is ITextChannel textChannel && !await textChannel.CanSendAsync())
                     return;
 
-                await context.InitializeAsync();
+                await ctx.InitializeAsync();
 
-                if (_rateLimitService.IsIgnored(context.User.Id))
+                if (_rateLimitService.IsIgnored(ctx.User.Id))
                     return;
-                else if (context.Guild != null && context.DbGuild.AutoMute && !await _spamService.AuthenticateAsync(context))
+                else if (ctx.Guild != null && ctx.DbGuild.AutoMute && !await _spamService.AuthenticateAsync(ctx))
                     return;
 
                 int argPos = 0;
 
                 if (!msg.HasStringPrefix(Config.PREFIX, ref argPos))
+                {
+                    await _chatService.ApplyAsync(ctx.User.Id, ctx.Guild.Id);
                     return;
+                }
 
-                var result = await _commandService.ExecuteAsync(context, argPos, _provider);
+                var result = await _commandService.ExecuteAsync(ctx, argPos, _provider);
 
-                await _resultService.HandleResultAsync(context, result, argPos);
+                await _resultService.HandleResultAsync(ctx, result, argPos);
             });
     }
 }

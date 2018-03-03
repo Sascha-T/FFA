@@ -61,7 +61,7 @@ namespace FFA.Modules
             var orderedDbUsers = guildDbUsers.OrderByDescending(x => x.Reputation).ToArray();
             var position = Array.FindIndex(orderedDbUsers, x => x.UserId == user.Id) + 1;
 
-            await Context.SendAsync($"**Reputation:** {dbUser.Reputation}\n**Rank:** #{position}", $"{user}'s Reputation");
+            await Context.SendAsync($"**Reputation:** {dbUser.Reputation.ToString("F")}\n**Rank:** #{position}", $"{user}'s Reputation");
         }
 
         [Command("RepLeaderboards")]

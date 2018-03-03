@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-// TODO: clear all duplicates from DB!
+// TODO: custom user type reader to do rest api fetch for mentions/id
 // TODO: README, contributing, all other github things.
 // TODO: move all command checks to preconditions!
 namespace FFA

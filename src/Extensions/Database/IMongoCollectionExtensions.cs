@@ -13,7 +13,7 @@ namespace FFA.Extensions.Database
         public static async Task<bool> AnyAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
             => await collection.CountAsync(filter) != 0;
 
-        public static async Task<IList<T>> WhereAsync<T>(this IMongoCollection<T> collection)
+        public static async Task<IList<T>> FindAsync<T>(this IMongoCollection<T> collection)
         {
             var result = await collection.FindAsync(FilterDefinition<T>.Empty);
             return await result.ToListAsync();

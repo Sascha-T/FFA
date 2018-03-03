@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace FFA.Services
 {
-    public sealed class SystemService : Service
+    public sealed class ListService : Service
     {
         public string ListCommands(IEnumerable<CommandInfo> cmds)
             => List(cmds, x => x.Name, x => x.Name.Length, x => x.Summary);

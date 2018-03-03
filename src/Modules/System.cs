@@ -15,9 +15,9 @@ namespace FFA.Modules
     public sealed class System : ModuleBase<Context>
     {
         private readonly CommandService _commandService;
-        private readonly SystemService _systemService;
+        private readonly ListService _systemService;
 
-        public System(CommandService commandService, SystemService systemService)
+        public System(CommandService commandService, ListService systemService)
         {
             _commandService = commandService;
             _systemService = systemService;
