@@ -32,7 +32,7 @@ namespace FFA.Services
                 var user = await guild.GetUserAsync(orderedArr[i].UserId);
 
                 if (user != null)
-                    desc += $"{(++pos)}. **{user}:** {orderedArr[i].Reputation.ToString("F")}\n";
+                    desc += $"{(++pos)}. **{user}:** {orderedArr[i].Reputation.ToString("F2")}\n";
 
                 if (pos == quantity)
                     break;
