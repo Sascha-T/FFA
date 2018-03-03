@@ -33,7 +33,8 @@ namespace FFA.Modules
 
         [Command("Rep")]
         [Summary("Give reputation to any user.")]
-        public async Task RepAsync([Summary("AlabamaTrigger#0001")] [Cooldown(Config.REP_CD)] [NoSelf] IUser user)
+        [Cooldown(Config.REP_CD)]
+        public async Task RepAsync([Summary("AlabamaTrigger#0001")] [NoSelf] IUser user)
         {
             await _dbUsers.UpsertUserAsync(user.Id, Context.Guild.Id, x => x.Reputation += Config.REP_INCREASE);
             await Context.ReplyAsync($"You have successfully repped {user.Bold()}.");
@@ -41,7 +42,8 @@ namespace FFA.Modules
 
         [Command("UnRep")]
         [Summary("Remove reputation from any user.")]
-        public async Task UnRepAsync([Summary("PapaFag#6666")] [Cooldown(Config.UNREP_CD)] [NoSelf] IUser user)
+        [Cooldown(Config.UNREP_CD)]
+        public async Task UnRepAsync([Summary("PapaFag#6666")] [NoSelf] IUser user)
         {
             await _dbUsers.UpsertUserAsync(user.Id, Context.Guild.Id, x => x.Reputation -= Config.UNREP_DECREASE);
             await Context.ReplyAsync($"You have successfully unrepped {user.Bold()}.");

@@ -58,8 +58,7 @@ namespace FFA.Events
 
                 var result = await _commandService.ExecuteAsync(context, argPos, _provider);
 
-                if (!result.IsSuccess)
-                    await _resultService.HandleResultAsync(context, result, argPos);
+                await _resultService.HandleResultAsync(context, result, argPos);
             });
     }
 }

@@ -35,7 +35,8 @@ namespace FFA.Modules
         [Summary("Give yourself a role with any color you please.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         [Top(Config.TOP_COLOR)]
-        public async Task ColorAsync([Summary("#FF0000")] [Remainder] [Cooldown(Config.COLOR_CD)] Color color)
+        [Cooldown(Config.COLOR_CD)]
+        public async Task ColorAsync([Summary("#FF0000")] [Remainder] Color color)
         {
             var role = await _colorRoleService.GetOrCreateAsync(Context.Guild, _colorRoleService.FormatColor(color), color);
             var existingColorRoles = Context.GuildUser.GetRoles().Where(x => x.Name.StartsWith('#'));
@@ -62,9 +63,9 @@ namespace FFA.Modules
         [Alias("modcommand", "modcmd", "modifycmd")]
         [Summary("Modify an existing custom command.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
+        [Cooldown(Config.MOD_CMD_CD)]
         public async Task ModifyCommandAsync([Summary("vim2meta")] CustomCmd command,
-            [Summary("RETARD THAT'S AS BLIND AS ME GRAN")] [Remainder] [Cooldown(Config.MOD_CMD_CD)]
-            [MaximumLength(Config.MAX_CMD_LENGTH)] CmdResponse response = null)
+            [Summary("RETARD THAT'S AS BLIND AS ME GRAN")] [Remainder] [MaximumLength(Config.MAX_CMD_LENGTH)] CmdResponse response = null)
         {
             await _dbCustomCmds.UpdateAsync(command, x => x.Response = response.Value);
             await Context.ReplyAsync("You have successfully updated this command.");

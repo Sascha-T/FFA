@@ -1,56 +1,32 @@
 using Discord.Commands;
+using FFA.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 namespace FFA.Preconditions.Parameter
 {
-    // TODO: no paramter cheap hack
-    public sealed class CooldownAttribute : ParameterPreconditionAttribute
+    public sealed class CooldownAttribute : PreconditionAttribute
     {
-        private readonly ConcurrentDictionary<Cooldown, DateTimeOffset> _cooldowns = new ConcurrentDictionary<Cooldown, DateTimeOffset>();
-        private readonly TimeSpan _cooldownLength;
+        public TimeSpan CooldownLength { get; }
 
         public CooldownAttribute(int hours)
         {
-            _cooldownLength = TimeSpan.FromHours(hours);
+            CooldownLength = TimeSpan.FromHours(hours);
         }
 
-        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value,
-            IServiceProvider services)
+        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo cmd, IServiceProvider services)
         {
-            var key = new Cooldown(context.User.Id, parameter.Command.GetHashCode());
+            var cooldownService = services.GetRequiredService<CooldownService>();
+            var cooldown = await cooldownService.GetCooldownAsync(context.User.Id, context.Guild.Id, cmd);
 
-            if (_cooldowns.TryGetValue(key, out DateTimeOffset endsAt))
+            if (cooldown != null)
             {
-                var difference = endsAt.Subtract(DateTimeOffset.UtcNow);
-
-                // TODO: Make cooldown response slick?
-                if (difference.Ticks > 0)
-                    return Task.FromResult(PreconditionResult.FromError($"You may use this command in {difference.ToString(@"hh\:mm\:ss")}."));
-
-                var time = DateTimeOffset.UtcNow.Add(_cooldownLength);
-
-                _cooldowns.TryUpdate(key, time, endsAt);
-            }
-            else
-            {
-                _cooldowns.TryAdd(key, DateTimeOffset.UtcNow.Add(_cooldownLength));
+                var difference = cooldown.EndsAt.Subtract(DateTimeOffset.UtcNow);
+                return PreconditionResult.FromError($"You may use this command in {difference.ToString(@"hh\:mm\:ss")}.");
             }
 
-            return Task.FromResult(PreconditionResult.FromSuccess());
+            return PreconditionResult.FromSuccess();
         }
-    }
-
-    public struct Cooldown
-    {
-        public Cooldown(ulong userId, int commandHash)
-        {
-            UserId = userId;
-            CommandHash = commandHash;
-        }
-
-        public ulong UserId { get; }
-        public int CommandHash { get; }
     }
 }

@@ -35,39 +35,24 @@ namespace FFA.Modules
 
         [Command("ErrorLogs")]
         [Alias("errorlog")]
+        [ErrorLogs]
         [Summary("Sends the error logs as an attached file.")]
-        public async Task ErrorLogsAsync()
-        {
-            var fileName = _logger.LogFileName(LogSeverity.Error);
-
-            // TODO: make precondition
-            if (!File.Exists(fileName))
-                await Context.ReplyErrorAsync("No error log file has been created.");
-            else
-                await Context.Channel.SendFileAsync(fileName);
-        }
+        public Task ErrorLogsAsync()
+            => Context.Channel.SendFileAsync(_logger.LogFileName(LogSeverity.Error));
 
         [Command("LastErrorLogs")]
         [Alias("lasterror")]
+        [ErrorLogs]
         [Summary("Sends the most recent error logs.")]
         public async Task ErrorLogsAsync(int lineCount = 20)
         {
-            var fileName = _logger.LogFileName(LogSeverity.Error);
+            var lines = await File.ReadAllLinesAsync(_logger.LogFileName(LogSeverity.Error));
+            var message = "```";
 
-            if (!File.Exists(fileName))
-            {
-                await Context.ReplyErrorAsync("No error log file has been created.");
-            }
-            else
-            {
-                var lines = await File.ReadAllLinesAsync(fileName);
-                var message = "```";
+            for (int i = lineCount >= lines.Length ? 0 : lines.Length - lineCount; i < lines.Length; i++)
+                message += $"{lines[i]}\n";
 
-                for (int i = lineCount >= lines.Length ? 0 : lines.Length - lineCount; i < lines.Length; i++)
-                    message += $"{lines[i]}\n";
-
-                await ReplyAsync($"{message}```");
-            }
+            await ReplyAsync($"{message}```");
         }
 
         [Command("Eval")]
