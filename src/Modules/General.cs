@@ -9,6 +9,7 @@ using FFA.Preconditions.Command;
 using FFA.Preconditions.Parameter;
 using FFA.Services;
 using MongoDB.Driver;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,12 +23,15 @@ namespace FFA.Modules
         private readonly IMongoCollection<CustomCmd> _dbCustomCmds;
         private readonly CustomCmdService _customCmdService;
         private readonly ColorRoleService _colorRoleService;
+        private readonly CooldownService _cooldownService;
 
-        public General(IMongoCollection<CustomCmd> dbCustomCmds, CustomCmdService customCmdService, ColorRoleService colorRoleService)
+        public General(IMongoCollection<CustomCmd> dbCustomCmds, CustomCmdService customCmdService, ColorRoleService colorRoleService,
+            CooldownService cooldownService)
         {
             _dbCustomCmds = dbCustomCmds;
             _customCmdService = customCmdService;
             _colorRoleService = colorRoleService;
+            _cooldownService = cooldownService;
         }
 
         [Command("Color")]
@@ -70,5 +74,31 @@ namespace FFA.Modules
             await _dbCustomCmds.UpdateAsync(command, x => x.Response = response.Value);
             await Context.ReplyAsync("You have successfully updated this command.");
         }
+
+        [Command("Cooldowns")]
+        [Alias("cd", "cooldown", "cds")]
+        [Summary("View anyone's command cooldowns.")]
+        public async Task CooldownsAsync([Summary("jimbo#8237")] [Remainder] IUser user = null)
+        {
+            user = user ?? Context.User;
+            var cooldowns = await _cooldownService.GetAllCooldownsAsync(user.Id, Context.Guild.Id);
+
+            if (cooldowns.Count() == 0)
+            {
+                _ = user.Id == Context.User.Id ?
+                    await Context.ReplyAsync("All your commands are available for use.") :
+                    await Context.SendAsync($"All of {user.Bold()}'s commands are available for use.");
+            }
+            else
+            {
+                var description = string.Empty;
+
+                foreach (var cd in cooldowns)
+                    description += $"**{cd.Command.Name}:** {cd.EndsAt.Subtract(DateTimeOffset.UtcNow).ToString(@"hh\:mm\:ss")}\n";
+
+                await Context.SendAsync(description, $"{user}'s Cooldowns");
+            }
+        }
+        
     }
 }

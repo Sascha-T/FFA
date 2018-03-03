@@ -23,6 +23,20 @@ namespace FFA.Services
             _commands = commands;
         }
 
+        public async Task<IEnumerable<Cooldown>> GetAllCooldownsAsync(ulong userId, ulong guildId)
+        {
+            await _semaphore.WaitAsync();
+
+            try
+            {
+                return _cooldowns.Where(x => x.UserId == userId && x.GuildId == guildId);
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
+
         public async Task<Cooldown> GetCooldownAsync(ulong userId, ulong guildId, CommandInfo cmd)
         {
             await _semaphore.WaitAsync();
