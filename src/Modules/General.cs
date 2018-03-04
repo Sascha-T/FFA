@@ -10,6 +10,7 @@ using FFA.Preconditions.Parameter;
 using FFA.Services;
 using MongoDB.Driver;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,9 +51,34 @@ namespace FFA.Modules
             await Context.GuildUser.AddRoleAsync(role);
             await Context.ReplyAsync("You have successfully set your role color.");
         }
-        
+
+        [Command("AddEmote")]
+        [Alias("addemoji", "createemote", "createemoji")]
+        [Summary("Add an emote.")]
+        [AttachedImage]
+        [Cooldown(Config.ADD_EMOTE_CD)]
+        public async Task AddEmoteAsync(
+            [Summary("nice")] string name)
+        {
+            var attachment = Context.Message.Attachments.First();
+            var stream = new MemoryStream(Config.WEB_CLIENT.DownloadData(new Uri(attachment.Url)));
+            await Context.Guild.CreateEmoteAsync(name, new Image(stream));
+            await Context.ReplyAsync("You have successfully added a new emote.");
+        }
+
+        [Command("RemoveEmote")]
+        [Alias("removeemoji", "deleteemote", "deleteemoji")]
+        [Summary("Remove an emote.")]
+        [Cooldown(Config.REMOVE_EMOTE_CD)]
+        public async Task RemoveEmoteAsync(
+            [Summary(":nice:")] GuildEmote emote)
+        {
+            await Context.Guild.DeleteEmoteAsync(emote);
+            await Context.ReplyAsync("You have successfully removed this emote.");
+        }
+
         [Command("AddCommand")]
-        [Alias("addcmd")]
+        [Alias("addcmd", "createcommand", "createcmd")]
         [Summary("Add any custom command you please.")]
         public async Task AddCommandAsync(
             [Summary("retarded")] [UniqueCustomCmd] string name,
@@ -60,7 +86,7 @@ namespace FFA.Modules
         {
             var newCmd = new CustomCmd(Context.User.Id, Context.Guild.Id, name.ToLower(), response.Value);
             await _dbCustomCmds.InsertOneAsync(newCmd);
-            await Context.ReplyAsync("You have successfully created a new custom command.");
+            await Context.ReplyAsync("You have successfully added a new custom command.");
         }
 
         [Command("ModifyCommand")]

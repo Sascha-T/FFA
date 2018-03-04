@@ -10,7 +10,7 @@ namespace FFA.Preconditions.Parameter
     {
         public TimeSpan CooldownLength { get; }
 
-        public CooldownAttribute(int hours)
+        public CooldownAttribute(double hours)
         {
             CooldownLength = TimeSpan.FromHours(hours);
         }

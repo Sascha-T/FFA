@@ -36,8 +36,7 @@ namespace FFA.Modules
             [Summary("Jimbo#5555")] [NoSelf] [HigherReputation] [NotMutedParam] IUser user,
             [Summary("2c")] Rule rule,
             [Summary("8h")] [MinimumHours(Config.MIN_MUTE_LENGTH)] TimeSpan length,
-            [Summary("stop with all that ruckus!")] [Remainder]
-            [MaximumLength(Config.MAX_REASON_LENGTH)] string reason = null)
+            [Summary("stop with all that ruckus!")] [Remainder] [MaximumLength(Config.MAX_REASON_LENGTH)] string reason = null)
         {
             var guildUser = await Context.Guild.GetUserAsync(user.Id);
 

@@ -65,19 +65,24 @@ namespace FFA.Common
         public const int MIN_LB = 5, MIN_CLEAR = 3;
 
         // Regexes
-        public static readonly Regex NEW_LINE_REGEX = new Regex(@"\r\n?|\n"), NUMBER_REGEX = new Regex(@"^\d+(\.\d+)?");
+        public static readonly Regex NEW_LINE_REGEX = new Regex(@"\r\n?|\n"), NUMBER_REGEX = new Regex(@"^\d+(\.\d+)?"),
+            EMOTE_REGEX = new Regex(@"<:.+:\d+>"), ID_REGEX = new Regex(@"\d+");
 
         // Defaults
         public const int CLEAR_DEFAULT = 20, LB_COUNT = 10;
 
         // Cooldowns in hours
-        public const int REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1, REMOVE_CMD_CD = 1;
+        public const double REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1, REMOVE_CMD_CD = 1, ADD_EMOTE_CD = 0.5,
+            REMOVE_EMOTE_CD = 0.5;
 
         // Timers in milliseconds
         public const int AUTO_UNMUTE_TIMER = 60000, REP_DECAY_TIMER = 3600000;
 
         // Logs
         public const string LOGS_DIRECTORY = "logs/";
+
+        // Static webclient to gaurentee thread safety
+        public static readonly WebClient WEB_CLIENT = new WebClient();
 
         // Discord code responses
         public static readonly IReadOnlyDictionary<int, string> DISCORD_CODES = new Dictionary<int, string>()
