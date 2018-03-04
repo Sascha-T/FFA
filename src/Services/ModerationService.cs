@@ -15,11 +15,13 @@ namespace FFA.Services
     public sealed class ModerationService : Service
     {
         private readonly IMongoCollection<Guild> _dbGuilds;
+        private readonly IMongoCollection<Mute> _dbMutes;
         private readonly SendingService _sender;
 
-        public ModerationService(IMongoCollection<Guild> dbGuilds, SendingService sender)
+        public ModerationService(IMongoCollection<Guild> dbGuilds, IMongoCollection<Mute> dbMutes, SendingService sender)
         {
             _dbGuilds = dbGuilds;
+            _dbMutes = dbMutes;
             _sender = sender;
         }
 
@@ -42,6 +44,19 @@ namespace FFA.Services
                 $"other users to vote in favor of said poll.", guild: ctx.Guild);
         }
 
+        public async Task CreateMute(Context ctx, IUser user, Rule rule, TimeSpan length, string reason = null)
+        {
+            await _dbMutes.InsertOneAsync(new Mute(ctx.Guild.Id, user.Id, length));
+            await LogMuteAsync(ctx, user, rule, length, reason);
+            await InformUserAsync(ctx, user, rule, length, reason);
+        }
+
+        public async Task RemoveMute(Context ctx, IUser user, string reason)
+        {
+            await _dbMutes.DeleteManyAsync(x => x.UserId == user.Id && x.GuildId == ctx.Guild.Id);
+            await LogUnmuteAsync(ctx, user, reason);
+        }
+
         public Task LogMuteAsync(Context ctx, IUser subject, Rule rule, TimeSpan length, string reason = null)
         {
             var elements = new List<(string, string)>
@@ -58,16 +73,14 @@ namespace FFA.Services
             return LogAsync(ctx.Guild, elements, Config.MUTE_COLOR, ctx.User);
         }
 
-        public Task LogUnmuteAsync(Context ctx, IUser subject, string reason = null)
+        public Task LogUnmuteAsync(Context ctx, IUser subject, string reason)
         {
-            var elements = new List<(string, string)>
+            var elements = new(string, string)[]
             {
                 ("Action", "Unmute"),
-                ("User", $"{subject} ({subject.Id})")
+                ("User", $"{subject} ({subject.Id})"),
+                ("Reason", reason)
             };
-
-            if (!string.IsNullOrWhiteSpace(reason))
-                elements.Add(("Reason", reason));
 
             return LogAsync(ctx.Guild, elements, Config.UNMUTE_COLOR, ctx.User);
         }
