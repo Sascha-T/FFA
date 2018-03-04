@@ -27,7 +27,7 @@ namespace FFA.Services
 
         public Cooldown GetCooldown(ulong userId, ulong guildId, CommandInfo cmd)
         {
-            var cooldown = _cooldowns.FirstOrDefault(x => x.UserId == userId && x.GuildId == guildId && x.Command.Name == cmd.Name);
+            var cooldown = _cooldowns.FirstOrDefault(x => x.UserId == userId && x.GuildId == guildId && x.Command == cmd);
 
             if (cooldown == default(Cooldown))
                 return null;
@@ -45,7 +45,12 @@ namespace FFA.Services
             if (cooldownPrecondtion == null)
                 return;
 
-            _cooldowns.Add(new Cooldown(ctx.User.Id, ctx.Guild.Id, cmd, cooldownPrecondtion.CooldownLength));
+            var cooldown = _cooldowns.FirstOrDefault(x => x.UserId == ctx.User.Id && x.GuildId == ctx.Guild.Id && x.Command == cmd);
+
+            if (cooldown != default(Cooldown))
+                cooldown.EndsAt = DateTimeOffset.UtcNow.Add(cooldownPrecondtion.CooldownLength);
+            else
+                _cooldowns.Add(new Cooldown(ctx.User.Id, ctx.Guild.Id, cmd, cooldownPrecondtion.CooldownLength));
         }
     }
 }

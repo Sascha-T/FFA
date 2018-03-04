@@ -16,6 +16,6 @@ namespace FFA.Entities.Cooldown
         public ulong UserId { get; }
         public ulong GuildId { get; }
         public CommandInfo Command { get; }
-        public DateTimeOffset EndsAt { get; }
+        public DateTimeOffset EndsAt { get; set; }
     }
 }
