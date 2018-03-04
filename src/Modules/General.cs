@@ -40,7 +40,8 @@ namespace FFA.Modules
         [RequireBotPermission(GuildPermission.ManageRoles)]
         [Top(Config.TOP_COLOR)]
         [Cooldown(Config.COLOR_CD)]
-        public async Task ColorAsync([Summary("#FF0000")] [Remainder] Color color)
+        public async Task ColorAsync(
+            [Summary("#FF0000")] [Remainder] Color color)
         {
             var role = await _colorRoleService.GetOrCreateAsync(Context.Guild, _colorRoleService.FormatColor(color), color);
             var existingColorRoles = Context.GuildUser.GetRoles().Where(x => x.Name.StartsWith('#'));
@@ -53,8 +54,8 @@ namespace FFA.Modules
         [Command("AddCommand")]
         [Alias("addcmd")]
         [Summary("Add any custom command you please.")]
-        [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task AddCommandAsync([Summary("retarded")] [UniqueCustomCmdAttribute] string name,
+        public async Task AddCommandAsync(
+            [Summary("retarded")] [UniqueCustomCmd] string name,
             [Summary("VIM2META LOL DUDE IS THICC AS BALLS")] [Remainder] [MaximumLength(Config.MAX_CMD_LENGTH)] CmdResponse response)
         {
             var newCmd = new CustomCmd(Context.User.Id, Context.Guild.Id, name.ToLower(), response.Value);
@@ -63,31 +64,46 @@ namespace FFA.Modules
         }
 
         [Command("ModifyCommand")]
-        [Top(Config.TOP_MOD_COMMAND)]
         [Alias("modcommand", "modcmd", "modifycmd")]
         [Summary("Modify an existing custom command.")]
-        [RequireBotPermission(GuildPermission.ManageRoles)]
+        [Top(Config.TOP_MOD_CMD)]
         [Cooldown(Config.MOD_CMD_CD)]
-        public async Task ModifyCommandAsync([Summary("vim2meta")] CustomCmd command,
+        public async Task ModifyCommandAsync(
+            [Summary("vim2meta")] CustomCmd command,
             [Summary("RETARD THAT'S AS BLIND AS ME GRAN")] [Remainder] [MaximumLength(Config.MAX_CMD_LENGTH)] CmdResponse response = null)
         {
             await _dbCustomCmds.UpdateAsync(command, x => x.Response = response.Value);
             await Context.ReplyAsync("You have successfully updated this command.");
         }
 
+        [Command("RemoveCommand")]
+        [Alias("removecmd", "deletecommand", "deletecmd")]
+        [Summary("Delete an existing custom command.")]
+        [Top(Config.TOP_REMOVE_CMD)]
+        [Cooldown(Config.REMOVE_CMD_CD)]
+        public async Task RemoveCommandAsync(
+            [Summary("vim2meta")] CustomCmd command)
+        {
+            await _dbCustomCmds.DeleteOneAsync(command);
+            await Context.ReplyAsync("You have successfully deleted this command.");
+        }
+
         [Command("Cooldowns")]
         [Alias("cd", "cooldown", "cds")]
         [Summary("View anyone's command cooldowns.")]
-        public async Task CooldownsAsync([Summary("jimbo#8237")] [Remainder] IUser user = null)
+        public async Task CooldownsAsync(
+            [Summary("jimbo#8237")] [Remainder] IUser user = null)
         {
             user = user ?? Context.User;
             var cooldowns = _cooldownService.GetAllCooldowns(user.Id, Context.Guild.Id);
 
             if (cooldowns.Count() == 0)
             {
-                _ = user.Id == Context.User.Id ?
-                    await Context.ReplyAsync("All your commands are available for use.") :
-                    await Context.SendAsync($"All of {user.Bold()}'s commands are available for use.");
+                var response = user.Id == Context.User.Id ?
+                    $"{user.Bold()}, All your commands are available for use." :
+                    $"All of {user.Bold()}'s commands are available for use.";
+
+                await Context.SendAsync(response);
             }
             else
             {

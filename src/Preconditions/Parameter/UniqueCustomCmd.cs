@@ -8,7 +8,7 @@ using MongoDB.Driver;
 
 namespace FFA.Preconditions.Parameter
 {
-    public sealed class UniqueCustomCmdAttributeAttribute : ParameterPreconditionAttribute
+    public sealed class UniqueCustomCmdAttribute : ParameterPreconditionAttribute
     {
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, ParameterInfo parameter, object value,
             IServiceProvider services)

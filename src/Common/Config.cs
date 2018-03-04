@@ -56,7 +56,7 @@ namespace FFA.Common
         public const double REP_INCREASE = 1, UNREP_DECREASE = 1;
 
         // Reputation requirements
-        public const int TOP_MOD_COMMAND = 20, TOP_MOD = 30, TOP_COLOR = 40;
+        public const int TOP_MOD_CMD = 20, TOP_REMOVE_CMD = 20, TOP_MOD = 30, TOP_COLOR = 40;
 
         // Maximums
         public const int MAX_LB = 30, MAX_CLEAR = 100, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 600, MAX_CMD_LENGTH = 200, MAX_CMD_NEW_LINES = 10;
@@ -71,7 +71,7 @@ namespace FFA.Common
         public const int CLEAR_DEFAULT = 20, LB_COUNT = 10;
 
         // Cooldowns in hours
-        public const int REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1;
+        public const int REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1, REMOVE_CMD_CD = 1;
 
         // Timers in milliseconds
         public const int AUTO_UNMUTE_TIMER = 60000, REP_DECAY_TIMER = 3600000;
