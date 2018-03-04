@@ -10,7 +10,8 @@ namespace FFA.Services
 
         public void IgnoreUser(ulong userId, TimeSpan length)
         {
-            _ignoredUsers.TryAdd(userId, DateTimeOffset.UtcNow.Add(length));
+            var endsAt = DateTimeOffset.UtcNow.Add(length);
+            _ignoredUsers.AddOrUpdate(userId, endsAt, (x, y) => endsAt);
         }
 
         public bool IsIgnored(ulong userId)
@@ -18,7 +19,7 @@ namespace FFA.Services
             if (!_ignoredUsers.TryGetValue(userId, out DateTimeOffset endsAt))
                 return false;
 
-            if (endsAt.Subtract(DateTimeOffset.UtcNow).Ticks <= 0)
+            if (endsAt.CompareTo(DateTimeOffset.UtcNow) < 0)
             {
                 _ignoredUsers.TryRemove(userId, out endsAt);
                 return false;
