@@ -66,7 +66,7 @@ namespace FFA.Common
 
         // Regexes
         public static readonly Regex NEW_LINE_REGEX = new Regex(@"\r\n?|\n"), NUMBER_REGEX = new Regex(@"^\d+(\.\d+)?"),
-            EMOTE_REGEX = new Regex(@"<:.+:\d+>"), ID_REGEX = new Regex(@"\d+");
+            EMOTE_REGEX = new Regex(@"<:.+:\d+>"), EMOTE_ID_REGEX = new Regex(@"<:.+:|>");
 
         // Defaults
         public const int CLEAR_DEFAULT = 20, LB_COUNT = 10;

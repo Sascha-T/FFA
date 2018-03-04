@@ -16,7 +16,7 @@ namespace FFA.Readers
             if (!Config.EMOTE_REGEX.IsMatch(input))
                 return Task.FromResult(TypeReaderResult.FromError(CommandError.Unsuccessful, "You have provided an invalid emote."));
 
-            var emoteId = ulong.Parse(Config.ID_REGEX.Match(input).Value);
+            var emoteId = ulong.Parse(Config.EMOTE_ID_REGEX.Replace(input, string.Empty));
             var emote = context.Guild.Emotes.FirstOrDefault(x => x.Id == emoteId);
 
             if (emote == default(GuildEmote))
