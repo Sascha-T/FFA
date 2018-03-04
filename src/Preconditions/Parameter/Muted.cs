@@ -14,8 +14,8 @@ namespace FFA.Preconditions.Parameter
         {
             var context = ctx as Context;
 
-            if (value is IGuildUser guildUser && guildUser.RoleIds.Any(x => x == context.DbGuild.MutedRoleId))
-                return Task.FromResult(PreconditionResult.FromError("This command may not be used on a muted user."));
+            if (value is IGuildUser guildUser && !guildUser.RoleIds.Any(x => x == context.DbGuild.MutedRoleId))
+                return Task.FromResult(PreconditionResult.FromError("This command may only be used on a muted user."));
 
             return Task.FromResult(PreconditionResult.FromSuccess());
         }
