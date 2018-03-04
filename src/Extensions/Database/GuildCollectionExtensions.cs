@@ -11,8 +11,7 @@ namespace FFA.Extensions.Database
             => new UpdateDefinitionBuilder<Guild>()
             .SetOnInsert(x => x.GuildId, guildId)
             .SetOnInsert(x => x.LogCase, 1u)
-            .SetOnInsert(x => x.AutoMute, true)
-            .SetOnInsert(x => x.Timestamp, DateTimeOffset.UtcNow);
+            .SetOnInsert(x => x.AutoMute, true);
 
         public static Task<Guild> GetGuildAsync(this IMongoCollection<Guild> collection, ulong guildId)
             => collection.GetAsync(x => x.GuildId == guildId, GetFactory(guildId));

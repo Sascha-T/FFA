@@ -5,7 +5,6 @@ using FFA.Entities.Event;
 using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using FFA.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System;

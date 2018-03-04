@@ -35,7 +35,7 @@ namespace FFA.Common
 
         // Chat settings
         public static readonly TimeSpan CHAT_SERVICE_DELAY = TimeSpan.FromSeconds(30);
-        public const double CHAT_REWARD = 0.1;
+        public const double CHAT_REWARD = 0.05;
 
         // Reputation decay settings
         public const double DECAY_MUL = 0.998;

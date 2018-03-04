@@ -1,5 +1,4 @@
 using Discord;
-using FFA.Common;
 using FFA.Database.Models;
 using FFA.Entities.Service;
 using FFA.Extensions.Database;

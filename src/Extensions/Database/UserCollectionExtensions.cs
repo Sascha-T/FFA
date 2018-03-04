@@ -11,8 +11,7 @@ namespace FFA.Extensions.Database
             => new UpdateDefinitionBuilder<User>()
             .SetOnInsert(x => x.UserId, userId)
             .SetOnInsert(x => x.GuildId, guildId)
-            .SetOnInsert(x => x.Reputation, 0)
-            .SetOnInsert(x => x.Timestamp, DateTimeOffset.UtcNow);
+            .SetOnInsert(x => x.Reputation, 0);
 
         public static Task<User> GetUserAsync(this IMongoCollection<User> collection, ulong userId, ulong guildId)
             => collection.GetAsync(x => x.UserId == userId && x.GuildId == guildId, GetFactory(userId, guildId));

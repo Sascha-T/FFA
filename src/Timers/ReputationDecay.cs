@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using FFA.Common;
 using FFA.Database.Models;
 using FFA.Entities.FFATimer;
-using FFA.Extensions.Database;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 

@@ -38,7 +38,8 @@ namespace FFA.Extensions.Database
 
         public static Task<T> GetAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter, UpdateDefinition<T> factory)
             where T : Entity
-            => collection.FindOneAndUpdateAsync(filter, factory, new FindOneAndUpdateOptions<T, T>
+            => collection.FindOneAndUpdateAsync(filter, factory.SetOnInsert(x => x.Timestamp, DateTimeOffset.UtcNow),
+            new FindOneAndUpdateOptions<T, T>
             {
                 IsUpsert = true,
                 ReturnDocument = ReturnDocument.After

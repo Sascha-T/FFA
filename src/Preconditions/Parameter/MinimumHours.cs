@@ -6,9 +6,9 @@ namespace FFA.Preconditions.Parameter
 {
     public sealed class MinimumHoursAttribute : ParameterPreconditionAttribute
     {
-        private readonly uint _minimumHours;
+        private readonly double _minimumHours;
 
-        public MinimumHoursAttribute(uint minimumHours)
+        public MinimumHoursAttribute(double minimumHours)
         {
             _minimumHours = minimumHours;
         }

@@ -1,4 +1,3 @@
-using Discord;
 using FFA.Common;
 using FFA.Entities.Event;
 using FFA.Services;
