@@ -12,6 +12,7 @@ using MongoDB.Driver;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace FFA.Modules
@@ -62,7 +63,7 @@ namespace FFA.Modules
             [Summary("nice")] string name)
         {
             var attachment = Context.Message.Attachments.First();
-            var stream = new MemoryStream(Config.WEB_CLIENT.DownloadData(new Uri(attachment.Url)));
+            var stream = new MemoryStream(new WebClient().DownloadData(new Uri(attachment.Url)));
             await Context.Guild.CreateEmoteAsync(name, new Image(stream));
             await Context.ReplyAsync("You have successfully added a new emote.");
         }

@@ -80,10 +80,7 @@ namespace FFA.Common
 
         // Logs
         public const string LOGS_DIRECTORY = "logs/";
-
-        // Static webclient to gaurentee thread safety
-        public static readonly WebClient WEB_CLIENT = new WebClient();
-
+        
         // Discord code responses
         public static readonly IReadOnlyDictionary<int, string> DISCORD_CODES = new Dictionary<int, string>()
         {
