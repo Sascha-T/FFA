@@ -21,6 +21,10 @@ namespace FFA.Services
         public async Task ExecuteAsync(Context context, int argPos)
         {
             var cmdName = context.Message.Content.Substring(argPos).Split(' ').FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(cmdName))
+                return;
+
             var customCmd = await _dbCustomCmds.FindCustomCmdAsync(cmdName, context.Guild.Id);
 
             if (customCmd != null)
