@@ -15,18 +15,18 @@ namespace FFA.Preconditions.Parameter
             CooldownLength = TimeSpan.FromHours(hours);
         }
 
-        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo cmd, IServiceProvider services)
+        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo cmd, IServiceProvider services)
         {
             var cooldownService = services.GetRequiredService<CooldownService>();
-            var cooldown = await cooldownService.GetCooldownAsync(context.User.Id, context.Guild.Id, cmd);
+            var cooldown = cooldownService.GetCooldown(context.User.Id, context.Guild.Id, cmd);
 
             if (cooldown != null)
             {
                 var difference = cooldown.EndsAt.Subtract(DateTimeOffset.UtcNow);
-                return PreconditionResult.FromError($"You may use this command in {difference.ToString(@"hh\:mm\:ss")}.");
+                return Task.FromResult(PreconditionResult.FromError($"You may use this command in {difference.ToString(@"hh\:mm\:ss")}."));
             }
 
-            return PreconditionResult.FromSuccess();
+            return Task.FromResult(PreconditionResult.FromSuccess());
         }
     }
 }
