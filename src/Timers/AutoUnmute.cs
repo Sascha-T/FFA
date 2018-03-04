@@ -45,7 +45,7 @@ namespace FFA.Timers
                     if (mute.Timestamp.Add(mute.Length).CompareTo(DateTimeOffset.UtcNow) > 0)
                         continue;
 
-                    await _dbMutes.DeleteOneAsync(x => x.Id == mute.Id);
+                    await _dbMutes.DeleteManyAsync(x => x.UserId == mute.UserId && x.GuildId == x.GuildId);
 
                     var guildUser = guild.GetUser(mute.UserId);
 
