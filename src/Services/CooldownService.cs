@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// TODO: use concurrent bag
 namespace FFA.Services
 {
     public sealed class CooldownService : Service
@@ -43,7 +44,7 @@ namespace FFA.Services
 
             try
             {
-                var cooldown = _cooldowns.FirstOrDefault(x => x.UserId == userId && x.GuildId == guildId && x.Command == cmd);
+                var cooldown = _cooldowns.FirstOrDefault(x => x.UserId == userId && x.GuildId == guildId && x.Command.Name == cmd.Name);
 
                 if (cooldown == default(Cooldown))
                     return null;
