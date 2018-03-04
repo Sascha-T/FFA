@@ -50,7 +50,7 @@ namespace FFA.Common
         public static readonly TimeSpan SPAM_MUTE_LENGTH = TimeSpan.FromHours(6), SPAM_DURATION = TimeSpan.FromSeconds(4);
 
         // Rate limit settings
-        public static readonly TimeSpan IGNORE_DURATION = TimeSpan.FromHours(2);
+        public static readonly TimeSpan IGNORE_DURATION = TimeSpan.FromMinutes(30);
 
         // Reputation commands
         public const double REP_INCREASE = 1, UNREP_DECREASE = 1;

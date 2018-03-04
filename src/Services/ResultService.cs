@@ -71,8 +71,8 @@ namespace FFA.Services
                 if ((int)httpEx.HttpCode == Constants.TOO_MANY_REQUESTS)
                 {
                     _rateLimitService.IgnoreUser(ctx.User.Id, Config.IGNORE_DURATION);
-                    await ctx.DmAsync($"You will not be able to use commands for the next {Config.IGNORE_DURATION.TotalHours} hours." +
-                        $"Please do not rate limit me.");
+                    await ctx.DmAsync($"You will not be able to use commands for the next {Config.IGNORE_DURATION.TotalMinutes} minutes. " +
+                        $"Please do not participate in command spam.");
                     return;
                 }
                 else if (!Config.DISCORD_CODES.TryGetValue(httpEx.DiscordCode.GetValueOrDefault(), out message))
