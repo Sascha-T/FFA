@@ -44,7 +44,8 @@ namespace FFA.Modules
         [Alias("lasterror")]
         [ErrorLogs]
         [Summary("Sends the most recent error logs.")]
-        public async Task ErrorLogsAsync(int lineCount = 20)
+        public async Task ErrorLogsAsync(
+            [Summary("15")] int lineCount = 20)
         {
             var lines = await File.ReadAllLinesAsync(_logger.LogFileName(LogSeverity.Error));
             var message = "```";
@@ -57,7 +58,8 @@ namespace FFA.Modules
 
         [Command("Eval")]
         [Summary("Evaluate C# code.")]
-        public async Task EvalAsync([Summary("Client.Token")] [Remainder] string code)
+        public async Task EvalAsync(
+            [Summary("Client.Token")] [Remainder] string code)
         {
             var script = CSharpScript.Create(code, Config.SCRIPT_OPTIONS, typeof(Globals));
 

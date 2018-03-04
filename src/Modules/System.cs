@@ -54,7 +54,8 @@ namespace FFA.Modules
         [Command("Module")]
         [Alias("modulelist")]
         [Summary("List of all commands of a specific module.")]
-        public Task ModuleAsync(string name)
+        public Task ModuleAsync(
+            [Summary("general")] string name)
         {
             var module = _commandService.Modules.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
@@ -67,7 +68,8 @@ namespace FFA.Modules
         [Command("Command")]
         [Alias("commandinfo", "cmd", "cmdinfo")]
         [Summary("Information about a specific command.")]
-        public async Task HelpAsync([Summary("rep")] string name)
+        public async Task HelpAsync(
+            [Summary("rep")] string name)
         {
             var cmd = _commandService.Commands.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase) ||
                     x.Aliases.Any(y => y.Equals(name, StringComparison.OrdinalIgnoreCase)));

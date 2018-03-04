@@ -30,7 +30,8 @@ namespace FFA.Modules
         [Command("SetLogChannel")]
         [Alias("setlogs", "setmodlog", "setmodlogs")]
         [Summary("Sets the log channel.")]
-        public async Task SetLogChannelAsync([Summary("OldManJenkins")] [Remainder] ITextChannel logChannel)
+        public async Task SetLogChannelAsync(
+            [Summary("OldManJenkins")] [Remainder] ITextChannel logChannel)
         {
             await _dbGuilds.UpsertGuildAsync(Context.Guild.Id, x => x.LogChannelId = logChannel.Id);
             await Context.ReplyAsync($"You have successfully set to log channel to {logChannel.Mention}.");
@@ -48,7 +49,8 @@ namespace FFA.Modules
         [Command("SetRulesChannel")]
         [Alias("setrules")]
         [Summary("Sets the rules channel.")]
-        public async Task SetRulesChannelAsync([Summary("MrsPuff")] [Remainder] ITextChannel rulesChannel)
+        public async Task SetRulesChannelAsync(
+            [Summary("MrsPuff")] [Remainder] ITextChannel rulesChannel)
         {
             await _dbGuilds.UpsertGuildAsync(Context.Guild.Id, x => x.RulesChannelId = rulesChannel.Id);
             await Context.ReplyAsync($"You have successfully set to rules channel to {rulesChannel.Mention}.");
@@ -57,7 +59,8 @@ namespace FFA.Modules
         [Command("SetMutedRole")]
         [Alias("setmuted", "setmuterole", "setmute")]
         [Summary("Sets the muted role.")]
-        public async Task SetMutedRoleAsync([Summary("BarnacleBoy")] [Remainder] IRole mutedRole)
+        public async Task SetMutedRoleAsync(
+            [Summary("BarnacleBoy")] [Remainder] IRole mutedRole)
         {
             await _dbGuilds.UpsertGuildAsync(Context.Guild.Id, x => x.MutedRoleId = mutedRole.Id);
             await Context.ReplyAsync($"You have successfully set to muted role to {mutedRole.Mention}.");
@@ -65,9 +68,10 @@ namespace FFA.Modules
 
         [Command("AddRule")]
         [Summary("Adds a rule.")]
-        public async Task AddRuleAsync([Summary("\"Cracking your willy in broad daylight\"")] string content,
-                                       [Summary("Harassment")] string category,
-                                       [Summary("72h")] TimeSpan? maxMuteLength = null)
+        public async Task AddRuleAsync(
+            [Summary("\"Cracking your willy in broad daylight\"")] string content,
+            [Summary("Harassment")] string category,
+            [Summary("72h")] TimeSpan? maxMuteLength = null)
         {
             await _dbRules.InsertOneAsync(new Rule(Context.Guild.Id, content, category, maxMuteLength));
             await Context.ReplyAsync($"You have successfully added a new rule.");
@@ -77,9 +81,10 @@ namespace FFA.Modules
         [Command("ModifyRule")]
         [Alias("modrule", "editrule", "changerule")]
         [Summary("Modifies any rule.")]
-        public async Task ModifyRuleAsync([Summary("3b")] Rule rule,
-                                          [Summary("\"Nutting faster than Willy Wonka\"")] string content,
-                                          [Summary("420h")] TimeSpan? maxMuteLength = null)
+        public async Task ModifyRuleAsync(
+            [Summary("3b")] Rule rule,
+            [Summary("\"Nutting faster than Willy Wonka\"")] string content,
+            [Summary("420h")] TimeSpan? maxMuteLength = null)
         {
             await _dbRules.UpdateAsync(rule, x =>
             {
@@ -93,7 +98,8 @@ namespace FFA.Modules
         [Command("RemoveRule")]
         [Alias("deleterule")]
         [Summary("Removes any rule.")]
-        public async Task RemoveRuleAsync([Summary("2d")] Rule rule)
+        public async Task RemoveRuleAsync(
+            [Summary("2d")] Rule rule)
         {
             await _dbRules.DeleteOneAsync(rule);
             await Context.ReplyAsync($"You have successfully removed this rule.");

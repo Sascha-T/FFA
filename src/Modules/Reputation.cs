@@ -34,7 +34,8 @@ namespace FFA.Modules
         [Command("Rep")]
         [Summary("Give reputation to any user.")]
         [Cooldown(Config.REP_CD)]
-        public async Task RepAsync([Summary("AlabamaTrigger#0001")] [NoSelf] IUser user)
+        public async Task RepAsync(
+            [Summary("AlabamaTrigger#0001")] [NoSelf] IUser user)
         {
             await _dbUsers.UpsertUserAsync(user.Id, Context.Guild.Id, x => x.Reputation += Config.REP_INCREASE);
             await Context.ReplyAsync($"You have successfully repped {user.Bold()}.");
@@ -43,7 +44,8 @@ namespace FFA.Modules
         [Command("UnRep")]
         [Summary("Remove reputation from any user.")]
         [Cooldown(Config.UNREP_CD)]
-        public async Task UnRepAsync([Summary("PapaFag#6666")] [NoSelf] IUser user)
+        public async Task UnRepAsync(
+            [Summary("PapaFag#6666")] [NoSelf] IUser user)
         {
             await _dbUsers.UpsertUserAsync(user.Id, Context.Guild.Id, x => x.Reputation -= Config.UNREP_DECREASE);
             await Context.ReplyAsync($"You have successfully unrepped {user.Bold()}.");
@@ -52,7 +54,8 @@ namespace FFA.Modules
         [Command("GetRep")]
         [Alias("GetRank")]
         [Summary("Get anyone's reputation.")]
-        public async Task GetRepAsync([Summary("Black Nugs#1234")] [Remainder] IUser user = null)
+        public async Task GetRepAsync(
+            [Summary("Black Nugs#1234")] [Remainder] IUser user = null)
         {
             user = user ?? Context.GuildUser;
 
@@ -67,7 +70,8 @@ namespace FFA.Modules
         [Command("RepLeaderboards")]
         [Alias("replb", "top", "toprep")]
         [Summary("The most reputable users.")]
-        public async Task RepLeaderboardsAsync([Summary("15")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
+        public async Task RepLeaderboardsAsync(
+            [Summary("15")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
         {
             await Context.SendAsync(await _lbService.GetUserLbAsync(Context.Guild, x => x.Reputation, count), "The Most Reputable Users");
         }
@@ -75,7 +79,8 @@ namespace FFA.Modules
         [Command("UnRepLeaderboards")]
         [Alias("unreplb", "bottomrep", "bottom")]
         [Summary("The least reputable users.")]
-        public async Task UnRepLeaderboardsAsync([Summary("20")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
+        public async Task UnRepLeaderboardsAsync(
+            [Summary("20")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
         {
             await Context.SendAsync(await _lbService.GetUserLbAsync(Context.Guild, x => x.Reputation, count, true), "The Least Reputable Users");
         }
