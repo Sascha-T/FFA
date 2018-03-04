@@ -57,6 +57,7 @@ namespace FFA.Modules
         [Summary("Add an emote.")]
         [AttachedImage]
         [Cooldown(Config.ADD_EMOTE_CD)]
+        [AvailableEmoteSlots]
         public async Task AddEmoteAsync(
             [Summary("nice")] string name)
         {

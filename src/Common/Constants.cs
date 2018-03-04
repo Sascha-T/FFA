@@ -12,7 +12,7 @@ namespace FFA.Common
         public const ushort TOO_MANY_REQUESTS = 429;
 
         // Discord constants
-        public const ushort MAX_ROLES = 500;
+        public const ushort MAX_ROLES = 500, MAX_EMOTES = 50;
 
         // Assembly classes
         public static readonly IReadOnlyList<Type> ASSEMBLY_CLASSES =
