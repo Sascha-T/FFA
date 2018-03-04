@@ -56,7 +56,7 @@ namespace FFA.Common
         public const double REP_INCREASE = 1, UNREP_DECREASE = 1;
 
         // Reputation requirements
-        public const int TOP_MOD_CMD = 20, TOP_REMOVE_CMD = 20, TOP_MOD = 30, TOP_COLOR = 40;
+        public const int TOP_REMOVE_EMOTE = 20, TOP_MOD_CMD = 20, TOP_REMOVE_CMD = 20, TOP_MOD = 30, TOP_COLOR = 40;
 
         // Maximums
         public const int MAX_LB = 30, MAX_CLEAR = 100, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 600, MAX_CMD_LENGTH = 200, MAX_CMD_NEW_LINES = 10;

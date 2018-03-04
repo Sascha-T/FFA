@@ -69,6 +69,7 @@ namespace FFA.Modules
         [Command("RemoveEmote")]
         [Alias("removeemoji", "deleteemote", "deleteemoji")]
         [Summary("Remove an emote.")]
+        [Top(Config.TOP_REMOVE_EMOTE)]
         [Cooldown(Config.REMOVE_EMOTE_CD)]
         public async Task RemoveEmoteAsync(
             [Summary(":nice:")] GuildEmote emote)
