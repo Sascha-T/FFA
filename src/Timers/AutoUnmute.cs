@@ -38,14 +38,15 @@ namespace FFA.Timers
                 if (mutedRole == null || !await mutedRole.CanUseAsync())
                     continue;
 
-                var mutes = await _dbMutes.FindAsync(FilterDefinition<Mute>.Empty);
+                var mutes = await _dbMutes.WhereAsync(x => x.Active);
 
-                foreach (var mute in mutes.ToEnumerable())
+                foreach (var mute in mutes)
                 {
                     if (mute.Timestamp.Add(mute.Length).CompareTo(DateTimeOffset.UtcNow) > 0)
                         continue;
 
-                    await _dbMutes.DeleteManyAsync(x => x.UserId == mute.UserId && x.GuildId == mute.GuildId);
+                    await _dbMutes.UpdateManyAsync(x => x.UserId == mute.UserId && x.GuildId == mute.GuildId,
+                        new UpdateDefinitionBuilder<Mute>().Set(x => x.Active, false));
 
                     var guildUser = guild.GetUser(mute.UserId);
 

@@ -16,11 +16,13 @@ namespace FFA.Modules
     {
         private readonly CommandService _commandService;
         private readonly ListService _systemService;
+        private readonly CooldownService _cooldownService;
 
-        public System(CommandService commandService, ListService systemService)
+        public System(CommandService commandService, ListService systemService, CooldownService cooldownService)
         {
             _commandService = commandService;
             _systemService = systemService;
+            _cooldownService = cooldownService;
         }
 
         [Command("Help")]
@@ -80,6 +82,34 @@ namespace FFA.Modules
                 await Context.SendAsync($"**Description:** {cmd.Summary}\n" +
                     $"**Usage:** `{Config.PREFIX}{cmd.GetUsage()}`\n" +
                     $"**Example:** `{Config.PREFIX}{cmd.GetExample()}`", cmd.Name);
+        }
+
+        [Command("Cooldowns")]
+        [Alias("cd", "cooldown", "cds")]
+        [Summary("View anyone's command cooldowns.")]
+        public async Task CooldownsAsync(
+            [Summary("jimbo#8237")] [Remainder] IUser user = null)
+        {
+            user = user ?? Context.User;
+            var cooldowns = await _cooldownService.GetAllCooldownsAsync(user.Id, Context.Guild.Id);
+
+            if (cooldowns.Count() == 0)
+            {
+                var response = user.Id == Context.User.Id ?
+                    $"{user.Bold()}, All your commands are available for use." :
+                    $"All of {user.Bold()}'s commands are available for use.";
+
+                await Context.SendAsync(response);
+            }
+            else
+            {
+                var description = string.Empty;
+
+                foreach (var cd in cooldowns)
+                    description += $"**{cd.Command.Name}:** {cd.EndsAt.Subtract(DateTimeOffset.UtcNow).ToString(@"hh\:mm\:ss")}\n";
+
+                await Context.SendAsync(description, $"{user}'s Cooldowns");
+            }
         }
     }
 }

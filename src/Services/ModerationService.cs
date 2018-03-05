@@ -53,7 +53,8 @@ namespace FFA.Services
 
         public async Task RemoveMute(Context ctx, IUser user, string reason)
         {
-            await _dbMutes.DeleteManyAsync(x => x.UserId == user.Id && x.GuildId == ctx.Guild.Id);
+            await _dbMutes.UpdateManyAsync(x => x.UserId == user.Id && x.GuildId == ctx.Guild.Id,
+                        new UpdateDefinitionBuilder<Mute>().Set(x => x.Active, false));
             await LogUnmuteAsync(ctx, user, reason);
         }
 
@@ -120,6 +121,8 @@ namespace FFA.Services
         {
             var dbGuild = await _dbGuilds.GetGuildAsync(guild.Id);
 
+            await _dbGuilds.UpdateAsync(dbGuild, x => x.LogCase++);
+
             if (!dbGuild.LogChannelId.HasValue)
                 return;
 
@@ -151,7 +154,6 @@ namespace FFA.Services
             }
 
             await logChannel.SendMessageAsync(string.Empty, false, builder.Build());
-            await _dbGuilds.UpdateAsync(dbGuild, x => x.LogCase++);
         }
     }
 }

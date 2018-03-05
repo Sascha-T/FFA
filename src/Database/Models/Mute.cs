@@ -13,5 +13,6 @@ namespace FFA.Database.Models
 
         public ulong UserId { get; set; }
         public TimeSpan Length { get; set; }
+        public bool Active { get; set; } = true;
     }
 }
