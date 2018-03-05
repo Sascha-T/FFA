@@ -120,7 +120,7 @@ namespace FFA.Services
         {
             var dbGuild = await _dbGuilds.GetGuildAsync(guild.Id);
 
-            await _dbGuilds.UpdateAsync(dbGuild, x => x.LogCase++);
+            await _dbGuilds.UpdateAsync(dbGuild, x => x.CaseCount++);
 
             if (!dbGuild.LogChannelId.HasValue)
                 return;
@@ -138,7 +138,7 @@ namespace FFA.Services
             var builder = new EmbedBuilder()
             {
                 Timestamp = DateTimeOffset.UtcNow,
-                Footer = new EmbedFooterBuilder { Text = $"Case #{dbGuild.LogCase}" },
+                Footer = new EmbedFooterBuilder { Text = $"Case #{dbGuild.CaseCount}" },
                 Description = description,
                 Color = color
             };

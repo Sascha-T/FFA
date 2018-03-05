@@ -2,6 +2,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using FFA.Common;
+using FFA.Database.Models;
 using FFA.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
@@ -67,6 +68,7 @@ namespace FFA
             Loader.LoadEvents(provider);
             Loader.LoadReaders(commands);
 
+            db.GetCollection<Guild>("guilds").UpdateMany(FilterDefinition<Guild>.Empty, new UpdateDefinitionBuilder<Guild>().Rename("LogCase", "CaseCount"));
             await commands.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
             await client.LoginAsync(TokenType.Bot, creds.Token);
             await client.StartAsync();
