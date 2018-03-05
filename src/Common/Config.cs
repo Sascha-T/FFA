@@ -38,7 +38,7 @@ namespace FFA.Common
         public const double CHAT_REWARD = 0.025;
 
         // Reputation decay settings
-        public const double DECAY_MUL = 0.998;
+        public const double DECAY_MUL = 0.995;
         public static readonly UpdateDefinition<User> DECAY_UPDATE = new UpdateDefinitionBuilder<User>().Mul(x => x.Reputation, DECAY_MUL);
 
         // Moderation settings
