@@ -5,39 +5,62 @@ using FFA.Entities.Service;
 using FFA.Extensions.Discord;
 using FFA.Preconditions.Parameter;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FFA.Services
 {
     public sealed class CooldownService : Service
     {
         private readonly CommandService _commands;
-        private readonly ConcurrentBag<Cooldown> _cooldowns = new ConcurrentBag<Cooldown>();
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private readonly IList<Cooldown> _cooldowns = new List<Cooldown>();
 
         public CooldownService(CommandService commands)
         {
             _commands = commands;
         }
 
-        public IReadOnlyList<Cooldown> GetAllCooldowns(ulong userId, ulong guildId)
-            => _cooldowns.Where(x => x.UserId == userId && x.GuildId == guildId).ToImmutableArray();
+        public async Task<IReadOnlyCollection<Cooldown>> GetAllCooldownsAsync(ulong userId, ulong guildId)
+        {
+            await _semaphore.WaitAsync();
 
-        public Cooldown GetCooldown(ulong userId, ulong guildId, CommandInfo cmd)
+            try
+            {
+                return _cooldowns.Where(x => x.UserId == userId && x.GuildId == guildId &&
+                    x.EndsAt.CompareTo(DateTimeOffset.UtcNow) > 0).ToImmutableArray();
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
+
+        public async Task<Cooldown> GetCooldownAsync(ulong userId, ulong guildId, CommandInfo cmd)
         {
             var cooldown = _cooldowns.FirstOrDefault(x => x.UserId == userId && x.GuildId == guildId && x.Command == cmd);
 
-            if (cooldown == default(Cooldown))
-                return null;
-            else if (cooldown.EndsAt.CompareTo(DateTimeOffset.UtcNow) > 0)
-                return cooldown;
+            await _semaphore.WaitAsync();
 
-            return null;
+            try
+            {
+                if (cooldown == default(Cooldown))
+                    return null;
+                else if (cooldown.EndsAt.CompareTo(DateTimeOffset.UtcNow) > 0)
+                    return cooldown;
+
+                return null;
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
-        public void ApplyCooldown(Context ctx, int argPos)
+        public async Task ApplyCooldownAsync(Context ctx, int argPos)
         {
             var cmd = _commands.GetCommand(ctx, argPos);
             var cooldownPrecondtion = cmd.Preconditions.FirstOrDefault(x => x is CooldownAttribute) as CooldownAttribute;
@@ -45,12 +68,21 @@ namespace FFA.Services
             if (cooldownPrecondtion == null)
                 return;
 
-            var cooldown = _cooldowns.FirstOrDefault(x => x.UserId == ctx.User.Id && x.GuildId == ctx.Guild.Id && x.Command == cmd);
+            await _semaphore.WaitAsync();
 
-            if (cooldown != default(Cooldown))
-                cooldown.EndsAt = DateTimeOffset.UtcNow.Add(cooldownPrecondtion.CooldownLength);
-            else
-                _cooldowns.Add(new Cooldown(ctx.User.Id, ctx.Guild.Id, cmd, cooldownPrecondtion.CooldownLength));
+            try
+            {
+                var cooldown = _cooldowns.FirstOrDefault(x => x.UserId == ctx.User.Id && x.GuildId == ctx.Guild.Id && x.Command == cmd);
+
+                if (cooldown != default(Cooldown))
+                    cooldown.EndsAt = DateTimeOffset.UtcNow.Add(cooldownPrecondtion.CooldownLength);
+                else
+                    _cooldowns.Add(new Cooldown(ctx.User.Id, ctx.Guild.Id, cmd, cooldownPrecondtion.CooldownLength));
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
     }
 }

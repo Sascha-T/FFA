@@ -125,7 +125,7 @@ namespace FFA.Modules
             [Summary("jimbo#8237")] [Remainder] IUser user = null)
         {
             user = user ?? Context.User;
-            var cooldowns = _cooldownService.GetAllCooldowns(user.Id, Context.Guild.Id);
+            var cooldowns = await _cooldownService.GetAllCooldownsAsync(user.Id, Context.Guild.Id);
 
             if (cooldowns.Count() == 0)
             {

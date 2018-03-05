@@ -75,8 +75,8 @@ namespace FFA.Common
         public const double REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1, REMOVE_CMD_CD = 1, ADD_EMOTE_CD = 0.5,
             REMOVE_EMOTE_CD = 0.5;
 
-        // Timers in milliseconds
-        public const int AUTO_UNMUTE_TIMER = 60000, REP_DECAY_TIMER = 3600000;
+        // Timers
+        public static readonly TimeSpan AUTO_UNMUTE_TIMER = TimeSpan.FromMinutes(1), REP_DECAY_TIMER = TimeSpan.FromHours(1);
 
         // Logs
         public const string LOGS_DIRECTORY = "logs/";

@@ -14,21 +14,19 @@ namespace FFA.Entities.FFATimer
         protected readonly LoggingService _logger;
         private readonly TaskService _taskService;
         private readonly Timer _timer;
-        private readonly AutoResetEvent _autoEvent;
 
-        public FFATimer(IServiceProvider provider, int ms)
+        public FFATimer(IServiceProvider provider, TimeSpan interval)
         {
             _client = provider.GetRequiredService<DiscordSocketClient>();
             _logger = provider.GetRequiredService<LoggingService>();
             _taskService = provider.GetRequiredService<TaskService>();
-            _autoEvent = new AutoResetEvent(false);
             _timer = new Timer((state) =>
             {
                 if (_client.ConnectionState != ConnectionState.Connected)
                     return;
 
                 _taskService.TryRun(Execute);
-            }, _autoEvent, 0, ms);
+            }, null, TimeSpan.Zero, interval);
         }
 
         protected abstract Task Execute();

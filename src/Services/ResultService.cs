@@ -32,8 +32,7 @@ namespace FFA.Services
         {
             if (result.IsSuccess)
             {
-                _cooldownService.ApplyCooldown(ctx, argPos);
-                return Task.CompletedTask;
+                return _cooldownService.ApplyCooldownAsync(ctx, argPos);
             }
             else
             {
