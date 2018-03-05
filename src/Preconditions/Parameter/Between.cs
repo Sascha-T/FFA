@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Discord.Commands;
+using FFA.Extensions.Discord;
 
 namespace FFA.Preconditions.Parameter
 {
@@ -19,7 +20,7 @@ namespace FFA.Preconditions.Parameter
             IServiceProvider services)
         {
             if (value is int number && (number < _minimum || number > _maximum))
-                return Task.FromResult(PreconditionResult.FromError($"The {parameter.Name} must be between {_minimum} and {_maximum}."));
+                return Task.FromResult(PreconditionResult.FromError($"The {parameter.Format()} must be between {_minimum} and {_maximum}."));
 
             return Task.FromResult(PreconditionResult.FromSuccess());
         }

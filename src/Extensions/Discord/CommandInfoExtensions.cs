@@ -9,9 +9,8 @@ namespace FFA.Extensions.Discord
         {
             var usage = command.Name;
 
-            // TODO: split spaces in param name to make it an actual word
             foreach (var param in command.Parameters)
-                usage += $" {(param.IsOptional ? "[" : "<")}{param.Name}{(param.IsOptional ? "]" : ">")}";
+                usage += $" {(param.IsOptional ? "[" : "<")}{param.Format()}{(param.IsOptional ? "]" : ">")}";
 
             return usage;
         }
@@ -29,8 +28,7 @@ namespace FFA.Extensions.Discord
                 else if (typeof(ITextChannel).IsAssignableFrom(param.Type))
                     before += "#";
 
-                // TODO: split spaces in param name to make it an actual word
-                example += $" {before}{param.Summary ?? param.Name}";
+                example += $" {before}{param.Summary ?? param.Format()}";
             }
 
             return example;

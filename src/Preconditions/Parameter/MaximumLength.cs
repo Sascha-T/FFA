@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Discord.Commands;
+using FFA.Extensions.Discord;
 
 namespace FFA.Preconditions.Parameter
 {
@@ -19,7 +20,7 @@ namespace FFA.Preconditions.Parameter
             var strValue = $"{value}";
 
             if (strValue.Length > _length)
-                return Task.FromResult(PreconditionResult.FromError($"The maximum {param.Name} length is {_length} characters."));
+                return Task.FromResult(PreconditionResult.FromError($"The maximum {param.Format()} length is {_length} characters."));
 
             return Task.FromResult(PreconditionResult.FromSuccess());
         }
