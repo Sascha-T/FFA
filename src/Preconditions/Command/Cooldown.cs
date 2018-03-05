@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
-namespace FFA.Preconditions.Parameter
+namespace FFA.Preconditions.Command
 {
     public sealed class CooldownAttribute : PreconditionAttribute
     {

@@ -1,3 +1,4 @@
+using Discord;
 using Discord.Commands;
 using FFA.Common;
 using FFA.Extensions.Discord;
@@ -18,6 +19,20 @@ namespace FFA.Modules
         public Utility(DeletedMessagesService deletedMsgsService)
         {
             _deletedMsgsService = deletedMsgsService;
+        }
+
+        [Command("AltCheck")]
+        [Alias("alt")]
+        [Summary("Verifies whether or not a user is an alterate account.")]
+        public Task AltCheck(
+            [Summary("Jimbo Steve#8842")] [Remainder] IGuildUser guildUser)
+        {
+            var joinedAt = guildUser.JoinedAt.GetValueOrDefault();
+
+            return Context.SendAsync(
+                $"**Created:** `{guildUser.CreatedAt.ToString("f")}`\n" +
+                $"**Joined:** `{joinedAt.ToString("f")}`\n" +
+                $"**Difference:** `{joinedAt.Subtract(guildUser.CreatedAt)}`", guildUser.ToString());
         }
 
         [Command("Deleted")]

@@ -3,7 +3,7 @@ using FFA.Common;
 using FFA.Entities.Cooldown;
 using FFA.Entities.Service;
 using FFA.Extensions.Discord;
-using FFA.Preconditions.Parameter;
+using FFA.Preconditions.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
