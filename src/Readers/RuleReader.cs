@@ -16,7 +16,8 @@ namespace FFA.Readers
         public override async Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
             // TODO: move to rules service
-            if (input.Length != 2 || !int.TryParse(input[0].ToString(), out int categoryNumber))
+            // TODO: support more than 9 categories, shouldnt only be 2 chars!
+            if (input.Length != 2 || !ushort.TryParse(input[0].ToString(), out ushort categoryNumber))
                 return TypeReaderResult.FromError(CommandError.Unsuccessful, "You have provided an invalid rule format.");
 
             var dbRules = services.GetRequiredService<IMongoCollection<Rule>>();

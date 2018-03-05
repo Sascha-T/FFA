@@ -70,16 +70,16 @@ namespace FFA.Modules
         [Command("Command")]
         [Alias("commandinfo", "cmd", "cmdinfo")]
         [Summary("Information about a specific command.")]
-        public async Task HelpAsync(
+        public Task HelpAsync(
             [Summary("rep")] string name)
         {
             var cmd = _commandService.Commands.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase) ||
                     x.Aliases.Any(y => y.Equals(name, StringComparison.OrdinalIgnoreCase)));
 
             if (cmd == default(CommandInfo))
-                await Context.ReplyErrorAsync("This command does not exist.");
+                return Context.ReplyErrorAsync("This command does not exist.");
             else
-                await Context.SendAsync($"**Description:** {cmd.Summary}\n" +
+                return Context.SendAsync($"**Description:** {cmd.Summary}\n" +
                     $"**Usage:** `{Config.PREFIX}{cmd.GetUsage()}`\n" +
                     $"**Example:** `{Config.PREFIX}{cmd.GetExample()}`", cmd.Name);
         }
