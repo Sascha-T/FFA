@@ -26,12 +26,13 @@ namespace FFA.Common
             "every aspect of the guild. The entire system is based around reputation. The most reputable users are the " +
             "moderators. If believe a certain user is suitable to moderate, you may enter the following: `" + PREFIX +
             "rep username#1234`. The opposite can be done with `" + PREFIX + "unrep`.\n\nIt is essential that reputation " +
-            "remains in the right hands, as everything revolves around it. It is your " +
-            "duty as a member of this community to ensure that if a user was unjustly punished, the culprit must pay " +
-            "the consequences while vindicating the victim.\n\nIf you wish to view the various command categories, you " +
-            "may use `" + PREFIX + "modules`. To view all the commands of a module, you may use `" + PREFIX + "module " +
-            "general`. You may also view all commands by using `" + PREFIX + "commands`. If you wish to view the progress " +
-            "of this bot, or simply support the creators, you may join the official FFA server here: " + INVITE_LINK + ".";
+            "remains in the right hands, as everything revolves around it. It is your duty as a member of this community " +
+            "to ensure that if a user was unjustly punished, the culprit must pay the consequences while vindicating the " +
+            "victim. You may view anyone's reputation by using `" + PREFIX + "getrep`.\n\nIf you wish to view the various " +
+            "command categories, you may use `" + PREFIX + "modules`. To view all the commands of a module, you may use `" +
+            PREFIX + "module general`. You may also view all commands by using `" + PREFIX + "commands`. If you wish " +
+            "to view the progress of this bot, or simply support the creators, you may join the official FFA server here: "
+            + INVITE_LINK + ".";
 
         // Chat settings
         public static readonly TimeSpan CHAT_SERVICE_DELAY = TimeSpan.FromSeconds(30);
@@ -49,6 +50,9 @@ namespace FFA.Common
         public const int SPAM_LIMIT = 5; 
         public static readonly TimeSpan SPAM_MUTE_LENGTH = TimeSpan.FromHours(6), SPAM_DURATION = TimeSpan.FromSeconds(4);
 
+        // Deleted messages settings
+        public const int DELETED_MESSAGES_CHARS = 150;
+
         // Rate limit settings
         public static readonly TimeSpan IGNORE_DURATION = TimeSpan.FromMinutes(30);
 
@@ -59,17 +63,18 @@ namespace FFA.Common
         public const int TOP_REMOVE_EMOTE = 20, TOP_MOD_CMD = 20, TOP_REMOVE_CMD = 20, TOP_MOD = 30, TOP_COLOR = 40, TOP_ADD_EMOTE = 40;
 
         // Maximums
-        public const int MAX_LB = 30, MAX_CLEAR = 100, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 600, MAX_CMD_LENGTH = 500, MAX_CMD_NEW_LINES = 10;
+        public const int MAX_LB = 30, MAX_CLEAR = 100, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 600, MAX_CMD_LENGTH = 500, MAX_CMD_NEW_LINES = 10,
+            MAX_DELETED_MSGS = 10;
 
         // Minimums
-        public const int MIN_LB = 5, MIN_CLEAR = 3;
+        public const int MIN_LB = 5, MIN_CLEAR = 3, MIN_DELETED_MSGS = 1;
 
         // Regexes
         public static readonly Regex NEW_LINE_REGEX = new Regex(@"\r\n?|\n"), NUMBER_REGEX = new Regex(@"^\d+(\.\d+)?"),
             EMOTE_REGEX = new Regex(@"<:.+:\d+>"), EMOTE_ID_REGEX = new Regex(@"<:.+:|>");
 
         // Defaults
-        public const int CLEAR_DEFAULT = 20, LB_COUNT = 10;
+        public const int CLEAR_DEFAULT = 20, LB_COUNT = 10, DELETED_MSGS = 5;
 
         // Cooldowns in hours
         public const double REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1, REMOVE_CMD_CD = 1, ADD_EMOTE_CD = 0.5,

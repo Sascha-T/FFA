@@ -7,6 +7,7 @@ using FFA.Common;
 
 namespace FFA.Readers
 {
+    // TODO: support emote name!
     public sealed class GuildEmoteReader : TypeReader
     {
         public Type Type { get; } = typeof(GuildEmote);
