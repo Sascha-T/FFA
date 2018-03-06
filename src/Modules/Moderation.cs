@@ -31,6 +31,7 @@ namespace FFA.Modules
 
         [Command("Mute")]
         [Summary("Mute any guild user.")]
+        [SetMutedRole]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task MuteAsync(
             [Summary("Jimbo#5555")] [NoSelf] [HigherReputation] [NotMutedParam] IUser user,
