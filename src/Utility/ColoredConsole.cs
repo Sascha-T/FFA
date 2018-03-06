@@ -12,8 +12,7 @@ namespace FFA.Utility
             Console.BackgroundColor = color;
 
             await Console.Out.WriteAsync(message);
-
-
+            
             Console.BackgroundColor = previous;
         }
 
