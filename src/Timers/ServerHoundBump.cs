@@ -9,11 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FFA.Timers
 {
-    public sealed class DisboardBump : FFATimer
+    public sealed class ServerHoundBump : FFATimer
     {
         private readonly Credentials _credentials;
 
-        public DisboardBump(IServiceProvider provider) : base(provider, Config.DISBOARD_BUMP_TIMER)
+        public ServerHoundBump(IServiceProvider provider) : base(provider, Config.SERVER_HOUND_BUMP_TIMER)
         {
             _credentials = provider.GetRequiredService<Credentials>();
         }
@@ -27,7 +27,7 @@ namespace FFA.Timers
             if (general == default(SocketTextChannel) || !await general.CanSendAsync())
                 return;
 
-            await general.SendMessageAsync("Please use the command `!disboard bump` to support this server.");
+            await general.SendMessageAsync("=bump");
         }
     }
 }
