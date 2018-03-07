@@ -29,6 +29,7 @@ namespace FFA.Services
 
             if (customCmd != null)
                 await context.Channel.SendMessageAsync(customCmd.Response);
+                await _dbCustomCmds.UpdateAsync(customCmd, x => x.Uses++);
         }
 
         public string SterilizeResponse(string input)

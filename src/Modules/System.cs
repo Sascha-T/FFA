@@ -1,8 +1,11 @@
 using Discord;
 using Discord.Commands;
 using FFA.Common;
+using FFA.Database.Models;
 using FFA.Extensions.Discord;
+using FFA.Preconditions.Parameter;
 using FFA.Services;
+using MongoDB.Driver;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,12 +20,14 @@ namespace FFA.Modules
         private readonly CommandService _commandService;
         private readonly ListService _systemService;
         private readonly CooldownService _cooldownService;
+        private readonly LeaderboardService _lbService;
 
-        public System(CommandService commandService, ListService systemService, CooldownService cooldownService)
+        public System(CommandService commandService, ListService systemService, CooldownService cooldownService, LeaderboardService lbService)
         {
             _commandService = commandService;
             _systemService = systemService;
             _cooldownService = cooldownService;
+            _lbService = lbService;
         }
 
         [Command("Help")]
@@ -111,5 +116,19 @@ namespace FFA.Modules
                 await Context.SendAsync(description, $"{user}'s Cooldowns");
             }
         }
+
+        [Command("BestCmds")]
+        [Alias("bestcustomcmd", "popularcmds", "bestcustomcmds", "popularcmd")]
+        [Summary("View the most used custom cmds")]
+        public async Task BestCmds(
+            [Summary("15")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
+            => await Context.SendAsync(await _lbService.GetCustomCmdsAsync(Context.Guild.Id, x => x.Uses, count), "The Most Used Custom Cmds");
+
+        [Command("WorstCmds")]
+        [Alias("worstcustomcmd", "leastusedcmds", "leastusedcmd", "worstcustomcmds")]
+        [Summary("View the least used custom cmds")]
+        public async Task WorstCmds(
+            [Summary("20")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
+            => await Context.SendAsync(await _lbService.GetCustomCmdsAsync(Context.Guild.Id, x => x.Uses, count, true), "The Least Used Custom Cmds");
     }
 }

@@ -13,5 +13,6 @@ namespace FFA.Database.Models
         public ulong OwnerId { get; set; }
         public string Name { get; set; }
         public string Response { get; set; }
+        public uint Uses { get; set; }
     }
 }
