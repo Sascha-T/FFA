@@ -7,6 +7,7 @@ using FFA.Extensions.Discord;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FFA.Services
@@ -130,16 +131,16 @@ namespace FFA.Services
             if (logChannel == null || !await logChannel.CanSendAsync())
                 return;
 
-            var description = string.Empty;
+            var descBuilder = new StringBuilder();
 
             foreach (var element in elements)
-                description += $"**{element.Item1}:** {element.Item2}\n";
+                descBuilder.AppendFormat("**{0}:** {1}\n", element.Item1, element.Item2);
 
             var builder = new EmbedBuilder()
             {
                 Timestamp = DateTimeOffset.UtcNow,
                 Footer = new EmbedFooterBuilder { Text = $"Case #{dbGuild.CaseCount}" },
-                Description = description,
+                Description = descBuilder.ToString(),
                 Color = color
             };
 

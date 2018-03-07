@@ -12,7 +12,7 @@ namespace FFA.Preconditions.Command
         {
             var context = ctx as Context;
 
-            if (context.GuildUser.RoleIds.Any(x => x == context.DbGuild.MutedRoleId.Value))
+            if (context.GuildUser.RoleIds.Any(x => x == context.DbGuild.MutedRoleId))
             {
                 return Task.FromResult(PreconditionResult.FromError("You may not use this command while muted."));
             }

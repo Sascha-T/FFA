@@ -6,6 +6,7 @@ using FFA.Extensions.System;
 using MongoDB.Driver;
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FFA.Services
@@ -26,7 +27,7 @@ namespace FFA.Services
             var dbGuildUsers = await _dbUsers.WhereAsync(x => x.GuildId == guild.Id);
             var ordered = ascending ? dbGuildUsers.OrderBy(keySelector) : dbGuildUsers.OrderByDescending(keySelector);
             var orderedArr = ordered.ToArray();
-            var desc = string.Empty;
+            var descBuilder = new StringBuilder();
             var pos = 0;
 
             for (int i = 0; i < orderedArr.Length; i++)
@@ -34,13 +35,13 @@ namespace FFA.Services
                 var user = await guild.GetUserAsync(orderedArr[i].UserId);
 
                 if (user != null)
-                    desc += $"{(++pos)}. **{user}:** {orderedArr[i].Reputation.ToString("F2")}\n";
+                    descBuilder.AppendFormat("{0}. **{1}:** {2}\n", ++pos, user, orderedArr[i].Reputation.ToString("F2"));
 
                 if (pos == quantity)
                     break;
             }
 
-            return desc;
+            return descBuilder.ToString();
         }
 
         public async Task<string> GetCustomCmdsAsync<TKey>(ulong guildId, Func<CustomCmd, TKey> keySelector, int quantity, bool ascending = false)

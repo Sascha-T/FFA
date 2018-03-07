@@ -7,6 +7,7 @@ using FFA.Services;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FFA.Modules
@@ -48,12 +49,14 @@ namespace FFA.Modules
             [Summary("15")] int lineCount = 20)
         {
             var lines = await File.ReadAllLinesAsync(_logger.LogFileName(LogSeverity.Error));
-            var message = "```";
+            var responseBuilder = new StringBuilder("```");
 
             for (int i = lineCount >= lines.Length ? 0 : lines.Length - lineCount; i < lines.Length; i++)
-                message += $"{lines[i]}\n";
+                responseBuilder.AppendFormat("{0}\n", lines[i]);
 
-            await ReplyAsync($"{message}```");
+            responseBuilder.Append("```");
+
+            await ReplyAsync(responseBuilder.ToString());
         }
 
         [Command("Eval")]

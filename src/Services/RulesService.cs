@@ -5,6 +5,7 @@ using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using MongoDB.Driver;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,13 +50,13 @@ namespace FFA.Services
 
                 for (var i = 0; i < groups.Length; i++)
                 {
-                    var description = string.Empty;
+                    var descBuilder = new StringBuilder();
 
                     foreach (var item in groups[i].OrderBy(x => x.Content).Select((Value, Index) => new { Value, Index }))
-                        description += $"**{(char)('a' + item.Index)}.** {item.Value.Content} " +
-                                       $"({(item.Value.MaxMuteLength.HasValue ? item.Value.MaxMuteLength.Value.TotalHours + "h" : "Bannable")})\n";
-
-                    await _sender.SendAsync(rulesChannel, description, $"{i + 1}. {groups[i].First().Category}:");
+                        descBuilder.AppendFormat("**{0}.** {1} ({2})\n", (char)('a' + item.Index), item.Value.Content,
+                            item.Value.MaxMuteLength.HasValue ? item.Value.MaxMuteLength.Value.TotalHours + "h" : "Bannable");
+        
+                    await _sender.SendAsync(rulesChannel, descBuilder.ToString(), $"{i + 1}. {groups[i].First().Category}:");
                     await Task.Delay(1000);
                 }
             }

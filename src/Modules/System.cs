@@ -8,6 +8,7 @@ using FFA.Services;
 using MongoDB.Driver;
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FFA.Modules
@@ -108,12 +109,12 @@ namespace FFA.Modules
             }
             else
             {
-                var description = string.Empty;
-
+                var descBuilder = new StringBuilder();
+                
                 foreach (var cd in cooldowns)
-                    description += $"**{cd.Command.Name}:** {cd.EndsAt.Subtract(DateTimeOffset.UtcNow).ToString(@"hh\:mm\:ss")}\n";
+                    descBuilder.AppendFormat("**{0}:** {1}\n", cd.Command.Name, cd.EndsAt.Subtract(DateTimeOffset.UtcNow).ToString(@"hh\:mm\:ss"));
 
-                await Context.SendAsync(description, $"{user}'s Cooldowns");
+                await Context.SendAsync(descBuilder.ToString(), $"{user}'s Cooldowns");
             }
         }
 

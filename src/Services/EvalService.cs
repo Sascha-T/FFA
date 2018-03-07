@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.Scripting;
 using MongoDB.Driver;
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FFA.Services
@@ -34,12 +35,14 @@ namespace FFA.Services
             var diagnostics = script.Compile();
             var compilerErrors = diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error);
 
-            errorMessage = string.Empty;
+            var errorMsgBuilder = new StringBuilder();
 
             foreach (var error in compilerErrors)
-                errorMessage += $"{error.GetMessage()}\n";
+                errorMsgBuilder.AppendFormat("{0}\n", error.GetMessage());
 
-            return string.IsNullOrWhiteSpace(errorMessage);
+            errorMessage = errorMsgBuilder.ToString();
+
+            return errorMsgBuilder.Length == 0;
         }
 
         public async Task<EvalResult> EvalAsync(IGuild guild, Script script)

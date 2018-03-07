@@ -81,7 +81,8 @@ namespace FFA.Common
             REMOVE_EMOTE_CD = 0.5;
 
         // Timers
-        public static readonly TimeSpan AUTO_UNMUTE_TIMER = TimeSpan.FromMinutes(1), REP_DECAY_TIMER = TimeSpan.FromHours(1);
+        public static readonly TimeSpan AUTO_UNMUTE_TIMER = TimeSpan.FromMinutes(1), REP_DECAY_TIMER = TimeSpan.FromHours(1),
+            DISBOARD_BUMP_TIMER = TimeSpan.FromHours(1), SERVER_HOUND_BUMP_TIMER = TimeSpan.FromHours(4);
 
         // Logs
         public const string LOGS_DIRECTORY = "logs/";

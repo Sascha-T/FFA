@@ -1,5 +1,6 @@
 using Discord;
 using Discord.Commands;
+using System.Text;
 
 namespace FFA.Extensions.Discord
 {
@@ -7,31 +8,31 @@ namespace FFA.Extensions.Discord
     {
         public static string GetUsage(this CommandInfo command)
         {
-            var usage = command.Name;
+            var usageBuilder = new StringBuilder(command.Name);
 
             foreach (var param in command.Parameters)
-                usage += $" {(param.IsOptional ? "[" : "<")}{param.Format()}{(param.IsOptional ? "]" : ">")}";
+                usageBuilder.AppendFormat(" {0}{1}{2}", param.IsOptional ? "[" : "<", param.Format(), param.IsOptional ? "]" : ">");
 
-            return usage;
+            return usageBuilder.ToString();
         }
 
         public static string GetExample(this CommandInfo command)
         {
-            var example = command.Name;
+            var exampleBuilder = new StringBuilder(command.Name);
 
             foreach (var param in command.Parameters)
             {
                 var before = string.Empty;
 
                 if (typeof(IUser).IsAssignableFrom(param.Type) || typeof(IRole).IsAssignableFrom(param.Type))
-                    before += "@";
+                    before = "@";
                 else if (typeof(ITextChannel).IsAssignableFrom(param.Type))
-                    before += "#";
+                    before = "#";
 
-                example += $" {before}{param.Summary ?? param.Format()}";
+                exampleBuilder.AppendFormat(" {0}{1}", before, param.Summary ?? param.Format());
             }
 
-            return example;
+            return exampleBuilder.ToString();
         }
     }
 }

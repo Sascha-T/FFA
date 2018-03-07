@@ -4,6 +4,7 @@ using FFA.Entities.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace FFA.Services
 {
@@ -18,13 +19,15 @@ namespace FFA.Services
         public string List<T, TSummary>(IEnumerable<T> elements, Func<T, string> nameSelector, Func<T, int> lengthSelector,
             Func<T, TSummary> summarySelector)
         {
-            var list = "```";
+            var listBuilder = new StringBuilder("```");
             var padding = nameSelector(elements.OrderByDescending(lengthSelector).First()).Length + 2;
 
             foreach (var element in elements.OrderBy(nameSelector))
-                list += $"{Config.PREFIX}{nameSelector(element).PadRight(padding)}{summarySelector(element)}\n";
+                listBuilder.AppendFormat("{0}{1}{2}\n", Config.PREFIX, nameSelector(element).PadRight(padding), summarySelector(element));
 
-            return $"{list}```";
+            listBuilder.Append("```");
+
+            return listBuilder.ToString();
         }
     }
 }
