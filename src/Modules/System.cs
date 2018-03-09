@@ -3,6 +3,7 @@ using Discord.Commands;
 using FFA.Common;
 using FFA.Database.Models;
 using FFA.Extensions.Discord;
+using FFA.Extensions.System;
 using FFA.Preconditions.Parameter;
 using FFA.Services;
 using MongoDB.Driver;
@@ -119,17 +120,31 @@ namespace FFA.Modules
         }
 
         [Command("BestCmds")]
-        [Alias("bestcustomcmd", "popularcmds", "bestcustomcmds", "popularcmd")]
+        [Alias("bestcmd", "bestcommands", "bestcommand")]
         [Summary("View the most used custom cmds")]
         public async Task BestCmds(
             [Summary("15")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
             => await Context.SendAsync(await _lbService.GetCustomCmdsAsync(Context.Guild.Id, x => x.Uses, count), "The Most Used Custom Cmds");
 
-        [Command("WorstCmds")]
-        [Alias("worstcustomcmd", "leastusedcmds", "leastusedcmd", "worstcustomcmds")]
-        [Summary("View the least used custom cmds")]
-        public async Task WorstCmds(
-            [Summary("20")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
-            => await Context.SendAsync(await _lbService.GetCustomCmdsAsync(Context.Guild.Id, x => x.Uses, count, true), "The Least Used Custom Cmds");
+        [Command("CmdInfo")]
+        [Alias("cmdinformation", "commandinfo", "commandinformation")]
+        [Summary("View a custom cmd's information")]
+        public async Task CmdInfo(
+            [Summary("command")] CustomCmd cmd)
+        {
+            var desc = String.Empty;
+            var creator = await Context.Client.GetUserAsync(cmd.OwnerId);
+
+            if (creator != null)
+                desc += $"**Creator:** {creator}\n";
+
+            desc += $"**Response:** {cmd.Response}\n" +
+                $"**Uses:** {cmd.Uses}\n";
+
+            if (cmd.LastModified != default(DateTimeOffset))
+                desc += $"**Last Modified:** {cmd.LastModified}";
+
+            await Context.SendAsync(desc, cmd.Name.UpperFirstChar());
+        }
     }
 }
