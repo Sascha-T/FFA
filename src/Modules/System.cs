@@ -8,6 +8,7 @@ using FFA.Preconditions.Parameter;
 using FFA.Services;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -132,19 +133,21 @@ namespace FFA.Modules
         public async Task CmdInfo(
             [Summary("command")] CustomCmd cmd)
         {
-            var desc = String.Empty;
+            var elems = new List<(string, string)>()
+            {
+                ("Response", cmd.Response),
+                ("Uses", cmd.Uses.ToString()),
+            };
+
             var creator = await Context.Client.GetUserAsync(cmd.OwnerId);
 
             if (creator != null)
-                desc += $"**Creator:** {creator}\n";
-
-            desc += $"**Response:** {cmd.Response}\n" +
-                $"**Uses:** {cmd.Uses}\n";
+                elems.Insert(0, ("Creator", creator.ToString()));
 
             if (cmd.LastModified != default(DateTimeOffset))
-                desc += $"**Last Modified:** {cmd.LastModified}";
+                elems.Add(("Last Modified", cmd.LastModified.ToString()));
 
-            await Context.SendAsync(desc, cmd.Name.UpperFirstChar());
+            await Context.SendAsync(string.Join("\n", elems.Select(x => $"**{x.Item1}:** {x.Item2}")), cmd.Name.UpperFirstChar());
         }
     }
 }
