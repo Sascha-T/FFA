@@ -137,15 +137,13 @@ namespace FFA.Modules
             {
                 ("Response", cmd.Response),
                 ("Uses", cmd.Uses.ToString()),
+                ("Created At", cmd.Timestamp.ToString("f")),
             };
 
             var creator = await Context.Client.GetUserAsync(cmd.OwnerId);
 
             if (creator != null)
                 elems.Insert(0, ("Creator", creator.ToString()));
-
-            if (cmd.LastModified != default(DateTimeOffset))
-                elems.Add(("Last Modified", cmd.LastModified.ToString()));
 
             await Context.SendAsync(string.Join("\n", elems.Select(x => $"**{x.Item1}:** {x.Item2}")), cmd.Name.UpperFirstChar());
         }
