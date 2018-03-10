@@ -121,7 +121,7 @@ namespace FFA.Modules
         }
 
         [Command("BestCmds")]
-        [Alias("bestcmd", "bestcommands", "bestcommand")]
+        [Alias("bestcmd", "bestcommands", "bestcommand", "cmdlb")]
         [Summary("View the most used custom cmds")]
         public async Task BestCmds(
             [Summary("15")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
