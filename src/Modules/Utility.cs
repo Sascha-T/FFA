@@ -5,6 +5,7 @@ using FFA.Extensions.Discord;
 using FFA.Extensions.System;
 using FFA.Preconditions.Parameter;
 using FFA.Services;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,19 +44,16 @@ namespace FFA.Modules
             [Summary("5")] [Between(Config.MIN_DELETED_MSGS, Config.MAX_DELETED_MSGS)] int count = Config.DELETED_MSGS)
         {
             var deletedMsgs = _deletedMsgsService.GetLast(Context.Channel.Id, count);
-            var responseBuilder = new StringBuilder();
+            var elems = new string[deletedMsgs.Count * 2];
 
-            foreach (var msg in deletedMsgs)
+            for (int i = 0, j = 0; i < deletedMsgs.Count; i++)
             {
-                responseBuilder
-                    .AppendFormat("{0}: ", msg.Author.Bold())
-                    .Append(msg.Content.Take(Config.DELETED_MESSAGES_CHARS).ToArray())
-                    .Append(msg.Content.Length > Config.DELETED_MESSAGES_CHARS ? "..." : string.Empty)
-                    .Append("\n\n");
+                elems[j++] = deletedMsgs[i].Author.Bold();
+                elems[j++] = deletedMsgs[i].Content;
             }
 
-            if (responseBuilder.Length > 0)
-                return Context.SendAsync(responseBuilder.ToString(), $"{Context.Channel.Name.UpperFirstChar()}'s Deleted Messages");
+            if (elems.Length > 0)
+                return Context.SendFieldsAsync(fieldOrValue: elems);
             else
                 return Context.ReplyErrorAsync("There have been no recent deleted messages in this channel.");
         }

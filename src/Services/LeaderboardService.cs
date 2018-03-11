@@ -2,6 +2,7 @@ using Discord;
 using FFA.Database.Models;
 using FFA.Entities.Service;
 using FFA.Extensions.Database;
+using FFA.Extensions.Discord;
 using FFA.Extensions.System;
 using MongoDB.Driver;
 using System;
@@ -35,7 +36,7 @@ namespace FFA.Services
                 var user = await guild.GetUserAsync(orderedArr[i].UserId);
 
                 if (user != null)
-                    descBuilder.AppendFormat("{0}. **{1}:** {2}\n", ++pos, user, orderedArr[i].Reputation.ToString("F2"));
+                    descBuilder.AppendFormat("{0}. {1}: {2}\n", ++pos, user.Bold(), orderedArr[i].Reputation.ToString("F2"));
 
                 if (pos == quantity)
                     break;
@@ -55,7 +56,7 @@ namespace FFA.Services
             for (int i = 0; i < OrderedArr.Length; i++)
             {
                 if (OrderedArr[i].Uses > 0)
-                    desc += $"{(++pos)}. **{OrderedArr[i].Name.UpperFirstChar()}:** {OrderedArr[i].Uses}\n";
+                    desc += $"{(++pos)}. {OrderedArr[i].Name.UpperFirstChar().Bold()}: {OrderedArr[i].Uses}\n";
 
                 if (pos == quantity)
                     break;

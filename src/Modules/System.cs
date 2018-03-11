@@ -114,7 +114,7 @@ namespace FFA.Modules
                 var descBuilder = new StringBuilder();
                 
                 foreach (var cd in cooldowns)
-                    descBuilder.AppendFormat("**{0}:** {1}\n", cd.Command.Name, cd.EndsAt.Subtract(DateTimeOffset.UtcNow).ToString(@"hh\:mm\:ss"));
+                    descBuilder.AppendFormat("{0}: {1}\n", cd.Command.Name.Bold(), cd.EndsAt.Subtract(DateTimeOffset.UtcNow).ToString(@"hh\:mm\:ss"));
 
                 await Context.SendAsync(descBuilder.ToString(), $"{user}'s Cooldowns");
             }
@@ -145,7 +145,7 @@ namespace FFA.Modules
             if (creator != null)
                 elems.Insert(0, ("Creator", creator.ToString()));
 
-            await Context.SendAsync(string.Join("\n", elems.Select(x => $"**{x.Item1}:** {x.Item2}")), cmd.Name.UpperFirstChar());
+            await Context.SendAsync(string.Join("\n", elems.Select(x => $"{x.Item1.Bold()}: {x.Item2}")), cmd.Name.UpperFirstChar());
         }
     }
 }
