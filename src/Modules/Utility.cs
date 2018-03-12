@@ -79,7 +79,7 @@ namespace FFA.Modules
             else
             {
                 var timeLeft = dbMuteUser.Timestamp.Add(dbMuteUser.Length).Subtract(DateTimeOffset.UtcNow);
-                await Context.SendAsync($"**Time left:** {timeLeft.ToString(@"dd\:hh\:mm\:ss")}", $"{user}'s Mute");
+                await Context.SendAsync($"**Time left:** {timeLeft.ToString(@"dd\.hh\:mm\:ss")}", $"{user}'s Mute");
             }
         }
     }
