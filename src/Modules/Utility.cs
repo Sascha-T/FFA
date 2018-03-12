@@ -1,10 +1,13 @@
 using Discord;
 using Discord.Commands;
 using FFA.Common;
+using FFA.Database.Models;
+using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using FFA.Extensions.System;
 using FFA.Preconditions.Parameter;
 using FFA.Services;
+using MongoDB.Driver;
 using System;
 using System.Linq;
 using System.Text;
@@ -17,10 +20,12 @@ namespace FFA.Modules
     public sealed class Utility : ModuleBase<Context>
     {
         private readonly DeletedMessagesService _deletedMsgsService;
+        private readonly IMongoCollection<Mute> _dbMutes;
 
-        public Utility(DeletedMessagesService deletedMsgsService)
+        public Utility(DeletedMessagesService deletedMsgsService, IMongoCollection<Mute> dbMutes)
         {
             _deletedMsgsService = deletedMsgsService;
+            _dbMutes = dbMutes;
         }
 
         [Command("AltCheck")]
@@ -56,6 +61,26 @@ namespace FFA.Modules
                 return Context.SendFieldsAsync(fieldOrValue: elems);
             else
                 return Context.ReplyErrorAsync("There have been no recent deleted messages in this channel.");
+        }
+
+
+        [Command("TimeLeft")]
+        [Alias("left")]
+        [Summary("Tell how much time is left on your mute.")]
+        public async Task TimeLeftAsync(
+            [Summary("hornydevil#0018")] [Remainder] IUser user = null)
+        {
+            user = user ?? Context.User;
+
+            var dbMuteUser = await _dbMutes.FindOneAsync(x => x.UserId == user.Id && x.GuildId == Context.Guild.Id && x.Active);
+
+            if (dbMuteUser == null)
+                await Context.ReplyErrorAsync($"{(user != Context.User ? user + " isn\'t" : "You aren\'t")} muted.");
+            else
+            {
+                var timeLeft = dbMuteUser.Timestamp.Add(dbMuteUser.Length).Subtract(DateTimeOffset.UtcNow);
+                await Context.SendAsync($"**Time left:** {timeLeft.ToString(@"dd\:hh\:mm\:ss")}", $"{user}'s Mute");
+            }
         }
     }
 }

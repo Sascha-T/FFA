@@ -23,14 +23,12 @@ namespace FFA.Modules
     public sealed class General : ModuleBase<Context>
     {
         private readonly IMongoCollection<CustomCmd> _dbCustomCmds;
-        private readonly IMongoCollection<Mute> _dbMutes;
         private readonly CustomCmdService _customCmdService;
         private readonly ColorRoleService _colorRoleService;
 
-        public General(IMongoCollection<CustomCmd> dbCustomCmds, IMongoCollection<Mute> dbMutes, CustomCmdService customCmdService, ColorRoleService colorRoleService)
+        public General(IMongoCollection<CustomCmd> dbCustomCmds, CustomCmdService customCmdService, ColorRoleService colorRoleService)
         {
             _dbCustomCmds = dbCustomCmds;
-            _dbMutes = dbMutes;
             _customCmdService = customCmdService;
             _colorRoleService = colorRoleService;
         }
@@ -115,25 +113,6 @@ namespace FFA.Modules
         {
             await _dbCustomCmds.DeleteOneAsync(command);
             await Context.ReplyAsync("You have successfully deleted this command.");
-        }
-
-        [Command("TimeLeft")]
-        [Alias("left")]
-        [Summary("Tell how much time is left on your mute.")]
-        public async Task TimeLeftAsync(
-            [Summary("hornydevil#0018")] [Remainder] IUser user = null)
-        {
-            user = user ?? Context.User;
-
-            var dbMuteUser = await _dbMutes.FindOneAsync(x => x.UserId == user.Id && x.GuildId == Context.Guild.Id && x.Active);
-
-            if (dbMuteUser == null)
-                await Context.ReplyErrorAsync($"{(user != Context.User ? user + " isn\'t" : "You aren\'t")} muted.");
-            else
-            {
-                var timeLeft = dbMuteUser.Timestamp.Add(dbMuteUser.Length).Subtract(DateTimeOffset.UtcNow);
-                await Context.SendAsync($"**Time left:** {timeLeft.ToString(@"hh\:mm\:ss")}", $"{user}'s Mute");
-            }
         }
     }
 }
