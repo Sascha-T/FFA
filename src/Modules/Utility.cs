@@ -54,13 +54,12 @@ namespace FFA.Modules
             for (int i = 0, j = 0; i < deletedMsgs.Count; i++)
             {
                 elems[j++] = deletedMsgs[i].Author.Bold();
-                elems[j++] = deletedMsgs[i].Content;
+                elems[j++] = new string(deletedMsgs[i].Content.Take(Config.DELETED_MESSAGES_CHARS).ToArray());
             }
 
-            if (elems.Length > 0)
-                return Context.SendFieldsAsync(fieldOrValue: elems);
-            else
-                return Context.ReplyErrorAsync("There have been no recent deleted messages in this channel.");
+            return elems.Length > 0 ?
+                Context.SendFieldsAsync(fieldOrValue: elems) :
+                Context.ReplyErrorAsync("There have been no recent deleted messages in this channel.");
         }
 
 

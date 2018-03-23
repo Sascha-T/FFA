@@ -36,14 +36,14 @@ namespace FFA.Common
 
         // Chat settings
         public static readonly TimeSpan CHAT_SERVICE_DELAY = TimeSpan.FromSeconds(30);
-        public const double CHAT_REWARD = 0.025;
+        public const double CHAT_REWARD = 0.05;
 
         // Reputation decay settings
         public const double DECAY_MUL = 0.995;
         public static readonly UpdateDefinition<User> DECAY_UPDATE = new UpdateDefinitionBuilder<User>().Mul(x => x.Reputation, DECAY_MUL);
 
         // Moderation settings
-        public const int MIN_MUTE_LENGTH = 1, CLEAR_DELETE_DELAY = 3000;
+        public const int CLEAR_DELETE_DELAY = 3000;
 
         // Spam settings
         public const double SPAM_REP_PENALTY = 2;
@@ -51,7 +51,7 @@ namespace FFA.Common
         public static readonly TimeSpan SPAM_MUTE_LENGTH = TimeSpan.FromHours(6), SPAM_DURATION = TimeSpan.FromSeconds(4);
 
         // Deleted messages settings
-        public const int DELETED_MESSAGES_CHARS = 150;
+        public const int DELETED_MESSAGES_CHARS = 350;
 
         // Rate limit settings
         public static readonly TimeSpan IGNORE_DURATION = TimeSpan.FromMinutes(30);
@@ -67,9 +67,9 @@ namespace FFA.Common
             MAX_DELETED_MSGS = 10;
 
         // Minimums
-        public const int MIN_LB = 5, MIN_CLEAR = 3, MIN_DELETED_MSGS = 1;
+        public const int MIN_LB = 5, MIN_CLEAR = 3, MIN_DELETED_MSGS = 1, MIN_MUTE_LENGTH = 1;
 
-        // Regexes
+        // Regexes, TODO: proper regex for mention + while loop replacing!
         public static readonly Regex NEW_LINE_REGEX = new Regex(@"\r\n?|\n"), NUMBER_REGEX = new Regex(@"^\d+(\.\d+)?"),
             EMOTE_REGEX = new Regex(@"<:.+:\d+>"), EMOTE_ID_REGEX = new Regex(@"<:.+:|>"), CAMEL_CASE = new Regex("(\\B[A-Z])"),
             MARKDOWN_REGEX = new Regex(@"\*|`|_|~");

@@ -15,10 +15,16 @@ namespace FFA.Services
 
             if (role == default(IRole))
             {
-                if (guild.Roles.Count == Constants.MAX_ROLES)
+                if (guild.Roles.Count == 13)
                 {
-                    var sortedRoles = guild.Roles.OrderBy(async x => (await x.GetMembersAsync()).Count());
-                    await sortedRoles.First(x => x.Name.StartsWith('#')).DeleteAsync();
+                    var tasks = guild.Roles.Select(async x => new
+                    {
+                        Role = x,
+                        MemberCount = (await x.GetMembersAsync()).Count()
+                    });
+                    var results = await Task.WhenAll(tasks);
+                    var sortedRoles = results.OrderBy(x => x.MemberCount);
+                    await sortedRoles.First(x => x.Role.Name.StartsWith('#')).Role.DeleteAsync();
                 }
 
                 role = await guild.CreateRoleAsync(name, color: color);
