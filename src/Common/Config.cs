@@ -34,6 +34,9 @@ namespace FFA.Common
             "to view the progress of this bot, or simply support the creators, you may join the official FFA server here: "
             + INVITE_LINK + ".";
 
+        // Account age required in days
+        public const int MEMBER_AGE = 2;
+
         // Chat settings
         public static readonly TimeSpan CHAT_SERVICE_DELAY = TimeSpan.FromSeconds(30);
         public const double CHAT_REWARD = 0.05;

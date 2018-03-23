@@ -34,6 +34,7 @@ namespace FFA.Modules
         [Command("Rep")]
         [Summary("Give reputation to any user.")]
         [Cooldown(Config.REP_CD)]
+        [MemberAge(Config.MEMBER_AGE)]
         public async Task RepAsync(
             [Summary("AlabamaTrigger#0001")] [NoSelf] IUser user)
         {
@@ -44,6 +45,7 @@ namespace FFA.Modules
         [Command("UnRep")]
         [Summary("Remove reputation from any user.")]
         [Cooldown(Config.UNREP_CD)]
+        [MemberAge(Config.MEMBER_AGE)]
         public async Task UnRepAsync(
             [Summary("PapaJohn#6666")] [NoSelf] IUser user)
         {

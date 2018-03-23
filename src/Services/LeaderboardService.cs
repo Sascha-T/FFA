@@ -45,6 +45,7 @@ namespace FFA.Services
             return descBuilder.ToString();
         }
 
+        // TODO: literally the exact same thing as the method above, merge into one generic method.
         public async Task<string> GetCustomCmdsAsync<TKey>(ulong guildId, Func<CustomCmd, TKey> keySelector, int quantity, bool ascending = false)
         {
             var dbGuildCmds = await _dbCustomCmds.WhereAsync(x => x.GuildId == guildId);

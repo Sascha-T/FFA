@@ -10,7 +10,6 @@ using FFA.Services;
 using MongoDB.Driver;
 using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FFA.Modules
@@ -74,7 +73,9 @@ namespace FFA.Modules
             var dbMuteUser = await _dbMutes.FindOneAsync(x => x.UserId == user.Id && x.GuildId == Context.Guild.Id && x.Active);
 
             if (dbMuteUser == null)
+            {
                 await Context.ReplyErrorAsync($"{(user != Context.User ? user + " isn\'t" : "You aren\'t")} muted.");
+            }
             else
             {
                 var timeLeft = dbMuteUser.Timestamp.Add(dbMuteUser.Length).Subtract(DateTimeOffset.UtcNow);
