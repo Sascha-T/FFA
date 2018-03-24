@@ -12,12 +12,18 @@ namespace FFA.Readers
 
         public Type Type { get; } = typeof(Color);
 
-        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
+        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input,
+            IServiceProvider services)
         {
-            if (uint.TryParse(input.Replace("#", string.Empty), NumberStyles.HexNumber, _numberFormat, out uint result))
+            if (uint.TryParse(input.Replace("#", string.Empty), NumberStyles.HexNumber, _numberFormat,
+                out uint result) && result <= 0xFFFFFF)
+            {
                 return Task.FromResult(TypeReaderResult.FromSuccess(new Color(result)));
+            }
+                
 
-            return Task.FromResult(TypeReaderResult.FromError(CommandError.Unsuccessful, "You have provided an invalid color hex value."));
+            return Task.FromResult(TypeReaderResult.FromError(CommandError.Unsuccessful,
+                "You have provided an invalid color hex value."));
         }
     }
 }
