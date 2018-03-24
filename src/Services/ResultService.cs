@@ -73,9 +73,10 @@ namespace FFA.Services
                     return ctx.DmAsync($"You will not be able to use commands for the next " +
                         $"{Config.IGNORE_DURATION.TotalMinutes} minutes. Please do not participate in command spam.");
                 }
-                else if (!Config.DISCORD_CODES.TryGetValue(httpEx.DiscordCode.GetValueOrDefault(), out message))
+                else if (!Config.DISCORD_CODES.TryGetValue(httpEx.DiscordCode.GetValueOrDefault(), out message) &&
+                         !Config.HTTP_CODES.TryGetValue(httpEx.HttpCode, out message))
                 {
-                    Config.HTTP_CODES.TryGetValue(httpEx.HttpCode, out message);
+                    message = last.Message;
                 }
             }
 

@@ -15,7 +15,7 @@ namespace FFA.Services
 
             if (role == default(IRole))
             {
-                if (guild.Roles.Count == 13)
+                if (guild.Roles.Count == Constants.MAX_ROLES)
                 {
                     var tasks = guild.Roles.Select(async x => new
                     {

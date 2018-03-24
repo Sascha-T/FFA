@@ -112,21 +112,21 @@ namespace FFA.Common
         public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65),
             CLEAR_COLOR = new Color(0x4D3DFF);
 
-    // Default colors
-    public static readonly IReadOnlyList<Color> DEFAULT_COLORS = new Color[]
-    {
-        new Color(0xFF269A), new Color(0x66FFCC),
-        new Color(0x00FF00), new Color(0xB10DC9),
-        new Color(0x00E828), new Color(0xFFFF00),
-        new Color(0x08F8FF), new Color(0x03FFAB),
-        new Color(0xF226FF), new Color(0xFF00BB),
-        new Color(0xFF1C8E), new Color(0x00FFFF),
-        new Color(0x68FF22), new Color(0x14DEA0),
-        new Color(0xFFBE11), new Color(0x0FFFFF),
-        new Color(0x2954FF), new Color(0x40E0D0),
-        new Color(0x9624ED), new Color(0x01ADB0),
-        new Color(0xA8ED00), new Color(0xBF255F)
-    }.ToImmutableArray();
+        // Default colors
+        public static readonly IReadOnlyList<Color> DEFAULT_COLORS = new Color[]
+        {
+            new Color(0xFF269A), new Color(0x66FFCC),
+            new Color(0x00FF00), new Color(0xB10DC9),
+            new Color(0x00E828), new Color(0xFFFF00),
+            new Color(0x08F8FF), new Color(0x03FFAB),
+            new Color(0xF226FF), new Color(0xFF00BB),
+            new Color(0xFF1C8E), new Color(0x00FFFF),
+            new Color(0x68FF22), new Color(0x14DEA0),
+            new Color(0xFFBE11), new Color(0x0FFFFF),
+            new Color(0x2954FF), new Color(0x40E0D0),
+            new Color(0x9624ED), new Color(0x01ADB0),
+            new Color(0xA8ED00), new Color(0xBF255F)
+        }.ToImmutableArray();
 
         // Eval imports
         public static readonly IReadOnlyList<string> EVAL_IMPORTS = new string[]
