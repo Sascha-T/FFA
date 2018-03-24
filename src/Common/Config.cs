@@ -20,7 +20,7 @@ namespace FFA.Common
         // Current user
         public const string GAME = PREFIX + "help";
 
-        // Guild
+        // Guild, move to some json thing
         public const string INVITE_LINK = "https://discord.gg/F7reg7e", HELP_MESSAGE =
             "FFA's goal is to provide a fully decentralized discord server by allowing the community to control " +
             "every aspect of the guild. The entire system is based around reputation. The most reputable users are the " +

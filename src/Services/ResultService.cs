@@ -60,7 +60,7 @@ namespace FFA.Services
             }
         }
 
-        public async Task HandleExceptionAsync(Context ctx, Exception ex)
+        public Task HandleExceptionAsync(Context ctx, Exception ex)
         {
             var last = ex.Last();
             var message = last.Message;
@@ -70,21 +70,18 @@ namespace FFA.Services
                 if ((int)httpEx.HttpCode == Constants.TOO_MANY_REQUESTS)
                 {
                     _rateLimitService.IgnoreUser(ctx.User.Id, Config.IGNORE_DURATION);
-                    await ctx.DmAsync($"You will not be able to use commands for the next {Config.IGNORE_DURATION.TotalMinutes} minutes. " +
-                        $"Please do not participate in command spam.");
-                    return;
+                    return ctx.DmAsync($"You will not be able to use commands for the next " +
+                        $"{Config.IGNORE_DURATION.TotalMinutes} minutes. Please do not participate in command spam.");
                 }
                 else if (!Config.DISCORD_CODES.TryGetValue(httpEx.DiscordCode.GetValueOrDefault(), out message))
                 {
                     Config.HTTP_CODES.TryGetValue(httpEx.HttpCode, out message);
                 }
             }
-            else
-            {
-                await _logger.LogAsync(LogSeverity.Error, $"{ex}");
-            }
 
-            await ctx.ReplyErrorAsync(message);
+            return Task.WhenAll(
+                _logger.LogAsync(LogSeverity.Error, $"{ex}"),
+                ctx.ReplyErrorAsync(message));
         }
     }
 }

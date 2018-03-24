@@ -52,8 +52,13 @@ namespace FFA.Modules
 
             for (int i = 0, j = 0; i < deletedMsgs.Count; i++)
             {
+                var val = new string(deletedMsgs[i].Content.Take(Config.DELETED_MESSAGES_CHARS).ToArray());
+
+                if (string.IsNullOrWhiteSpace(val))
+                    continue;
+
                 elems[j++] = deletedMsgs[i].Author.Bold();
-                elems[j++] = new string(deletedMsgs[i].Content.Take(Config.DELETED_MESSAGES_CHARS).ToArray());
+                elems[j++] = val;
             }
 
             return elems.Length > 0 ?
@@ -70,7 +75,8 @@ namespace FFA.Modules
         {
             user = user ?? Context.User;
 
-            var dbMuteUser = await _dbMutes.FindOneAsync(x => x.UserId == user.Id && x.GuildId == Context.Guild.Id && x.Active);
+            var dbMuteUser = await _dbMutes.FindOneAsync(x => x.UserId == user.Id && x.GuildId == Context.Guild.Id &&
+                x.Active);
 
             if (dbMuteUser == null)
             {
