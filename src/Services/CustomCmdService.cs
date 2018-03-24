@@ -28,8 +28,10 @@ namespace FFA.Services
             var customCmd = await _dbCustomCmds.FindCustomCmdAsync(cmdName, context.Guild.Id);
 
             if (customCmd != null)
+            {
                 await context.Channel.SendMessageAsync(customCmd.Response);
                 await _dbCustomCmds.UpdateAsync(customCmd, x => x.Uses++);
+            } 
         }
 
         public string SterilizeResponse(string input)
