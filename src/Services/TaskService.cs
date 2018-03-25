@@ -16,7 +16,7 @@ namespace FFA.Services
 
         public Task TryRun(Func<Task> task)
         {
-            Task.Run(async () =>
+            new Action(async () =>
             {
                 try
                 {
@@ -26,7 +26,7 @@ namespace FFA.Services
                 {
                     await _logger.LogAsync(LogSeverity.Error, ex.ToString());
                 }
-            });
+            })();
 
             return Task.CompletedTask;
         }

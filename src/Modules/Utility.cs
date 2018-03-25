@@ -52,12 +52,13 @@ namespace FFA.Modules
 
             for (int i = 0, j = 0; i < deletedMsgs.Count; i++)
             {
+                var name = deletedMsgs[i].Author.Bold();
                 var val = new string(deletedMsgs[i].Content.Take(Config.DELETED_MESSAGES_CHARS).ToArray());
 
-                if (string.IsNullOrWhiteSpace(val))
+                if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(val))
                     continue;
 
-                elems[j++] = deletedMsgs[i].Author.Bold();
+                elems[j++] = name;
                 elems[j++] = val;
             }
 
