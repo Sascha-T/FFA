@@ -7,6 +7,7 @@ using FFA.Extensions.Discord;
 using FFA.Extensions.System;
 using FFA.Preconditions.Parameter;
 using FFA.Services;
+using FFA.Utility;
 using MongoDB.Driver;
 using System;
 using System.Linq;
@@ -72,7 +73,7 @@ namespace FFA.Modules
         [Alias("left")]
         [Summary("Tell how much time is left on your mute.")]
         public async Task TimeLeftAsync(
-            [Summary("hornydevil#0018")] [Remainder] IUser user = null)
+            [Summary("hornydevil#0018")] [Remainder] [UserOverride] IUser user = null)
         {
             user = user ?? Context.User;
 

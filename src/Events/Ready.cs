@@ -12,11 +12,13 @@ namespace FFA.Events
     {
         private readonly IServiceProvider _provider;
         private readonly LoggingService _logger;
+        private bool _loadedTimers;
 
         public Ready(IServiceProvider provider) : base(provider)
         {
             _provider = provider;
             _logger = provider.GetRequiredService<LoggingService>();
+            _loadedTimers = false;
 
             _client.Ready += OnReadyAsync;
         }
@@ -24,7 +26,11 @@ namespace FFA.Events
         private Task OnReadyAsync()
             => _taskService.TryRun(async () =>
             {
-                Loader.LoadTimers(_provider);
+                if (!_loadedTimers)
+                {
+                    Loader.LoadTimers(_provider);
+                    _loadedTimers = true;
+                }
 
                 await _client.SetGameAsync(Config.GAME);
             });

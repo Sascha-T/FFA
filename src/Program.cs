@@ -1,5 +1,6 @@
 using Discord;
 using Discord.Commands;
+using Discord.Rest;
 using Discord.WebSocket;
 using FFA.Common;
 using FFA.Utility;
@@ -31,13 +32,18 @@ namespace FFA
                 await Arguments.TerminateAsync($"The {credsFileName} file does not exist.");
 
             var creds = JsonConvert.DeserializeObject<Credentials>(await File.ReadAllTextAsync(credsFileName), Config.JSON_SETTINGS);
-
+            
             var client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Info,
                 AlwaysDownloadUsers = true,
                 HandlerTimeout = null,
                 MessageCacheSize = 10
+            });
+
+            var restClient = new DiscordRestClient(new DiscordRestConfig
+            {
+                LogLevel = LogSeverity.Info
             });
 
             var commands = new CommandService(new CommandServiceConfig
@@ -56,6 +62,7 @@ namespace FFA
                 .AddSingleton(mongo)
                 .AddSingleton(db)
                 .AddSingleton(client)
+                .AddSingleton(restClient)
                 .AddSingleton(commands)
                 .AddSingleton(rand);
 
@@ -68,6 +75,7 @@ namespace FFA
             Loader.LoadReaders(commands);
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
+            await restClient.LoginAsync(TokenType.Bot, creds.Token);
             await client.LoginAsync(TokenType.Bot, creds.Token);
             await client.StartAsync();
 

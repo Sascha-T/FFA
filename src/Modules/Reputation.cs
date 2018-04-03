@@ -6,7 +6,9 @@ using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using FFA.Preconditions.Command;
 using FFA.Preconditions.Parameter;
+using FFA.Readers;
 using FFA.Services;
+using FFA.Utility;
 using MongoDB.Driver;
 using System;
 using System.Linq;
@@ -36,7 +38,7 @@ namespace FFA.Modules
         [Cooldown(Config.REP_CD)]
         [MemberAge(Config.MEMBER_AGE)]
         public async Task RepAsync(
-            [Summary("AlabamaTrigger#0001")] [NoSelf] IUser user)
+            [Summary("AlabamaTrigger#0001")] [NoSelf] [UserOverride] IUser user)
         {
             await _dbUsers.UpsertUserAsync(user.Id, Context.Guild.Id, x => x.Reputation += Config.REP_INCREASE);
             await Context.ReplyAsync($"You have successfully repped {user.Bold()}.");
@@ -47,7 +49,7 @@ namespace FFA.Modules
         [Cooldown(Config.UNREP_CD)]
         [MemberAge(Config.MEMBER_AGE)]
         public async Task UnRepAsync(
-            [Summary("PapaJohn#6666")] [NoSelf] IUser user)
+            [Summary("PapaJohn#6666")] [NoSelf] [UserOverride] IUser user)
         {
             await _dbUsers.UpsertUserAsync(user.Id, Context.Guild.Id, x => x.Reputation -= Config.UNREP_DECREASE);
             await Context.ReplyAsync($"You have successfully unrepped {user.Bold()}.");
@@ -57,7 +59,7 @@ namespace FFA.Modules
         [Alias("GetRank")]
         [Summary("Get anyone's reputation.")]
         public async Task GetRepAsync(
-            [Summary("Nolan#6900")] [Remainder] IUser user = null)
+            [Summary("Nolan#6900")] [Remainder] [UserOverride] IUser user = null)
         {
             user = user ?? Context.GuildUser;
 

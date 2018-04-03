@@ -45,7 +45,6 @@ namespace FFA.Utility
         public static void LoadReaders(CommandService commands)
         {
             var readerTypes = Constants.ASSEMBLY_CLASSES.Where(x => x.BaseType == typeof(TypeReader));
-            var method = commands.GetType().GetMethod("AddTypeReader", new Type[] { typeof(Type), typeof(TypeReader) });
 
             foreach (var readerType in readerTypes)
             {
@@ -53,7 +52,7 @@ namespace FFA.Utility
                 var reader = ctor.Invoke(null);
                 var type = reader.GetType().GetProperty("Type").GetValue(reader);
 
-                method.Invoke(commands, new object[] { type, ctor.Invoke(null) });
+                commands.AddTypeReader((Type)type, (TypeReader)ctor.Invoke(null), true);
             }
         }
 

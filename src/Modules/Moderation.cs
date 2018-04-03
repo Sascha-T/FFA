@@ -6,6 +6,7 @@ using FFA.Extensions.Discord;
 using FFA.Preconditions.Command;
 using FFA.Preconditions.Parameter;
 using FFA.Services;
+using FFA.Utility;
 using MongoDB.Driver;
 using System;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace FFA.Modules
         [SetMutedRole]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task MuteAsync(
-            [Summary("Jimbo#5555")] [NoSelf] [HigherReputation] [NotMutedParam] IUser user,
+            [Summary("Jimbo#5555")] [NoSelf] [HigherReputation] [NotMutedParam] [UserOverride] IUser user,
             [Summary("2c")] Rule rule,
             [Summary("8h")] [MinimumHours(Config.MIN_MUTE_LENGTH)] TimeSpan length,
             [Summary("stop with all that ruckus!")] [Remainder] [MaximumLength(Config.MAX_REASON_LENGTH)] string reason = null)
@@ -71,7 +72,7 @@ namespace FFA.Modules
         [Summary("Delete a specified amount of messages sent by any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task Clear(
-            [Summary("SteveJr#3333")] [NoSelf] [HigherReputation] IUser user,
+            [Summary("SteveJr#3333")] [NoSelf] [HigherReputation] [UserOverride] IUser user,
             [Summary("3a")] Rule rule,
             [Summary("20")] [Between(Config.MIN_CLEAR, Config.MAX_CLEAR)] int quantity = Config.CLEAR_DEFAULT,
             [Summary("stop spamming")] [Remainder] [MaximumLength(Config.MAX_REASON_LENGTH)] string reason = null)
