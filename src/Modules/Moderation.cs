@@ -37,14 +37,15 @@ namespace FFA.Modules
         public async Task MuteAsync(
             [Summary("Jimbo#5555")] [NoSelf] [HigherReputation] [NotMutedParam] [UserOverride] IUser user,
             [Summary("2c")] Rule rule,
-            [Summary("8h")] [MinimumHours(Config.MIN_MUTE_LENGTH)] TimeSpan length,
-            [Summary("stop with all that ruckus!")] [Remainder] [MaximumLength(Config.MAX_REASON_LENGTH)] string reason = null)
+            [Summary("8h")] [MinHours(Config.MIN_MUTE_LENGTH)] TimeSpan length,
+            [Summary("stop spamming")] [Remainder] [MaxLength(Config.MAX_REASON_LENGTH)] string reason = null)
         {
             var guildUser = await Context.Guild.GetUserAsync(user.Id);
 
             if (rule.MaxMuteLength.HasValue && length > rule.MaxMuteLength)
             {
-                await Context.ReplyErrorAsync($"The maximum mute length of this rule is {rule.MaxMuteLength.Value.TotalHours}h.");
+                await Context.ReplyErrorAsync(
+                    $"The maximum mute length of this rule is {rule.MaxMuteLength.Value.TotalHours}h.");
             }
             else
             {
@@ -59,8 +60,8 @@ namespace FFA.Modules
         [RequireBotPermission(GuildPermission.ManageRoles)]
         public async Task UnmuteAsync(
             [Summary("Billy#6969")] [NoSelf] [Muted] IGuildUser guildUser,
-            [Summary("you best stop flirting with Mrs Ruckus")] [Remainder]
-            [MaximumLength(Config.MAX_REASON_LENGTH)] string reason)
+            [Summary("he apologized")] [Remainder]
+            [MaxLength(Config.MAX_REASON_LENGTH)] string reason)
         {
             await guildUser.RemoveRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
             await Context.ReplyAsync($"You have successfully unmuted {guildUser.Bold()}.");
@@ -75,14 +76,15 @@ namespace FFA.Modules
             [Summary("SteveJr#3333")] [NoSelf] [HigherReputation] [UserOverride] IUser user,
             [Summary("3a")] Rule rule,
             [Summary("20")] [Between(Config.MIN_CLEAR, Config.MAX_CLEAR)] int quantity = Config.CLEAR_DEFAULT,
-            [Summary("stop spamming")] [Remainder] [MaximumLength(Config.MAX_REASON_LENGTH)] string reason = null)
+            [Summary("stop spamming")] [Remainder] [MaxLength(Config.MAX_REASON_LENGTH)] string reason = null)
         {
             var messages = await Context.Channel.GetMessagesAsync().FlattenAsync();
             var filtered = messages.Where(x => x.Author.Id == user.Id).Take(quantity);
 
             await Context.TextChannel.DeleteMessagesAsync(filtered);
 
-            var msg = await Context.ReplyAsync($"You have successfully deleted {quantity} messages sent by {user.Bold()}.");
+            var msg = await Context.ReplyAsync(
+                $"You have successfully deleted {quantity} messages sent by {user.Bold()}.");
 
             await Task.Delay(Config.CLEAR_DELETE_DELAY);
             await msg.DeleteAsync();

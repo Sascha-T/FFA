@@ -5,11 +5,11 @@ using FFA.Extensions.Discord;
 
 namespace FFA.Preconditions.Parameter
 {
-    public sealed class MaximumLengthAttribute : ParameterPreconditionAttribute
+    public sealed class MaxLengthAttribute : ParameterPreconditionAttribute
     {
         private readonly int _length;
 
-        public MaximumLengthAttribute(int length)
+        public MaxLengthAttribute(int length)
         {
             _length = length;
         }

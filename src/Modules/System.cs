@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace FFA.Modules
 {
+    // TODO: properly format timespans like in ;alt
     // TODO: make less memes of the command examples!
     [Name("System")]
     [Summary("System commands directly tied with FFA's functionality.")]
@@ -114,7 +115,8 @@ namespace FFA.Modules
                 var descBuilder = new StringBuilder();
                 
                 foreach (var cd in cooldowns)
-                    descBuilder.AppendFormat("{0}: {1}\n", cd.Command.Name.Bold(), cd.EndsAt.Subtract(DateTimeOffset.UtcNow).ToString(@"hh\:mm\:ss"));
+                    descBuilder.AppendFormat("{0}: {1}\n", cd.Command.Name.Bold(),
+                        cd.EndsAt.Subtract(DateTimeOffset.UtcNow).ToString(@"hh\:mm\:ss"));
 
                 await Context.SendAsync(descBuilder.ToString(), $"{user}'s Cooldowns");
             }
@@ -125,7 +127,8 @@ namespace FFA.Modules
         [Summary("View the most used custom cmds")]
         public async Task BestCmds(
             [Summary("15")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
-            => await Context.SendAsync(await _lbService.GetCustomCmdsAsync(Context.Guild.Id, x => x.Uses, count), "The Most Used Custom Cmds");
+            => await Context.SendAsync(await _lbService.GetCustomCmdsAsync(Context.Guild, x => x.Uses, count),
+                "The Most Used Custom Cmds");
 
         [Command("CmdInfo")]
         [Alias("cmdinformation", "commandinfo", "commandinformation")]

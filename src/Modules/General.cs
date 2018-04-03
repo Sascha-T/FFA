@@ -83,7 +83,7 @@ namespace FFA.Modules
         [Summary("Add any custom command you please.")]
         public async Task AddCommandAsync(
             [Summary("retarded")] [UniqueCustomCmd] string name,
-            [Summary("VIM2META LOL DUDE IS THICC AS BALLS")] [Remainder] [MaximumLength(Config.MAX_CMD_LENGTH)] CmdResponse response)
+            [Summary("VIM2META LOL DUDE IS THICC AS BALLS")] [Remainder] [MaxLength(Config.MAX_CMD_LENGTH)] CmdResponse response)
         {
             var newCmd = new CustomCmd(Context.User.Id, Context.Guild.Id, name.ToLower(), response.Value);
             await _dbCustomCmds.InsertOneAsync(newCmd);
@@ -97,7 +97,7 @@ namespace FFA.Modules
         [Cooldown(Config.MOD_CMD_CD)]
         public async Task ModifyCommandAsync(
             [Summary("vim2meta")] CustomCmd command,
-            [Summary("RETARD THAT'S AS BLIND AS ME GRAN")] [Remainder] [MaximumLength(Config.MAX_CMD_LENGTH)] CmdResponse response = null)
+            [Summary("RETARD THAT'S AS BLIND AS ME GRAN")] [Remainder] [MaxLength(Config.MAX_CMD_LENGTH)] CmdResponse response = null)
         {
             await _dbCustomCmds.UpdateAsync(command, x => x.Response = response.Value);
             await Context.ReplyAsync("You have successfully updated this command.");

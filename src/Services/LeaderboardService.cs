@@ -1,9 +1,11 @@
 using Discord;
+using FFA.Database;
 using FFA.Database.Models;
 using FFA.Entities.Service;
 using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using FFA.Extensions.System;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System;
 using System.Linq;
@@ -14,57 +16,59 @@ namespace FFA.Services
 {
     public sealed class LeaderboardService : Service
     {
-        private readonly IMongoCollection<User> _dbUsers;
-        private readonly IMongoCollection<CustomCmd> _dbCustomCmds;
+        private readonly IServiceProvider _provider;
 
-        public LeaderboardService(IMongoCollection<User> dbUsers, IMongoCollection<CustomCmd> dbCustomCmds)
+        public LeaderboardService(IServiceProvider provider)
         {
-            _dbUsers = dbUsers;
-            _dbCustomCmds = dbCustomCmds;
+            _provider = provider;
         }
-        
-        public async Task<string> GetUserLbAsync<TKey>(IGuild guild, Func<User, TKey> keySelector, int quantity, bool ascending = false)
+
+        public async Task<string> GetLbAsync<T, TKey>(IGuild guild, Func<T, TKey> keySelector,
+            Func<T, int, Task<ValueTuple<bool, string>>> formatter, int quantity, bool ascending = false)
+            where T : Entity
         {
-            // TODO: utility method that does a rest req IF its not in cache!
-            var dbGuildUsers = await _dbUsers.WhereAsync(x => x.GuildId == guild.Id);
-            var ordered = ascending ? dbGuildUsers.OrderBy(keySelector) : dbGuildUsers.OrderByDescending(keySelector);
+            var collection = _provider.GetRequiredService<IMongoCollection<T>>();
+            var elements = await collection.WhereAsync(x => x.GuildId == guild.Id);
+            var ordered = ascending ? elements.OrderBy(keySelector) : elements.OrderByDescending(keySelector);
             var orderedArr = ordered.ToArray();
             var descBuilder = new StringBuilder();
-            var pos = 0;
+            var pos = 1;
 
             for (int i = 0; i < orderedArr.Length; i++)
             {
-                var user = await guild.GetUserAsync(orderedArr[i].UserId);
-
-                if (user != null)
-                    descBuilder.AppendFormat("{0}. {1}: {2}\n", ++pos, user.Bold(), orderedArr[i].Reputation.ToString("F2"));
-
                 if (pos == quantity)
                     break;
+
+                var (success, msg) = await formatter(orderedArr[i], pos);
+
+                if (success)
+                {
+                    descBuilder.AppendFormat("{0}\n", msg);
+                    pos++;
+                }
             }
 
             return descBuilder.ToString();
         }
 
-        // TODO: literally the exact same thing as the method above, merge into one generic method.
-        public async Task<string> GetCustomCmdsAsync<TKey>(ulong guildId, Func<CustomCmd, TKey> keySelector, int quantity, bool ascending = false)
-        {
-            var dbGuildCmds = await _dbCustomCmds.WhereAsync(x => x.GuildId == guildId);
-            var ordered = ascending ? dbGuildCmds.OrderBy(keySelector) : dbGuildCmds.OrderByDescending(keySelector);
-            var OrderedArr = ordered.ToArray();
-            var desc = string.Empty;
-            var pos = 0;
+        public Task<string> GetUserLbAsync<TKey>(IGuild guild, Func<User, TKey> keySelector, int quantity,
+            bool ascending = false)
+            => GetLbAsync(guild, keySelector, async (dbUser, pos) => {
+                var user = await guild.GetUserAsync(dbUser.UserId);
 
-            for (int i = 0; i < OrderedArr.Length; i++)
-            {
-                if (OrderedArr[i].Uses > 0)
-                    desc += $"{(++pos)}. {OrderedArr[i].Name.UpperFirstChar().Bold()}: {OrderedArr[i].Uses}\n";
+                if (user == null)
+                    return (false, string.Empty);
 
-                if (pos == quantity)
-                    break;
-            }
+                return (true, $"{pos}. {user.Bold()}: {dbUser.Reputation.ToString("F2")}");
+            }, quantity, ascending);
+        
+        public Task<string> GetCustomCmdsAsync<TKey>(IGuild guild, Func<CustomCmd, TKey> keySelector,
+            int quantity, bool ascending = false)
+            => GetLbAsync(guild, keySelector, (dbCmd, pos) => {
+                if (dbCmd.Uses == 0)
+                    return Task.FromResult((false, string.Empty));
 
-            return desc;
-        }
+                return Task.FromResult((true, $"{pos}. {dbCmd.Name.UpperFirstChar().Bold()}: {dbCmd.Uses}"));
+            }, quantity, ascending);
     }
 }
