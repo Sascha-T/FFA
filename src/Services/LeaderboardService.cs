@@ -25,6 +25,7 @@ namespace FFA.Services
         
         public async Task<string> GetUserLbAsync<TKey>(IGuild guild, Func<User, TKey> keySelector, int quantity, bool ascending = false)
         {
+            // TODO: utility method that does a rest req IF its not in cache!
             var dbGuildUsers = await _dbUsers.WhereAsync(x => x.GuildId == guild.Id);
             var ordered = ascending ? dbGuildUsers.OrderBy(keySelector) : dbGuildUsers.OrderByDescending(keySelector);
             var orderedArr = ordered.ToArray();
