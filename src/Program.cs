@@ -41,6 +41,7 @@ namespace FFA
                 MessageCacheSize = 10
             });
 
+            // TODO: sub to rest client log event
             var restClient = new DiscordRestClient(new DiscordRestConfig
             {
                 LogLevel = LogSeverity.Info
