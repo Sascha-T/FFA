@@ -36,7 +36,8 @@ namespace FFA.Services
 
         public string SterilizeResponse(string input)
         {
-            input = input.Replace("@", string.Empty);
+            while (Config.MENTION_REGEX.IsMatch(input))
+                input = Config.MENTION_REGEX.Replace(input, string.Empty);
 
             if (input.Count(x => x == '\n') > Config.MAX_CMD_NEW_LINES)
                 input = Config.NEW_LINE_REGEX.Replace(input, string.Empty);

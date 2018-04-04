@@ -43,7 +43,8 @@ namespace FFA.Common
 
         // Reputation decay settings
         public const double DECAY_MUL = 0.995;
-        public static readonly UpdateDefinition<User> DECAY_UPDATE = new UpdateDefinitionBuilder<User>().Mul(x => x.Reputation, DECAY_MUL);
+        public static readonly UpdateDefinition<User> DECAY_UPDATE =
+            new UpdateDefinitionBuilder<User>().Mul(x => x.Reputation, DECAY_MUL);
 
         // Moderation settings
         public const int CLEAR_DELETE_DELAY = 3000;
@@ -51,7 +52,8 @@ namespace FFA.Common
         // Spam settings
         public const double SPAM_REP_PENALTY = 2;
         public const int SPAM_LIMIT = 5; 
-        public static readonly TimeSpan SPAM_MUTE_LENGTH = TimeSpan.FromHours(6), SPAM_DURATION = TimeSpan.FromSeconds(4);
+        public static readonly TimeSpan SPAM_MUTE_LENGTH = TimeSpan.FromHours(6),
+            SPAM_DURATION = TimeSpan.FromSeconds(4);
 
         // Deleted messages settings
         public const int DELETED_MESSAGES_CHARS = 350;
@@ -63,30 +65,33 @@ namespace FFA.Common
         public const double REP_INCREASE = 1, UNREP_DECREASE = 1;
 
         // Reputation requirements
-        public const int TOP_REMOVE_EMOTE = 20, TOP_MOD_CMD = 20, TOP_REMOVE_CMD = 20, TOP_MOD = 30, TOP_COLOR = 40, TOP_ADD_EMOTE = 40;
+        public const int TOP_REMOVE_EMOTE = 20, TOP_MOD_CMD = 20, TOP_REMOVE_CMD = 20, TOP_MOD = 30, TOP_COLOR = 40,
+            TOP_ADD_EMOTE = 40;
 
         // Maximums
-        public const int MAX_LB = 30, MAX_CLEAR = 100, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 600, MAX_CMD_LENGTH = 500, MAX_CMD_NEW_LINES = 10,
-            MAX_DELETED_MSGS = 10;
+        public const int MAX_LB = 30, MAX_CLEAR = 100, MAX_HEX_LENGTH = 6, MAX_REASON_LENGTH = 600,
+            MAX_CMD_LENGTH = 500, MAX_CMD_NEW_LINES = 10, MAX_DELETED_MSGS = 10;
 
         // Minimums
         public const int MIN_LB = 5, MIN_CLEAR = 3, MIN_DELETED_MSGS = 1, MIN_MUTE_LENGTH = 1;
 
-        // Regexes, TODO: proper regex for mention + while loop replacing!
+        // Regexes
         public static readonly Regex NEW_LINE_REGEX = new Regex(@"\r\n?|\n"), NUMBER_REGEX = new Regex(@"^\d+(\.\d+)?"),
-            EMOTE_REGEX = new Regex(@"<:.+:\d+>"), EMOTE_ID_REGEX = new Regex(@"<:.+:|>"), CAMEL_CASE = new Regex("(\\B[A-Z])"),
+            EMOTE_REGEX = new Regex(@"<:.+:\d+>"), MENTION_REGEX = new Regex(@"@here|@everyone|<@!?\d+>"),
+            EMOTE_ID_REGEX = new Regex(@"<:.+:|>"), CAMEL_CASE = new Regex("(\\B[A-Z])"),
             MARKDOWN_REGEX = new Regex(@"\*|`|_|~");
 
         // Defaults
         public const int CLEAR_DEFAULT = 20, LB_COUNT = 10, DELETED_MSGS = 5;
 
         // Cooldowns in hours
-        public const double REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1, REMOVE_CMD_CD = 1, ADD_EMOTE_CD = 0.5,
-            REMOVE_EMOTE_CD = 0.5;
+        public const double REP_CD = 6, UNREP_CD = 6, COLOR_CD = 1, UNMUTE_CD = 12, MOD_CMD_CD = 1, REMOVE_CMD_CD = 1,
+            ADD_EMOTE_CD = 0.5, REMOVE_EMOTE_CD = 0.5;
 
         // Timers
-        public static readonly TimeSpan AUTO_UNMUTE_TIMER = TimeSpan.FromMinutes(1), REP_DECAY_TIMER = TimeSpan.FromHours(1),
-            DISBOARD_BUMP_TIMER = TimeSpan.FromHours(1), SERVER_HOUND_BUMP_TIMER = TimeSpan.FromHours(4);
+        public static readonly TimeSpan AUTO_UNMUTE_TIMER = TimeSpan.FromMinutes(1),
+            REP_DECAY_TIMER = TimeSpan.FromHours(1), DISBOARD_BUMP_TIMER = TimeSpan.FromHours(1),
+            SERVER_HOUND_BUMP_TIMER = TimeSpan.FromHours(4);
 
         // Logs
         public const string LOGS_DIRECTORY = "logs/";
@@ -101,16 +106,17 @@ namespace FFA.Common
         }.ToImmutableDictionary();
 
         // HTTP code responses
-        public static readonly IReadOnlyDictionary<HttpStatusCode, string> HTTP_CODES = new Dictionary<HttpStatusCode, string>()
-        {
-            { HttpStatusCode.Forbidden, "I do not have permission to do that." },
-            { HttpStatusCode.InternalServerError, "An unexpected error has occurred, please try again later." },
-            { HttpStatusCode.RequestTimeout, "The request has timed out, please try again later." }
-        }.ToImmutableDictionary();
+        public static readonly IReadOnlyDictionary<HttpStatusCode, string> HTTP_CODES =
+            new Dictionary<HttpStatusCode, string>()
+            {
+                { HttpStatusCode.Forbidden, "I do not have permission to do that." },
+                { HttpStatusCode.InternalServerError, "An unexpected error has occurred, please try again later." },
+                { HttpStatusCode.RequestTimeout, "The request has timed out, please try again later." }
+            }.ToImmutableDictionary();
 
         // Custom colors
-        public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29), UNMUTE_COLOR = new Color(0x72FF65),
-            CLEAR_COLOR = new Color(0x4D3DFF);
+        public static readonly Color ERROR_COLOR = new Color(0xFF0000), MUTE_COLOR = new Color(0xFF3E29),
+            UNMUTE_COLOR = new Color(0x72FF65), CLEAR_COLOR = new Color(0x4D3DFF);
 
         // Default colors
         public static readonly IReadOnlyList<Color> DEFAULT_COLORS = new Color[]
@@ -147,9 +153,9 @@ namespace FFA.Common
 
         // Eval script options
         public static readonly ScriptOptions SCRIPT_OPTIONS = ScriptOptions.Default
-                .WithImports(EVAL_IMPORTS)
-                .WithReferences(AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic &&
-                                !string.IsNullOrWhiteSpace(x.Location)));
+            .WithImports(EVAL_IMPORTS)
+            .WithReferences(AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic &&
+                !string.IsNullOrWhiteSpace(x.Location)));
 
         // JSON serialization settings
         public static readonly JsonSerializerSettings JSON_SETTINGS = new JsonSerializerSettings
