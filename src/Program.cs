@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
+// TODO: disallow certain channels from getting chat rep
 // TODO: custom user type reader to do rest api fetch for mentions/id
 // TODO: README, contributing, all other github things.
 // TODO: move all command checks to preconditions!
@@ -41,6 +42,7 @@ namespace FFA
                 MessageCacheSize = 10
             });
 
+            // TODO: sub to rest client log event
             var restClient = new DiscordRestClient(new DiscordRestConfig
             {
                 LogLevel = LogSeverity.Info
