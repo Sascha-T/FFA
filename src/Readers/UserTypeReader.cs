@@ -46,7 +46,7 @@ namespace FFA.Readers
                         var guildUser = guildUsers.FirstOrDefault(x => x.DiscriminatorValue == discriminator &&
                             string.Equals(username, x.Username, StringComparison.OrdinalIgnoreCase));
 
-                        if (guildUser != null)
+                        if (guildUser != default(IGuildUser))
                             return TypeReaderResult.FromSuccess(guildUser);
                     }
                 }
