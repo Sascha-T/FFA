@@ -39,9 +39,7 @@ namespace FFA.Services
                 var (success, msg) = await formatter(orderedArr[i]);
 
                 if (success)
-                {
                     descBuilder.AppendFormat("{0}. {1}\n", ++pos, msg);
-                }
 
                 if (pos == quantity)
                     break;

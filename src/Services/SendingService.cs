@@ -4,6 +4,7 @@ using FFA.Entities.Service;
 using FFA.Extensions.Discord;
 using FFA.Extensions.System;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,21 +19,21 @@ namespace FFA.Services
             _random = random;
         }
 
-        public Task<IUserMessage> SendFieldsAsync(IMessageChannel channel, Color? color = null, params string[] fieldOrValue)
+        public Task<IUserMessage> SendFieldsAsync(IMessageChannel channel, IReadOnlyList<string> fieldOrValue, Color? color = null)
         {
             var builder = new EmbedBuilder
             {
                 Color = color ?? _random.Value.ArrayElement(Config.DEFAULT_COLORS)
             };
 
-            for (var i = 0; i < fieldOrValue.Length; i += 2)
+            for (var i = 0; i < fieldOrValue.Count; i += 2)
                 builder.AddField(fieldOrValue[i], fieldOrValue[i + 1]);
 
             return SendEmbedAsync(channel, builder);
         }
 
-        public Task<IUserMessage> SendFieldsErrorAsync(IMessageChannel channel, params string[] fieldOrValue)
-            => SendFieldsAsync(channel, Config.ERROR_COLOR, fieldOrValue);
+        public Task<IUserMessage> SendFieldsErrorAsync(IMessageChannel channel, IReadOnlyList<string> fieldOrValue)
+            => SendFieldsAsync(channel, fieldOrValue, Config.ERROR_COLOR);
 
         public async Task<bool> TryDMAsync(IUser user, string description, string title = null, Color? color = null, IGuild guild = null)
         {

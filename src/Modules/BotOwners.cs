@@ -68,16 +68,28 @@ namespace FFA.Modules
 
             if (!_evalService.TryCompile(script, out string errorMessage))
             {
-                await Context.SendFieldsErrorAsync("Eval", $"```cs\n{code}```", "Compilation Error", $"```{errorMessage}```");
+                await Context.SendFieldsErrorAsync(new string[]
+                {
+                    "Eval", $"```cs\n{code}```",
+                    "Compilation Error", $"```{errorMessage}```"
+                });
             }
             else
             {
                 var result = await _evalService.EvalAsync(Context.Guild, script);
 
                 if (result.Success)
-                    await Context.SendFieldsAsync(null, "Eval", $"```cs\n{code}```", "Result", $"```{result.Result}```");
+                    await Context.SendFieldsAsync(new string[]
+                    {
+                        "Eval", $"```cs\n{code}```",
+                        "Result", $"```{result.Result}```"
+                    });
                 else
-                    await Context.SendFieldsErrorAsync("Eval", $"```cs\n{code}```", "Runtime Error", $"```{result.Exception}```");
+                    await Context.SendFieldsErrorAsync(new string[]
+                    {
+                        "Eval", $"```cs\n{code}```",
+                        "Runtime Error", $"```{result.Exception}```"
+                    });
             }
         }
     }

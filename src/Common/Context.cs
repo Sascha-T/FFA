@@ -6,6 +6,7 @@ using FFA.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FFA.Common
@@ -53,10 +54,10 @@ namespace FFA.Common
         public async Task<IUserMessage> DmAsync(string description, string title = null)
             => await _sender.SendAsync(await User.GetOrCreateDMChannelAsync(), description, title, guild: Guild);
 
-        public Task<IUserMessage> SendFieldsAsync(Color? color = null, params string[] fieldOrValue)
-            => _sender.SendFieldsAsync(Channel, color, fieldOrValue);
+        public Task<IUserMessage> SendFieldsAsync(IReadOnlyList<string> fieldOrValue, Color? color = null)
+            => _sender.SendFieldsAsync(Channel, fieldOrValue, color);
 
-        public Task<IUserMessage> SendFieldsErrorAsync(params string[] fieldOrValue)
+        public Task<IUserMessage> SendFieldsErrorAsync(IReadOnlyList<string> fieldOrValue)
             => _sender.SendFieldsErrorAsync(Channel, fieldOrValue);
 
         public Task<IUserMessage> SendAsync(string description, string title = null, Color? color = null)
