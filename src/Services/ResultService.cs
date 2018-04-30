@@ -38,6 +38,7 @@ namespace FFA.Services
 
                 _actionService.Increment(ctx, cmd);
 
+                // TODO: always apply the cooldown regardless of success BEFORE EXECUTING, then remove it if the command failed.
                 return _cooldownService.ApplyCooldownAsync(ctx, cmd);
             }
 
