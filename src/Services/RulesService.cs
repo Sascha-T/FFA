@@ -26,6 +26,7 @@ namespace FFA.Services
             _semaphore = new SemaphoreSlim(1, 1);
         }
 
+        // TODO: accept context to not refetch db guild?
         public async Task UpdateAsync(IGuild guild)
         {
             await _semaphore.WaitAsync();
@@ -48,6 +49,7 @@ namespace FFA.Services
                 var result = await _dbRules.WhereAsync(x => x.GuildId == guild.Id);
                 var groups = result.OrderBy(x => x.Category).GroupBy(x => x.Category).ToArray();
 
+                // TODO: gen unique random colors to prevent duplicates?
                 for (var i = 0; i < groups.Length; i++)
                 {
                     var descBuilder = new StringBuilder();
