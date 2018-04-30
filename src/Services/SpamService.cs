@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 // TODO: allow certain channels to be ignored
 namespace FFA.Services
 {
-    // TODO: ensure all async methods are suffixed with Async
     public sealed class SpamService : Service
     {
         private readonly ModerationService _modService;

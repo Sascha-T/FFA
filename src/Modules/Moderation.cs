@@ -18,6 +18,7 @@ namespace FFA.Modules
     [Summary("Commands reserved for the most reputable users to moderate the guild.")]
     [GuildOnly]
     [NotMuted]
+    [MaxActions]
     [Top(Config.TOP_MOD)]
     public sealed class Moderation : ModuleBase<Context>
     {
@@ -51,7 +52,7 @@ namespace FFA.Modules
             {
                 await guildUser?.AddRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
                 await Context.ReplyAsync($"You have successfully muted {user.Bold()}.");
-                await _modService.CreateMute(Context, user, rule, length, reason);
+                await _modService.CreateMuteAsync(Context, user, rule, length, reason);
             }
         }
         
@@ -65,14 +66,14 @@ namespace FFA.Modules
         {
             await guildUser.RemoveRoleAsync(Context.Guild.GetRole(Context.DbGuild.MutedRoleId.Value));
             await Context.ReplyAsync($"You have successfully unmuted {guildUser.Bold()}.");
-            await _modService.RemoveMute(Context, guildUser, reason);
+            await _modService.RemoveMuteAsync(Context, guildUser, reason);
         }
 
         [Command("Clear")]
         [Alias("prune", "purge")]
         [Summary("Delete a specified amount of messages sent by any guild user.")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task Clear(
+        public async Task ClearAsync(
             [Summary("SteveJr#3333")] [NoSelf] [HigherReputation] [UserOverride] IUser user,
             [Summary("3a")] Rule rule,
             [Summary("20")] [Between(Config.MIN_CLEAR, Config.MAX_CLEAR)] int quantity = Config.CLEAR_DEFAULT,
@@ -81,14 +82,21 @@ namespace FFA.Modules
             var messages = await Context.Channel.GetMessagesAsync().FlattenAsync();
             var filtered = messages.Where(x => x.Author.Id == user.Id).Take(quantity);
 
-            await Context.TextChannel.DeleteMessagesAsync(filtered);
+            if (filtered.Count() < 0)
+            {
+                await Context.ReplyAsync("There are no messages to delete.");
+            }
+            else
+            {
+                await Context.TextChannel.DeleteMessagesAsync(filtered);
 
-            var msg = await Context.ReplyAsync(
-                $"You have successfully deleted {quantity} messages sent by {user.Bold()}.");
+                var msg = await Context.ReplyAsync(
+                    $"You have successfully deleted {quantity} messages sent by {user.Bold()}.");
 
-            await Task.Delay(Config.CLEAR_DELETE_DELAY);
-            await msg.DeleteAsync();
-            await _modService.LogClearAsync(Context, user, rule, quantity, reason);
+                await Task.Delay(Config.CLEAR_DELETE_DELAY);
+                await msg.DeleteAsync();
+                await _modService.LogClearAsync(Context, user, rule, quantity, reason);
+            }
         }
     }
 }

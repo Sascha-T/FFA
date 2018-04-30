@@ -12,15 +12,17 @@ namespace FFA.Services
 {
     public sealed class ResultService : Service
     {
+        private readonly ActionService _actionService;
         private readonly LoggingService _logger;
         private readonly CommandService _commands;
         private readonly RateLimitService _rateLimitService;
         private readonly CustomCmdService _customCmdService;
         private readonly CooldownService _cooldownService;
 
-        public ResultService(LoggingService logger, CommandService commands, RateLimitService rateLimitService, CustomCmdService customCmdService,
+        public ResultService(ActionService actionService, LoggingService logger, CommandService commands, RateLimitService rateLimitService, CustomCmdService customCmdService,
             CooldownService cooldownService)
         {
+            _actionService = actionService;
             _logger = logger;
             _commands = commands;
             _rateLimitService = rateLimitService;
@@ -32,32 +34,34 @@ namespace FFA.Services
         {
             if (result.IsSuccess)
             {
-                return _cooldownService.ApplyCooldownAsync(ctx, argPos);
+                var cmd = _commands.GetCommand(ctx, argPos);
+
+                _actionService.Increment(ctx, cmd);
+
+                return _cooldownService.ApplyCooldownAsync(ctx, cmd);
             }
-            else
+
+            var message = result.ErrorReason;
+
+            switch (result.Error)
             {
-                var message = result.ErrorReason;
+                case CommandError.ParseFailed:
+                    message = "You have provided an invalid number.";
+                    break;
+                case CommandError.UnknownCommand:
+                    return _customCmdService.ExecuteAsync(ctx, argPos);
+                case CommandError.Exception:
+                    return HandleExceptionAsync(ctx, ((ExecuteResult)result).Exception);
+                case CommandError.BadArgCount:
+                    var cmd = _commands.GetCommand(ctx, argPos);
 
-                switch (result.Error)
-                {
-                    case CommandError.ParseFailed:
-                        message = "You have provided an invalid number.";
-                        break;
-                    case CommandError.UnknownCommand:
-                        return _customCmdService.ExecuteAsync(ctx, argPos);
-                    case CommandError.Exception:
-                        return HandleExceptionAsync(ctx, ((ExecuteResult)result).Exception);
-                    case CommandError.BadArgCount:
-                        var cmd = _commands.GetCommand(ctx, argPos);
-
-                        message = $"You are incorrectly using this command.\n" +
-                                  $"**Usage:** `{Config.PREFIX}{cmd.GetUsage()}`\n" +
-                                  $"**Example:** `{Config.PREFIX}{cmd.GetExample()}`";
-                        break;
-                }
-
-                return ctx.ReplyErrorAsync(message);
+                    message = $"You are incorrectly using this command.\n" +
+                              $"**Usage:** `{Config.PREFIX}{cmd.GetUsage()}`\n" +
+                              $"**Example:** `{Config.PREFIX}{cmd.GetExample()}`";
+                    break;
             }
+
+            return ctx.ReplyErrorAsync(message);
         }
 
         public Task HandleExceptionAsync(Context ctx, Exception ex)

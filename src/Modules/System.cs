@@ -37,7 +37,7 @@ namespace FFA.Modules
         [Command("Help")]
         [Alias("information", "info")]
         [Summary("Information about the bot.")]
-        public async Task Help()
+        public async Task HelpAsync()
         {
             await Context.DmAsync(Config.HELP_MESSAGE, "FFA Information");
 
@@ -125,7 +125,7 @@ namespace FFA.Modules
         [Command("BestCmds")]
         [Alias("bestcmd", "bestcommands", "bestcommand", "cmdlb")]
         [Summary("View the most used custom cmds")]
-        public async Task BestCmds(
+        public async Task BestCmdsAsync(
             [Summary("15")] [Between(Config.MIN_LB, Config.MAX_LB)] int count = Config.LB_COUNT)
             => await Context.SendAsync(await _lbService.GetCustomCmdsAsync(Context.Guild, x => x.Uses, count),
                 "The Most Used Custom Cmds");
@@ -133,7 +133,7 @@ namespace FFA.Modules
         [Command("CmdInfo")]
         [Alias("cmdinformation", "commandinfo", "commandinformation")]
         [Summary("View a custom cmd's information")]
-        public async Task CmdInfo(
+        public async Task CmdInfoAsync(
             [Summary("command")] CustomCmd cmd)
         {
             var elems = new List<(string, string)>()

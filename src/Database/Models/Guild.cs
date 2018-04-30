@@ -7,6 +7,7 @@ namespace FFA.Database.Models
         public ulong? RulesChannelId { get; set; }
         public ulong? ArchiveChannelId { get; set; }
         public uint CaseCount { get; set; }
+        public uint MaxActions { get; set; }
         public bool AutoMute { get; set; }
     }
 }

@@ -6,7 +6,6 @@ using FFA.Extensions.Database;
 using FFA.Extensions.Discord;
 using FFA.Preconditions.Command;
 using FFA.Preconditions.Parameter;
-using FFA.Readers;
 using FFA.Services;
 using FFA.Utility;
 using MongoDB.Driver;

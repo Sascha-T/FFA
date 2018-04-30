@@ -20,7 +20,7 @@ namespace FFA.Common
         // Current user
         public const string GAME = PREFIX + "help";
 
-        // Guild, move to some json thing
+        // Guild, TODO: move to some json thing
         public const string INVITE_LINK = "https://discord.gg/F7reg7e", HELP_MESSAGE =
             "FFA's goal is to provide a fully decentralized discord server by allowing the community to control " +
             "every aspect of the guild. The entire system is based around reputation. The most reputable users are the " +
@@ -39,10 +39,10 @@ namespace FFA.Common
 
         // Chat settings
         public static readonly TimeSpan CHAT_SERVICE_DELAY = TimeSpan.FromSeconds(30);
-        public const double CHAT_REWARD = 0.05;
+        public const double CHAT_REWARD = 0.025;
 
         // Reputation decay settings
-        public const double DECAY_MUL = 0.995;
+        public const double DECAY_MUL = 0.99;
         public static readonly UpdateDefinition<User> DECAY_UPDATE =
             new UpdateDefinitionBuilder<User>().Mul(x => x.Reputation, DECAY_MUL);
 
@@ -91,7 +91,7 @@ namespace FFA.Common
         // Timers
         public static readonly TimeSpan AUTO_UNMUTE_TIMER = TimeSpan.FromMinutes(1),
             REP_DECAY_TIMER = TimeSpan.FromHours(1), DISBOARD_BUMP_TIMER = TimeSpan.FromHours(1),
-            SERVER_HOUND_BUMP_TIMER = TimeSpan.FromHours(4);
+            SERVER_HOUND_BUMP_TIMER = TimeSpan.FromHours(4), RESET_ACTIONS_TIMER = TimeSpan.FromHours(1);
 
         // Logs
         public const string LOGS_DIRECTORY = "logs/";

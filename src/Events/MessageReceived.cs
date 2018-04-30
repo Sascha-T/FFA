@@ -43,14 +43,15 @@ namespace FFA.Events
 
                 var ctx = new Context(_client, msg, _provider);
 
-                if (ctx.Channel is ITextChannel textChannel && !await textChannel.CanSendAsync())
+                if (ctx.TextChannel != null && !await ctx.TextChannel.CanSendAsync())
                     return;
 
                 await ctx.InitializeAsync();
 
-                if (_rateLimitService.IsIgnored(ctx.User.Id))
-                    return;
-                else if (ctx.Guild != null && ctx.DbGuild.AutoMute && !await _spamService.AuthenticateAsync(ctx))
+                var isRateLimited = _rateLimitService.IsIgnored(ctx.User.Id);
+                var isSpammer = ctx.Guild != null && ctx.DbGuild.AutoMute && !await _spamService.AuthenticateAsync(ctx);
+
+                if (isRateLimited || isSpammer)
                     return;
 
                 int argPos = 0;

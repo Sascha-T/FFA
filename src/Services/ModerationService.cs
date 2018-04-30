@@ -44,14 +44,14 @@ namespace FFA.Services
                 $"other users to vote in favor of said poll.", guild: ctx.Guild);
         }
 
-        public async Task CreateMute(Context ctx, IUser user, Rule rule, TimeSpan length, string reason = null)
+        public async Task CreateMuteAsync(Context ctx, IUser user, Rule rule, TimeSpan length, string reason = null)
         {
             await _dbMutes.InsertOneAsync(new Mute(ctx.Guild.Id, user.Id, length));
             await LogMuteAsync(ctx, user, rule, length, reason);
             await InformUserAsync(ctx, user, rule, length, reason);
         }
 
-        public async Task RemoveMute(Context ctx, IUser user, string reason)
+        public async Task RemoveMuteAsync(Context ctx, IUser user, string reason)
         {
             await _dbMutes.UpdateManyAsync(x => x.UserId == user.Id && x.GuildId == ctx.Guild.Id,
                         new UpdateDefinitionBuilder<Mute>().Set(x => x.Active, false));

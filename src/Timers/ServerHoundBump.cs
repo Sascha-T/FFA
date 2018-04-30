@@ -1,7 +1,5 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Discord.WebSocket;
 using FFA.Common;
 using FFA.Entities.FFATimer;
 using FFA.Extensions.Discord;
@@ -20,11 +18,9 @@ namespace FFA.Timers
 
         protected override async Task Execute()
         {
-            // TODO: extension to get general channel
-            var guild = _client.GetGuild(_credentials.GuildId);
-            var general = guild.TextChannels.FirstOrDefault(x => x.Name == "general");
+            var general = await _client.GetGuild(_credentials.GuildId).GetGeneralAsync();
 
-            if (general == default(SocketTextChannel) || !await general.CanSendAsync())
+            if (general != null || !await general.CanSendAsync())
                 return;
 
             await general.SendMessageAsync("=bump");

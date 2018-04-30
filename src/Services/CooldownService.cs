@@ -2,7 +2,6 @@ using Discord.Commands;
 using FFA.Common;
 using FFA.Entities.Cooldown;
 using FFA.Entities.Service;
-using FFA.Extensions.Discord;
 using FFA.Preconditions.Command;
 using System;
 using System.Collections.Generic;
@@ -60,9 +59,8 @@ namespace FFA.Services
             }
         }
 
-        public async Task ApplyCooldownAsync(Context ctx, int argPos)
+        public async Task ApplyCooldownAsync(Context ctx, CommandInfo cmd)
         {
-            var cmd = _commands.GetCommand(ctx, argPos);
             var cooldownPrecondtion = cmd.Preconditions.FirstOrDefault(x => x is CooldownAttribute) as CooldownAttribute;
 
             if (cooldownPrecondtion == null)

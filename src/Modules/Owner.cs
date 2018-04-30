@@ -27,6 +27,15 @@ namespace FFA.Modules
             _dbRules = dbRules;
         }
 
+        [Command("SetMaxActions")]
+        [Alias("setactions", "setaction")]
+        [Summary("Sets the number of actions a moderator can perform per hour.")]
+        public async Task SetMaxActionsAsync([Summary("20")] uint max)
+        {
+            await _dbGuilds.UpsertGuildAsync(Context.Guild.Id, x => x.MaxActions = max);
+            await Context.ReplyAsync($"You have successfully set to maximum amount of actions to {max}.");
+        }
+
         [Command("SetLogChannel")]
         [Alias("setlogs", "setmodlog", "setmodlogs")]
         [Summary("Sets the log channel.")]
