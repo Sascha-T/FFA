@@ -38,7 +38,7 @@ namespace FFA.Events
             {
                 var msg = socketMsg as IUserMessage;
 
-                if (msg == null || msg.Author.IsBot)
+                if (msg == null || msg.Author.IsBot || msg.Embeds.Count > 0)
                     return;
 
                 var ctx = new Context(_client, msg, _provider);
